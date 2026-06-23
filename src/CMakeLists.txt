@@ -14,15 +14,16 @@ else()
 endif()
 
 file(TO_NATIVE_PATH "${STAGED_INSTALL_PREFIX}/${_LIBDIR}/cmake/glfw3" glfw3_DIR)
-file(TO_NATIVE_PATH "${STAGED_INSTALL_PREFIX}/${_LIBDIR}/cmake/glew" GLEW_DIR)
+# file(TO_NATIVE_PATH "${STAGED_INSTALL_PREFIX}/${_LIBDIR}/cmake/glew" GLEW_DIR)
 
 message(STATUS "glfw3_DIR is... ${glfw3_DIR}")
-message(STATUS "GLEW_DIR is... ${GLEW_DIR}")
+# message(STATUS "GLEW_DIR is... ${GLEW_DIR}")
 
 find_package(glfw3 REQUIRED CONFIG)
 
-set(GLEW_USE_STATIC_LIBS ON)
-find_package(GLEW REQUIRED CONFIG)
+# set(GLEW_USE_STATIC_LIBS ON)
+# find_package(GLEW REQUIRED CONFIG)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../lib/glad ${CMAKE_BINARY_DIR}/glad_build)
 
 # set(SRCS main.cpp)
 file(GLOB_RECURSE SRCS
@@ -41,7 +42,7 @@ else()
     add_executable(main ${SRCS} main.exe.manifest)
 endif()
 
-target_link_libraries(main PRIVATE GLEW::glew_s glfw)
+target_link_libraries(main PRIVATE glad glfw)
 
 set_target_properties(main PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}"

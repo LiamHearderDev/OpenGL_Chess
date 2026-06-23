@@ -1,11 +1,11 @@
 #define GLFW_INCLUDE_NONE
-#include <GL/glew.h>
 
 #include <array>
 #include <iostream>
 #include <cstdint>
 #include <fstream>
 
+#include <glad/glad.h>
 #include "Window/WindowManager.h"
 
 
@@ -23,8 +23,8 @@ constexpr auto squareVertices = std::array{
 };
 
 
-void OnFramebufferSizeChanged(GLFWwindow *window, int32_t width, int32_t height);
-void render(GLFWwindow *window);
+void OnFramebufferSizeChanged(int32_t width, int32_t height);
+void render();
 GLuint InitShader(const char* vert_shader, const char* frag_shader);
 
 
@@ -34,11 +34,16 @@ int main() {
 	WindowManager window_manager{};
 	window_manager.createWindow(640, 480);
 
-	glewExperimental = GL_TRUE;
-	if (glewInit() != GLEW_OK){
-		fprintf(stderr, "Error: Failed to initialise GLEW.");
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+		fprintf(stderr, "Error: Failed to initialize GLAD.\n");
 		return 1;
 	}
+
+	// glewExperimental = GL_TRUE;
+	// if (glewInit() != GLEW_OK){
+	// 	fprintf(stderr, "Error: Failed to initialise GLEW.");
+	// 	return 1;
+	// }
 
 	// ======== OpenGL setup ======== //
 
@@ -72,7 +77,7 @@ int main() {
 	
 	// Event Loop
 	while (!(window_manager.ShouldWindowClose())) {
-		//render(window); // TODO: fix
+		render(); // TODO: fixs
 		window_manager.update();
 		window_manager.swapBuffers();
 	}
@@ -87,12 +92,12 @@ int main() {
 
 
 
-void OnFramebufferSizeChanged(GLFWwindow *window, int32_t width, int32_t height) {
+void OnFramebufferSizeChanged(int32_t width, int32_t height) {
 	glViewport(0, 0, width, height);
-	render(window);
+	render();
 }
 
-void render(GLFWwindow *window){
+void render(){
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 

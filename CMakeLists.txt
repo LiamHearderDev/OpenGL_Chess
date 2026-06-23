@@ -16,7 +16,7 @@ add_subdirectory(lib)
 include(ExternalProject)
 
 ExternalProject_Add(${PROJECT_NAME}_core
-  DEPENDS GLFW_external GLEW_external glm_external
+  DEPENDS GLFW_external glm_external
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src
   CMAKE_ARGS
   -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}

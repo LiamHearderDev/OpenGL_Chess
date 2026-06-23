@@ -11,7 +11,7 @@ void WindowManager::init()
     glfwInit();
     if (!glfwInit())
 	{
-		fprintf(stderr, "Error: Failed to initialise GLFW.");
+		fprintf(stderr, "Error: Failed to initialise GLFW.\n");
 		return;
 	}
 	glfwSetErrorCallback(error_callback);
@@ -32,7 +32,7 @@ void WindowManager::createWindow(unsigned int width, unsigned int height)
 	// Create Window
 	window = glfwCreateWindow(width, height, "OpenGL Chess", NULL, NULL);
 	if (NULL == window) {
-		fprintf(stderr, "Error: Failed to create GLFW window.");
+		fprintf(stderr, "Error: Failed to create GLFW window.\n");
 		glfwTerminate();
 		return;
 	}
