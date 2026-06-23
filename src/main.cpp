@@ -1,11 +1,12 @@
 #define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
 #include <GL/glew.h>
 
 #include <array>
 #include <iostream>
 #include <cstdint>
 #include <fstream>
+
+#include "Window/WindowManager.h"
 
 
 GLuint shaderProgram{};
@@ -24,53 +25,20 @@ constexpr auto squareVertices = std::array{
 
 void OnFramebufferSizeChanged(GLFWwindow *window, int32_t width, int32_t height);
 void render(GLFWwindow *window);
-void error_callback(int error, const char* description);
 GLuint InitShader(const char* vert_shader, const char* frag_shader);
 
 
 int main() {
 
-	// ======== GLFW setup ======== //
-
-	// Initialize GLFW
-	// TODO: This will all be abstracted out into its own class
-	if (!glfwInit())
-	{
-		fprintf(stderr, "Error: Failed to initialise GLFW.");
-		return 1;
-	}
-	glfwSetErrorCallback(error_callback);
-
-	// Add window hints
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	// Needed for apple devices, as only forward compatability is supported
-#ifdef __APPLE__
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-
-	// Create Window
-	GLFWwindow* window = glfwCreateWindow(640, 480, "OpenGL Chess", NULL, NULL);
-	if (NULL == window) {
-		fprintf(stderr, "Error: Failed to create GLFW window.");
-		glfwTerminate();
-		return 1;
-	}
-
-	// Activate the GLFW context
-	glfwMakeContextCurrent(window);
+	WindowManager::init();
+	WindowManager window_manager{};
+	window_manager.createWindow(640, 480);
 
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK){
 		fprintf(stderr, "Error: Failed to initialise GLEW.");
 		return 1;
 	}
-
-	// Connect frame buffer size changed callback
-	glfwSetFramebufferSizeCallback(window, OnFramebufferSizeChanged);
-
 
 	// ======== OpenGL setup ======== //
 
@@ -103,9 +71,10 @@ int main() {
 	glClearColor(0.0, 0.0, 0.0, 0.0); // Draw black background
 	
 	// Event Loop
-	while (false == glfwWindowShouldClose(window)) {
-		render(window);
-		glfwPollEvents();
+	while (!(window_manager.ShouldWindowClose())) {
+		//render(window); // TODO: fix
+		window_manager.update();
+		window_manager.swapBuffers();
 	}
 
 	// Finish up OpenGL
@@ -129,8 +98,6 @@ void render(GLFWwindow *window){
 
 	glUseProgram(shaderProgram);
 	glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(squareVertices.size()/3));
-	
-	glfwSwapBuffers(window);
 }
 
 std::string loadShaderSource(const char* filepath) {
@@ -172,9 +139,4 @@ GLuint InitShader(const char* vert_shader, const char* frag_shader) {
     glDeleteShader(fragment);
 
     return program;
-}
-
-void error_callback(int error, const char* description)
-{
-    fprintf(stderr, "Error: %s\n", description);
 }

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
 project(OpenGL_Chess LANGUAGES CXX)
 
@@ -24,7 +24,11 @@ find_package(glfw3 REQUIRED CONFIG)
 set(GLEW_USE_STATIC_LIBS ON)
 find_package(GLEW REQUIRED CONFIG)
 
-set(SRCS main.cpp)
+# set(SRCS main.cpp)
+file(GLOB_RECURSE SRCS
+    CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
+)
 
 if(APPLE)
     # create bundle on apple compiles
