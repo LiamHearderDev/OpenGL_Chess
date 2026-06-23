@@ -39,9 +39,6 @@ void WindowManager::createWindow(unsigned int width, unsigned int height)
 
 	// Activate the GLFW context
 	glfwMakeContextCurrent(window);
-
-	// Connect frame buffer size changed callback
-	//glfwSetFramebufferSizeCallback(window, OnFramebufferSizeChanged);
 }
 
 
@@ -67,6 +64,11 @@ void WindowManager::update()
 void WindowManager::swapBuffers()
 {
     glfwSwapBuffers(window);
+}
+
+void WindowManager::registerFramebufferSizeCallback(GLFWframebuffersizefun callback)
+{
+	glfwSetFramebufferSizeCallback(window, callback);
 }
 
 double WindowManager::getDeltaTime()

@@ -20,6 +20,7 @@ public:
     bool ShouldWindowClose();
     void update();
     void swapBuffers();
+    void registerFramebufferSizeCallback(GLFWframebuffersizefun callback);
     double getDeltaTime();    
 };
 

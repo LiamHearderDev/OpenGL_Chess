@@ -23,7 +23,7 @@ constexpr auto squareVertices = std::array{
 };
 
 
-void OnFramebufferSizeChanged(int32_t width, int32_t height);
+void OnFramebufferSizeChanged(GLFWwindow* window, int32_t width, int32_t height);
 void render();
 GLuint InitShader(const char* vert_shader, const char* frag_shader);
 
@@ -33,6 +33,7 @@ int main() {
 	WindowManager::init();
 	WindowManager window_manager{};
 	window_manager.createWindow(640, 480);
+	window_manager.registerFramebufferSizeCallback(OnFramebufferSizeChanged);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		fprintf(stderr, "Error: Failed to initialize GLAD.\n");
@@ -91,8 +92,7 @@ int main() {
 }
 
 
-
-void OnFramebufferSizeChanged(int32_t width, int32_t height) {
+void OnFramebufferSizeChanged(GLFWwindow* window, int32_t width, int32_t height) {
 	glViewport(0, 0, width, height);
 	render();
 }
