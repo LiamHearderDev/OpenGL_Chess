@@ -21,13 +21,16 @@ constexpr auto squareVertices = std::array{
     -0.5f, 0.5f, 0.0f   // Top-left
 };
 
-void error_callback(int error, const char* description);
+
 void OnFramebufferSizeChanged(GLFWwindow *window, int32_t width, int32_t height);
 void render(GLFWwindow *window);
+void error_callback(int error, const char* description);
 GLuint InitShader(const char* vert_shader, const char* frag_shader);
 
 
 int main() {
+
+	// ======== GLFW setup ======== //
 
 	// Initialize GLFW
 	// TODO: This will all be abstracted out into its own class
@@ -43,6 +46,7 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+	// Needed for apple devices, as only forward compatability is supported
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
@@ -58,17 +62,21 @@ int main() {
 	// Activate the GLFW context
 	glfwMakeContextCurrent(window);
 
+	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK){
 		fprintf(stderr, "Error: Failed to initialise GLEW.");
 		return 1;
 	}
 
+	// Connect frame buffer size changed callback
+	glfwSetFramebufferSizeCallback(window, OnFramebufferSizeChanged);
 
-	// ==== OpenGL setup ==== //
+
+	// ======== OpenGL setup ======== //
 
 	// Vertex Array Object
 	GLuint VAO;
-	glGenVertexArrays(1, &VAO);
+	glGenVertexArrays(1, &VAO); // TODO: Add the apple version for this
 	glBindVertexArray(VAO);
 
 	// Vertex Buffer Object
@@ -84,17 +92,16 @@ int main() {
 	);
 
 	// shaders
-	shaderProgram = InitShader("res/shaders/vert.glsl", "res/shaders/frag.glsl");
+	shaderProgram = InitShader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
 	glUseProgram(shaderProgram);
 
 	// Initialise vertex position attribute
 	GLuint vPos = glGetAttribLocation(shaderProgram, "vPosition");
-	glEnableVertex
+	glVertexAttribPointer(vPos, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+	glEnableVertexAttribArray(vPos);
 
+	glClearColor(0.0, 0.0, 0.0, 0.0); // Draw black background
 	
-	// Connect frame buffer size changed callback
-	glfwSetFramebufferSizeCallback(window, OnFramebufferSizeChanged);
-
 	// Event Loop
 	while (false == glfwWindowShouldClose(window)) {
 		render(window);
@@ -109,10 +116,7 @@ int main() {
 	return 0;
 }
 
-void error_callback(int error, const char* description)
-{
-    fprintf(stderr, "Error: %s\n", description);
-}
+
 
 void OnFramebufferSizeChanged(GLFWwindow *window, int32_t width, int32_t height) {
 	glViewport(0, 0, width, height);
@@ -142,6 +146,11 @@ GLuint InitShader(const char* vert_shader, const char* frag_shader) {
 	const char* vCode = vCodeStr.c_str();
 	const char* fCode = fCodeStr.c_str();
 
+	if (vCodeStr.empty() || fCodeStr.empty()) {
+    	fprintf(stderr, "Failed to load shader files: %s , %s\n", vert_shader, frag_shader);
+    	return 0;
+	}
+
 	// 2. Create shader objects
 	GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
 	GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
@@ -165,3 +174,7 @@ GLuint InitShader(const char* vert_shader, const char* frag_shader) {
     return program;
 }
 
+void error_callback(int error, const char* description)
+{
+    fprintf(stderr, "Error: %s\n", description);
+}
