@@ -6,10 +6,11 @@
 #include <fstream>
 
 #include <glad/glad.h>
-#include "Window/WindowManager.h"
+#include "window/WindowManager.h"
+#include "rendering/MasterRenderer.h"
 
-
-GLuint shaderProgram{};
+WindowManager window_manager{};
+MasterRenderer master_renderer{};
 
 constexpr auto squareVertices = std::array{
     -0.5f, 0.5f, 0.0f,  // Top-left
@@ -24,14 +25,12 @@ constexpr auto squareVertices = std::array{
 
 
 void OnFramebufferSizeChanged(GLFWwindow* window, int32_t width, int32_t height);
-void render();
-GLuint InitShader(const char* vert_shader, const char* frag_shader);
 
 
 int main() {
 
+	// ======== Window setup ======== //
 	WindowManager::init();
-	WindowManager window_manager{};
 	window_manager.createWindow(640, 480);
 	window_manager.registerFramebufferSizeCallback(OnFramebufferSizeChanged);
 
@@ -40,53 +39,19 @@ int main() {
 		return 1;
 	}
 
-	// glewExperimental = GL_TRUE;
-	// if (glewInit() != GLEW_OK){
-	// 	fprintf(stderr, "Error: Failed to initialise GLEW.");
-	// 	return 1;
-	// }
 
 	// ======== OpenGL setup ======== //
-
-	// Vertex Array Object
-	GLuint VAO;
-	glGenVertexArrays(1, &VAO); // TODO: Add the apple version for this
-	glBindVertexArray(VAO);
-
-	// Vertex Buffer Object
-	GLuint VBO;
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-	glBufferData(
-		GL_ARRAY_BUFFER, 
-		squareVertices.size() * sizeof(float),
-		squareVertices.data(),
-		GL_STATIC_DRAW
-	);
-
-	// shaders
-	shaderProgram = InitShader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
-	glUseProgram(shaderProgram);
-
-	// Initialise vertex position attribute
-	GLuint vPos = glGetAttribLocation(shaderProgram, "vPosition");
-	glVertexAttribPointer(vPos, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
-	glEnableVertexAttribArray(vPos);
-
-	glClearColor(0.0, 0.0, 0.0, 0.0); // Draw black background
+	master_renderer.init();
 	
-	// Event Loop
+
+	// ======== Main Event Loop ======== //
 	while (!(window_manager.ShouldWindowClose())) {
-		render(); // TODO: fixs
+		master_renderer.draw();
 		window_manager.update();
 		window_manager.swapBuffers();
 	}
 
-	// Finish up OpenGL
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteProgram(shaderProgram);
+	master_renderer.finish();
 
 	return 0;
 }
@@ -94,54 +59,8 @@ int main() {
 
 void OnFramebufferSizeChanged(GLFWwindow* window, int32_t width, int32_t height) {
 	glViewport(0, 0, width, height);
-	render();
+	master_renderer.draw();
+	window_manager.update();
+	window_manager.swapBuffers();
 }
 
-void render(){
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	glUseProgram(shaderProgram);
-	glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(squareVertices.size()/3));
-}
-
-std::string loadShaderSource(const char* filepath) {
-    std::ifstream file(filepath);
-    if (!file.is_open()) return "";
-    return std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-}
-
-GLuint InitShader(const char* vert_shader, const char* frag_shader) {
-	// 1. Load source code
-	std::string vCodeStr = loadShaderSource(vert_shader);
-	std::string fCodeStr = loadShaderSource(frag_shader);
-	const char* vCode = vCodeStr.c_str();
-	const char* fCode = fCodeStr.c_str();
-
-	if (vCodeStr.empty() || fCodeStr.empty()) {
-    	fprintf(stderr, "Failed to load shader files: %s , %s\n", vert_shader, frag_shader);
-    	return 0;
-	}
-
-	// 2. Create shader objects
-	GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
-	GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
-
-	// 3. Attach source code and compile
-	glShaderSource(vertex, 1, &vCode, NULL);
-	glCompileShader(vertex);
-	glShaderSource(fragment, 1, &fCode, NULL);
-	glCompileShader(fragment);
-	
-	// 4. Create Program and link shaders
-	GLuint program = glCreateProgram();
-    glAttachShader(program, vertex);
-    glAttachShader(program, fragment);
-    glLinkProgram(program);
-
-	// 5. Clean up (shaders are now linked into the program)
-    glDeleteShader(vertex);
-    glDeleteShader(fragment);
-
-    return program;
-}
