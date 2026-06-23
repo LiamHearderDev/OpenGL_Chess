@@ -1,5 +1,8 @@
 #include "MasterRenderer.h"
 
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+
 #include <array>
 #include <iostream>
 #include <fstream>
@@ -27,9 +30,9 @@ void MasterRenderer::init()
 	glUseProgram(shaderProgram);
 
 	// Initialise vertex position attribute
-	GLuint vPos = glGetAttribLocation(shaderProgram, "vPosition");
-	glVertexAttribPointer(vPos, 2, GL_FLOAT, GL_FALSE, 2*sizeof(float), (void*)0);
-	glEnableVertexAttribArray(vPos);
+	GLuint vPosition_loc = glGetAttribLocation(shaderProgram, "vPosition");
+	glVertexAttribPointer(vPosition_loc, 2, GL_FLOAT, GL_FALSE, 2*sizeof(float), (void*)0);
+	glEnableVertexAttribArray(vPosition_loc);
 
 	glClearColor(0.0, 0.0, 0.0, 0.0); // Draw black background
 }

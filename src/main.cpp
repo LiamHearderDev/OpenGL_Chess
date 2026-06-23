@@ -6,6 +6,8 @@
 #include <fstream>
 
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include "window/WindowManager.h"
 #include "rendering/MasterRenderer.h"
 
@@ -23,16 +25,11 @@ constexpr auto squareVertices = std::array{
     -0.5f, 0.5f, 0.0f   // Top-left
 };
 
-
-void OnFramebufferSizeChanged(GLFWwindow* window, int32_t width, int32_t height);
-
-
 int main() {
 
 	// ======== Window setup ======== //
 	WindowManager::init();
-	window_manager.createWindow(640, 480);
-	window_manager.registerFramebufferSizeCallback(OnFramebufferSizeChanged);
+	window_manager.createWindow(512, 512);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		fprintf(stderr, "Error: Failed to initialize GLAD.\n");
@@ -49,18 +46,11 @@ int main() {
 		master_renderer.draw();
 		window_manager.update();
 		window_manager.swapBuffers();
+		glfwPollEvents();
 	}
 
 	master_renderer.finish();
 
 	return 0;
-}
-
-
-void OnFramebufferSizeChanged(GLFWwindow* window, int32_t width, int32_t height) {
-	glViewport(0, 0, width, height);
-	master_renderer.draw();
-	window_manager.update();
-	window_manager.swapBuffers();
 }
 

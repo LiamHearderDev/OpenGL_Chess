@@ -1,5 +1,9 @@
 #include "WindowManager.h"
+
+#include <glad/glad.h>
+#include <glm/gtc/matrix_transform.hpp>
 #include <cstdio>
+
 
 void error_callback(int error, const char* description)
 {
@@ -41,8 +45,6 @@ void WindowManager::createWindow(unsigned int width, unsigned int height)
 	glfwMakeContextCurrent(window);
 }
 
-
-
 bool WindowManager::ShouldWindowClose()
 {
     return (window) ? (glfwWindowShouldClose(window)) : (true);
@@ -58,7 +60,23 @@ void WindowManager::update()
     }
     lastTime = time;
 
-    glfwPollEvents();
+	// Calculate the screen size and position, ensuring it's always centered
+	glm::ivec2 size = getFrameBufferSize();
+	const float targetAspect = 1.0f;
+	float windowAspect = float(size.x) / float(size.y);
+
+	int viewW, viewH;
+	if (windowAspect > targetAspect) {
+		viewH = size.y;
+		viewW = int(viewH * targetAspect);
+	} else {
+		viewW = size.x;
+		viewH = int(viewW / targetAspect);
+	}
+
+	int viewX = (size.x - viewW) / 2;
+	int viewY = (size.y - viewH) / 2;
+	glViewport(viewX, viewY, viewW, viewH);
 }
 
 void WindowManager::swapBuffers()
@@ -66,12 +84,14 @@ void WindowManager::swapBuffers()
     glfwSwapBuffers(window);
 }
 
-void WindowManager::registerFramebufferSizeCallback(GLFWframebuffersizefun callback)
-{
-	glfwSetFramebufferSizeCallback(window, callback);
-}
-
 double WindowManager::getDeltaTime()
 {
     return delta_time;
+}
+
+glm::ivec2 WindowManager::getFrameBufferSize()
+{
+	glm::ivec2 size;
+	glfwGetFramebufferSize(window, &size.x, &size.y);
+    return size;
 }

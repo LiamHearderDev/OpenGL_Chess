@@ -5,11 +5,13 @@
 #define GLFW_INCLUDE_NONE
 
 #include <GLFW/glfw3.h>
-//#include <glm/glm.hpp>
+#include <glm/glm.hpp>
 
 class WindowManager {
     GLFWwindow* window;
     double delta_time = 0.0;
+
+    glm::ivec2 calculateScreenSize();
 
 public:
     static void init();
@@ -20,8 +22,8 @@ public:
     bool ShouldWindowClose();
     void update();
     void swapBuffers();
-    void registerFramebufferSizeCallback(GLFWframebuffersizefun callback);
-    double getDeltaTime();    
+    double getDeltaTime();
+    glm::ivec2 getFrameBufferSize();
 };
 
 #endif //WINDOW_MANAGER_H
