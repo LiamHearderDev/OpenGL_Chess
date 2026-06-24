@@ -1,7 +1,7 @@
 #include "MasterRenderer.h"
 
 #include <glad/glad.h>
-#include <glm/glm.hpp>
+
 
 #include <array>
 #include <iostream>
@@ -20,8 +20,8 @@ void MasterRenderer::init()
 
 	glBufferData(
 		GL_ARRAY_BUFFER,
-		sizeof(squareVertices),
-		squareVertices,
+		sizeof(board_vertices),
+		board_vertices.data(),
 		GL_STATIC_DRAW
 	);
 
@@ -29,10 +29,15 @@ void MasterRenderer::init()
 	shaderProgram = initShader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
 	glUseProgram(shaderProgram);
 
-	// Initialise vertex position attribute
+	// Vertex Position
 	GLuint vPosition_loc = glGetAttribLocation(shaderProgram, "vPosition");
-	glVertexAttribPointer(vPosition_loc, 2, GL_FLOAT, GL_FALSE, 2*sizeof(float), (void*)0);
+	glVertexAttribPointer( vPosition_loc, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)0 );
 	glEnableVertexAttribArray(vPosition_loc);
+
+	// Vertex Texture Coordinate
+	GLuint vTexCoord_loc = glGetAttribLocation(shaderProgram, "vTexCoord");
+	glVertexAttribPointer( vTexCoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(vertex_data, texture_coordinate) );
+	glEnableVertexAttribArray(vTexCoord_loc);
 
 	glClearColor(0.0, 0.0, 0.0, 0.0); // Draw black background
 }
@@ -42,7 +47,11 @@ void MasterRenderer::draw()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
     glUseProgram(shaderProgram);
-	glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(sizeof(squareVertices)/3));
+	//glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(sizeof(squareVertices)/3));
+	glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(sizeof(board_vertices)));
+	
+	const std::array<uint64_t, 12> pieces = game_board.getPieces();
+	
 }
 
 void MasterRenderer::finish()
