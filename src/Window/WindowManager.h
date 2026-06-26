@@ -23,6 +23,7 @@ public:
     void update();
     void swapBuffers();
     double getDeltaTime();
+
     glm::ivec2 getFrameBufferSize();
 };
 

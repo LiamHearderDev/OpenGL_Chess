@@ -2,9 +2,11 @@
 #define MASTER_RENDERER_H
 
 #include <glm/glm.hpp>
-
 #include "../chess/GameBoard.h"
 
+/**
+ * A Structure representing a single vertex.
+ */
 struct vertex_data {
     glm::vec3 position;
     glm::vec2 texture_coordinate;
@@ -18,17 +20,6 @@ class MasterRenderer {
 
     GameBoard game_board{};
 
-    // const float squareVertices[24] = {
-    //     -0.5f,  0.5f,   0.f,   // Top-left
-    //     0.5f,   0.5f,   0.f,   // Top-right
-    //     0.5f,   0.5f,   0.f,   // Top-right
-    //     0.5f,   -0.5f,  0.f,  // Bottom-right
-    //     0.5f,   -0.5f,  0.f,  // Bottom-right
-    //     -0.5f,  -0.5f,  0.f,  // Bottom-left
-    //     -0.5f,  -0.5f,  0.f,  // Bottom-left
-    //     -0.5f,  0.5f,   0.f   // Top-left
-    // };
-
     const std::array<vertex_data, 4> board_vertices = {
         vertex_data{ {-0.5f, 0.5f, 0.f},      {0.f, 1.0f}    },  // Top-left
         vertex_data{ {0.5f, 0.5f, 0.f},       {1.0f, 1.0f}   },  // Top-right
@@ -41,7 +32,12 @@ public:
     int init();
     void draw();
     void finish();
+    
+private:
     unsigned int initShader(const char* vert_shader, const char* frag_shader);
+    unsigned int loadTexture(const char* filepath);
+
+    void drawPiece();
 };
 
 
