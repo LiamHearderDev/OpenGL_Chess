@@ -29,20 +29,16 @@ class MasterRenderer {
     //     -0.5f,  0.5f,   0.f   // Top-left
     // };
 
-    const std::array<vertex_data, 8> board_vertices = {
+    const std::array<vertex_data, 4> board_vertices = {
         vertex_data{ {-0.5f, 0.5f, 0.f},      {0.f, 1.0f}    },  // Top-left
         vertex_data{ {0.5f, 0.5f, 0.f},       {1.0f, 1.0f}   },  // Top-right
-        vertex_data{ {0.5f, 0.5f, 0.f},       {1.0f, 1.0f}   },  // Top-right
-        vertex_data{ {0.5f, -0.5f, 0.f},      {1.0f, 0.f}    },  // Bottom-right
         vertex_data{ {0.5f, -0.5f, 0.f},      {1.0f, 0.f}    },  // Bottom-right
         vertex_data{ {-0.5f, -0.5f, 0.f},     {0.f, 0.f}     },  // Bottom-left
-        vertex_data{ {-0.5f, -0.5f, 0.f},     {0.f, 0.f}     },  // Bottom-left
-        vertex_data{ {-0.5f, 0.5f, 0.f},      {0.f, 1.0f}    }   // Top-left
     };
 
 public:
     MasterRenderer() = default;
-    void init();
+    int init();
     void draw();
     void finish();
     unsigned int initShader(const char* vert_shader, const char* frag_shader);

@@ -25,9 +25,11 @@ constexpr auto squareVertices = std::array{
     -0.5f, 0.5f, 0.0f   // Top-left
 };
 
-int main() {
+int main(int arc, char** argv) {
+	fprintf(stdout, "Beginning OpenGL_Chess...\n");
 
 	// ======== Window setup ======== //
+	fprintf(stdout, "Beginning Window Manager...\n");
 	WindowManager::init();
 	window_manager.createWindow(512, 512);
 
@@ -38,10 +40,14 @@ int main() {
 
 
 	// ======== OpenGL setup ======== //
-	master_renderer.init();
+	fprintf(stdout, "Beginning renderer...\n");
+	if (master_renderer.init() != 0) {
+		fprintf(stderr, "Error: Could not initialise renderer.");
+		return 1;
+	}
 	
-
 	// ======== Main Event Loop ======== //
+	fprintf(stdout, "Beginning main loop...\n");
 	while (!(window_manager.ShouldWindowClose())) {
 		master_renderer.draw();
 		window_manager.update();

@@ -2,16 +2,19 @@
 
 #include <glad/glad.h>
 
+#ifdef __APPLE__
+	#include <CoreFoundation/CoreFoundation.h>
+#endif
 
 #include <array>
 #include <iostream>
 #include <fstream>
 
-void MasterRenderer::init()
+int MasterRenderer::init()
 {
 
     // Vertex Array Object
-	glGenVertexArrays(1, &VAO); // TODO: Add the apple version for this
+	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
 	// Vertex Buffer Object
@@ -25,21 +28,51 @@ void MasterRenderer::init()
 		GL_STATIC_DRAW
 	);
 
-	// shaders
-	shaderProgram = initShader("../res/shaders/vert.glsl", "../res/shaders/frag.glsl");
+	#ifdef __APPLE__
+		// TODO : ensure the following code can actually run
+
+		const CFBundleRef bundle = CFBundleGetMainBundle();
+		const CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(bundle);
+		char path[PATH_MAX];
+		CFURLGetFileSystemRepresentation(resourcesURL, true, (UInt8*)path, PATH_MAX);
+    	CFRelease(resourcesURL);
+
+		std::string vert_path = std::string(path) + "/../../../../res/shaders/vert.glsl";
+		const char* vert_shader_path = vert_path.c_str();
+
+		std::string frag_path = std::string(path) + "/../../../../res/shaders/frag.glsl";
+		const char* frag_shader_path = frag_path.c_str();
+
+		//const char* vert_shader_path = "../../../../res/shaders/vert.glsl";
+		//const char* frag_shader_path = "../../../../res/shaders/frag.glsl";
+	#else
+		const char* vert_shader_path = "../res/shaders/vert.glsl";
+		const char* frag_shader_path = "../res/shaders/frag.glsl";
+	#endif
+
+	shaderProgram = initShader(vert_shader_path, frag_shader_path);
 	glUseProgram(shaderProgram);
 
 	// Vertex Position
 	GLuint vPosition_loc = glGetAttribLocation(shaderProgram, "vPosition");
+	if (vPosition_loc < 0){
+		fprintf(stderr, "Error: vPosition attrib could not be found.\n");
+		return 1;
+	}
 	glVertexAttribPointer( vPosition_loc, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)0 );
 	glEnableVertexAttribArray(vPosition_loc);
 
 	// Vertex Texture Coordinate
 	GLuint vTexCoord_loc = glGetAttribLocation(shaderProgram, "vTexCoord");
+	if (vTexCoord_loc < 0){
+		fprintf(stderr, "Error: vTexCoord attrib could not be found.\n");
+		return 1;
+	}
 	glVertexAttribPointer( vTexCoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(vertex_data, texture_coordinate) );
 	glEnableVertexAttribArray(vTexCoord_loc);
 
 	glClearColor(0.0, 0.0, 0.0, 0.0); // Draw black background
+	return 0;
 }
 
 void MasterRenderer::draw()
@@ -48,7 +81,7 @@ void MasterRenderer::draw()
 	glClear(GL_COLOR_BUFFER_BIT);
     glUseProgram(shaderProgram);
 	//glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(sizeof(squareVertices)/3));
-	glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(sizeof(board_vertices)));
+	glDrawArrays(GL_LINE_LOOP, 0, static_cast<GLsizei>(board_vertices.size()));
 	
 	const std::array<uint64_t, 12> pieces = game_board.getPieces();
 	
