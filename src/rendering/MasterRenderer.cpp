@@ -27,8 +27,6 @@ int MasterRenderer::init()
 		element->init();
 	}
 
-	delete square;
-
 	return 0;
 }
 

@@ -26,7 +26,7 @@ class MasterRenderer {
     const renderable_data board_data = {
         board_vertices,
         std::vector<unsigned int>{ 0,1,3, 1,2,3},
-        new BaseMaterial(std::string{}, "NONE")
+        new BaseMaterial(std::string{}, "NONE") // TODO: Ensure you can actually pass through shaders
     };
 
     std::vector<Entity*> entities;
