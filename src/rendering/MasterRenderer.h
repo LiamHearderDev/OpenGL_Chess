@@ -3,14 +3,10 @@
 
 #include <glm/glm.hpp>
 #include "../chess/GameBoard.h"
-
-/**
- * A Structure representing a single vertex.
- */
-struct vertex_data {
-    glm::vec3 position;
-    glm::vec2 texture_coordinate;
-};
+#include "rendering/materials/BaseMaterial.h"
+#include "rendering/entities/Entity.h"
+#include <vector>
+#include <string>
 
 class MasterRenderer {
 
@@ -20,12 +16,22 @@ class MasterRenderer {
 
     GameBoard game_board{};
 
-    const std::array<vertex_data, 4> board_vertices = {
+    const std::vector<vertex_data> board_vertices = {
         vertex_data{ {-0.5f, 0.5f, 0.f},      {0.f, 1.0f}    },  // Top-left
         vertex_data{ {0.5f, 0.5f, 0.f},       {1.0f, 1.0f}   },  // Top-right
         vertex_data{ {0.5f, -0.5f, 0.f},      {1.0f, 0.f}    },  // Bottom-right
         vertex_data{ {-0.5f, -0.5f, 0.f},     {0.f, 0.f}     },  // Bottom-left
     };
+
+    const renderable_data board_data = {
+        board_vertices,
+        std::vector<unsigned int>{ 0,1,3, 1,2,3},
+        new BaseMaterial(std::string{}, "NONE")
+    };
+
+    std::vector<Entity*> entities;
+
+    void drawPiece();
 
 public:
     MasterRenderer() = default;
@@ -34,10 +40,7 @@ public:
     void finish();
     
 private:
-    unsigned int initShader(const char* vert_shader, const char* frag_shader);
-    //unsigned int loadTexture(const char* filepath);
-
-    void drawPiece();
+    
 };
 
 

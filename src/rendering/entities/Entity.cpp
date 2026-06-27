@@ -16,7 +16,7 @@ glm::mat4 LocalTransformComponent::calc_model_matrix() const
 
 void Renderable::init()
 {
-    GLuint VBO_vertices, VBO_indices;
+    // 1. Initialise vertices
     glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
@@ -29,14 +29,38 @@ void Renderable::init()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_indices);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, (long)(sizeof(unsigned int) * get_indices_count()), indices.data(), GL_STATIC_DRAW);
 
-    glBindVertexArray(0);
+    glBindVertexArray(0); // Unbind, so we don't accidentally write to the above VAO
+
+    // 2. Initialise shader
+    material->init();
 }
 
 void Renderable::render()
 {
+    /**
+     * 1. Use shader
+     * 2. Set shader data (such as projection view matrix, view position, instance model matrix, etc...)
+     * 3. Set active texture (GL_TEXTURE0 to start), then bind texture.
+     * 4. Bind VAO
+     * 5. Draw()
+     */
+
+    material->use();
+
+    // TODO: material->set_data();
+
+    // TODO: material->initialise_textures();
+
     glBindVertexArray(VAO);
     glDrawElementsBaseVertex(GL_TRIANGLES, get_indices_count(), GL_UNSIGNED_INT, nullptr, vertex_offset);
     glBindVertexArray(0);
+}
+
+void Renderable::finish()
+{
+    glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO_vertices);
+    glDeleteBuffers(1, &VBO_indices);
 }
 
 void Renderable::setup_attrib_pointers()
@@ -46,3 +70,5 @@ void Renderable::setup_attrib_pointers()
     glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 }
+
+
