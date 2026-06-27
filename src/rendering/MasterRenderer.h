@@ -35,7 +35,7 @@ public:
     
 private:
     unsigned int initShader(const char* vert_shader, const char* frag_shader);
-    unsigned int loadTexture(const char* filepath);
+    //unsigned int loadTexture(const char* filepath);
 
     void drawPiece();
 };
