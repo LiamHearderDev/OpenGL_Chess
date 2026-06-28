@@ -20,6 +20,7 @@ public:
     void init();
     void finish();
     void use();
+    void init_textures();
 
 private:
     std::string get_vert_shader_path();
