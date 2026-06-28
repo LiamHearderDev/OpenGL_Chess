@@ -6,9 +6,7 @@
 #include <iostream>
 
 
-#ifdef __APPLE__
-	#include <CoreFoundation/CoreFoundation.h>
-#endif
+
 
 
 int MasterRenderer::init()

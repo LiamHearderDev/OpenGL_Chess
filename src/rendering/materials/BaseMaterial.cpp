@@ -3,6 +3,9 @@
 #include <glad/glad.h>
 #include <fstream>      // For _loadShaderSource()
 
+#ifdef __APPLE__
+	#include <CoreFoundation/CoreFoundation.h>
+#endif
 
 void BaseMaterial::init()
 {
@@ -14,7 +17,7 @@ void BaseMaterial::init()
 	std::string fCodeStr = _load_shader_source(frag_file_path.c_str());
 
     if (vCodeStr.empty() || fCodeStr.empty()) {
-    	fprintf(stderr, "Error: Failed to load shader files: %s , %s\n", vert_file_path, frag_file_path);
+    	fprintf(stderr, "Error: Failed to load shader files: %s , %s\n", vert_file_path.c_str(), frag_file_path.c_str());
     	return;
 	}
 
@@ -64,7 +67,7 @@ std::string BaseMaterial::_load_shader_source(const char* filepath) {
  * This function returns the file path of either a vert or frag shader, depending on input type.
  * If you want to get a shader, use either `get_vert_shader_path()` or `get_frag_shader_path()`.
  */
-const char* _get_shader_path(bool type)
+std::string _get_shader_path(bool type)
 {
     #ifdef __APPLE__
 		// TODO : ensure the following code can actually run
@@ -72,33 +75,31 @@ const char* _get_shader_path(bool type)
 		const CFBundleRef bundle = CFBundleGetMainBundle();
 		const CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(bundle);
 		char path[PATH_MAX];
+		
 		CFURLGetFileSystemRepresentation(resourcesURL, true, (UInt8*)path, PATH_MAX);
     	CFRelease(resourcesURL);
 
 		std::string vert_path = std::string(path) + "/../../../../res/shaders/vert.glsl";
-		const char* vert_shader_path = vert_path.c_str();
-
 		std::string frag_path = std::string(path) + "/../../../../res/shaders/frag.glsl";
-		const char* frag_shader_path = frag_path.c_str();
 
 	#else
-		const char* vert_shader_path = "../res/shaders/vert.glsl";
-		const char* frag_shader_path = "../res/shaders/frag.glsl";
+		std::string vert_shader_path = "../res/shaders/vert.glsl";
+		std::string frag_shader_path = "../res/shaders/frag.glsl";
 	#endif
     
-    return (type == 0) ? (vert_shader_path) : (frag_shader_path);
+    return (type == 0) ? (vert_path) : (frag_path);
 }
 
 
 // Returns the file path of the vertex shader used by this entity.
-const char* BaseMaterial::get_vert_shader_path()
+std::string BaseMaterial::get_vert_shader_path()
 {
     return _get_shader_path(0); // 0 = vertex shader
 }
 
 
 // Returns the file path of the fragment shader used by this entity.
-const char *BaseMaterial::get_frag_shader_path()
+std::string BaseMaterial::get_frag_shader_path()
 {
     return _get_shader_path(1); // 1 = fragment shader
 }

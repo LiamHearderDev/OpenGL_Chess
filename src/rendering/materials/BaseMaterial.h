@@ -22,8 +22,8 @@ public:
     void use();
 
 private:
-    const char* get_vert_shader_path();
-    const char* get_frag_shader_path();
+    std::string get_vert_shader_path();
+    std::string get_frag_shader_path();
 
     std::string _load_shader_source(const char* filepath);
 
