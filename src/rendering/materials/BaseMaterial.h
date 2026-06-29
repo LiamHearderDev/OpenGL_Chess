@@ -4,7 +4,7 @@
 #include <string>
 
 class BaseMaterial {
-    std::string vert_file_path;
+    std::string vert_file_path; // TODO: ensure these are actually used.
     std::string frag_file_path;
 
     unsigned int shader_program; // Represents the initialised shader.

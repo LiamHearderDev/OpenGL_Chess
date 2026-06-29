@@ -2,20 +2,13 @@
 
 #include <glad/glad.h>
 #include <fstream>      // For _loadShaderSource()
+#include <filesystem>
 #include "rendering/components/TextureLoader.h"
-
-#ifdef __APPLE__
-	#include <CoreFoundation/CoreFoundation.h>
-#endif
 
 void BaseMaterial::init()
 {
-    // 1. Load source code
-	vert_file_path = get_vert_shader_path();
-	frag_file_path = get_frag_shader_path();
-
-	std::string vCodeStr = _load_shader_source(vert_file_path.c_str());
-	std::string fCodeStr = _load_shader_source(frag_file_path.c_str());
+	std::string vCodeStr = _load_shader_source(get_vert_shader_path().c_str());
+	std::string fCodeStr = _load_shader_source(get_frag_shader_path().c_str());
 
     if (vCodeStr.empty() || fCodeStr.empty()) {
     	fprintf(stderr, "Error: Failed to load shader files: %s , %s\n", vert_file_path.c_str(), frag_file_path.c_str());
@@ -83,25 +76,18 @@ std::string BaseMaterial::_load_shader_source(const char* filepath) {
  */
 std::string _get_shader_path(bool type)
 {
-    #ifdef __APPLE__
-		// TODO : ensure the following code can actually run
+    const std::string shader_name = (type == 0) ? "vert.glsl" : "frag.glsl";
 
-		const CFBundleRef bundle = CFBundleGetMainBundle();
-		const CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(bundle);
-		char path[PATH_MAX];
-		
-		CFURLGetFileSystemRepresentation(resourcesURL, true, (UInt8*)path, PATH_MAX);
-    	CFRelease(resourcesURL);
+    for (std::filesystem::path dir = std::filesystem::current_path(); !dir.empty(); dir = dir.parent_path())
+    {
+        const std::filesystem::path candidate = dir / "res" / "shaders" / shader_name;
+        if (std::filesystem::exists(candidate))
+        {
+            return candidate.string();
+        }
+    }
 
-		std::string vert_path = std::string(path) + "/../../../../res/shaders/vert.glsl";
-		std::string frag_path = std::string(path) + "/../../../../res/shaders/frag.glsl";
-
-	#else
-		std::string vert_path = "../res/shaders/vert.glsl";
-		std::string frag_path = "../res/shaders/frag.glsl";
-	#endif
-    
-    return (type == 0) ? (vert_path) : (frag_path);
+    return (std::filesystem::current_path() / "res" / "shaders" / shader_name).string();
 }
 
 
