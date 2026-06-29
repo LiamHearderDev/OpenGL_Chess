@@ -66,7 +66,7 @@ void BaseMaterial::init_textures()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
-	glBindTexture();
+	//glBindTexture();
 }
 
 std::string BaseMaterial::_load_shader_source(const char* filepath) {
@@ -97,8 +97,8 @@ std::string _get_shader_path(bool type)
 		std::string frag_path = std::string(path) + "/../../../../res/shaders/frag.glsl";
 
 	#else
-		std::string vert_shader_path = "../res/shaders/vert.glsl";
-		std::string frag_shader_path = "../res/shaders/frag.glsl";
+		std::string vert_path = "../res/shaders/vert.glsl";
+		std::string frag_path = "../res/shaders/frag.glsl";
 	#endif
     
     return (type == 0) ? (vert_path) : (frag_path);
