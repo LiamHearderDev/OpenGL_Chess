@@ -71,6 +71,8 @@ void BaseMaterial::init()
 	// 5. Clean up (shaders are now linked into the program)
     glDeleteShader(vertex);
     glDeleteShader(fragment);
+
+    init_textures();
 }
 
 void BaseMaterial::finish() 
@@ -85,8 +87,13 @@ void BaseMaterial::use()
 
 void BaseMaterial::init_textures()
 {	
+    if (texture_file_path.empty()) { return; }
+
+    std::string full_path = _get_texture_file_path(texture_file_path.c_str());
+
 	glActiveTexture(GL_TEXTURE0);
-	//unsigned int texture_id = TextureLoader::loadTexture();
+	unsigned int texture_id = TextureLoader::loadTexture(full_path.c_str());
+    glBindTexture(GL_TEXTURE_2D, texture_id);
 }
 
 std::string BaseMaterial::_load_shader_source(const char* filepath) {
@@ -136,4 +143,29 @@ std::string BaseMaterial::get_vert_shader_path()
 std::string BaseMaterial::get_frag_shader_path()
 {
     return _get_shader_path(1); // 1 = fragment shader
+}
+
+
+/**
+ * This function returns the file path of a texture, given a relative path.
+ * It recursively checks if a file exists in the current directory or the parent directory.
+ */
+std::string BaseMaterial::_get_texture_file_path(const char* filepath) {
+    const std::string texture_path = filepath;
+
+    const int max_depth = 5;
+    int current_depth = 0;
+
+    for (std::filesystem::path dir = std::filesystem::current_path(); !dir.empty(); dir = dir.parent_path())
+    {
+        if (current_depth > max_depth){ break; }
+        const std::filesystem::path candidate = dir / "res" / "textures" / texture_path;
+        if (std::filesystem::exists(candidate))
+        {
+            return candidate.string();
+        }
+        current_depth++;
+    }
+
+    return (std::filesystem::current_path() / "res" / "textures" / texture_path).string();
 }

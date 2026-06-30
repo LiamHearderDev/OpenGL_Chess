@@ -4,16 +4,17 @@
 #include <string>
 
 class BaseMaterial {
-    std::string vert_file_path; // TODO: ensure these are actually used.
+    std::string vert_file_path;
     std::string frag_file_path;
+    std::string texture_file_path;
 
     unsigned int shader_program; // Represents the initialised shader.
     unsigned int texture_id;
 
 public:
     // Constructor
-    BaseMaterial(std::string vert_file_path, std::string frag_file_path) : 
-        vert_file_path(vert_file_path), frag_file_path(frag_file_path) {}
+    BaseMaterial(std::string vert_file_path, std::string frag_file_path, std::string texture_file_path = "") : 
+        vert_file_path(vert_file_path), frag_file_path(frag_file_path), texture_file_path(texture_file_path) {}
 
     // Destructor
     ~BaseMaterial() { finish(); }
@@ -24,6 +25,7 @@ public:
     void init_textures();
 
     unsigned int get_texture_id() { return texture_id; }
+    std::string _get_texture_file_path(const char* filepath);
 
 private:
     std::string get_vert_shader_path();

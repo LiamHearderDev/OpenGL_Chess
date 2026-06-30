@@ -25,6 +25,13 @@ class MasterRenderer {
         vertex_data{ {-0.5f, -0.5f, 0.f},     {0.f, 0.f}     },  // Bottom-left
     };
 
+    const std::vector<vertex_data> piece_vertices = {
+        vertex_data{ {-0.5f, 0.5f, 1.f},      {0.f, 1.0f}    },  // Top-left
+        vertex_data{ {0.5f, 0.5f, 1.f},       {1.0f, 1.0f}   },  // Top-right
+        vertex_data{ {0.5f, -0.5f, 1.f},      {1.0f, 0.f}    },  // Bottom-right
+        vertex_data{ {-0.5f, -0.5f, 1.f},     {0.f, 0.f}     },  // Bottom-left
+    };
+
     const renderable_data board_data = {
         board_vertices,
         std::vector<unsigned int>{0,1,3, 1,2,3},
@@ -32,9 +39,9 @@ class MasterRenderer {
     };
 
     const renderable_data pawn_data = {
-        board_vertices, // TODO: obviously change this
+        piece_vertices, // TODO: obviously change this
         std::vector<unsigned int>{0,1,3, 1,2,3},
-        new BaseMaterial("pieces/vert.glsl", "pieces/frag.glsl")
+        new BaseMaterial("pieces/vert.glsl", "pieces/frag.glsl", "chess/piece_spritesheet.png")
     };
     
     std::vector<Entity*> entities;

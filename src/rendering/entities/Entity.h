@@ -51,7 +51,7 @@ private:
 
 protected:
     unsigned int vertex_offset = 0; // Currently unused. Perhaps override this in an `InstancedEntity` derived class?
-    virtual void setup_attrib_pointers();
+    virtual void setup_attrib_pointers() {}
 
 public:
     Renderable(renderable_data render_data) : 
