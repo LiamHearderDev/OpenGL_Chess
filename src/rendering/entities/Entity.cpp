@@ -47,11 +47,9 @@ void Renderable::render()
 
     material->use();
 
-    // TODO: material->set_data();
-
-    material->init_textures();
 
     glBindVertexArray(VAO);
+
     glDrawElementsBaseVertex(GL_TRIANGLES, get_indices_count(), GL_UNSIGNED_INT, nullptr, vertex_offset);
     glBindVertexArray(0);
 }
