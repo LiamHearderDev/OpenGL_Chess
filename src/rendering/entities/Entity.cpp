@@ -61,7 +61,7 @@ void Renderable::finish()
     glDeleteBuffers(1, &VBO_indices);
 }
 
-void Renderable::setup_attrib_pointers()
+void Entity::setup_attrib_pointers()
 {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(vertex_data, position) );
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(vertex_data, texture_coordinate) );

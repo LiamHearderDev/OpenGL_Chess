@@ -51,7 +51,7 @@ private:
 
 protected:
     unsigned int vertex_offset = 0; // Currently unused. Perhaps override this in an `InstancedEntity` derived class?
-    void setup_attrib_pointers();
+    virtual void setup_attrib_pointers();
 
 public:
     Renderable(renderable_data render_data) : 
@@ -86,6 +86,9 @@ public:
         name(name), 
         LocalTransformComponent(glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)),
         Renderable(render_data) {}
+
+protected:
+    void setup_attrib_pointers() override;
 };
 
 #endif // ENTITY_H

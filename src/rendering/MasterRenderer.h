@@ -5,6 +5,8 @@
 #include "../chess/GameBoard.h"
 #include "rendering/materials/BaseMaterial.h"
 #include "rendering/entities/Entity.h"
+#include "rendering/entities/pieces/PieceEntity.h"
+
 #include <vector>
 #include <string>
 
@@ -27,6 +29,12 @@ class MasterRenderer {
         board_vertices,
         std::vector<unsigned int>{0,1,3, 1,2,3},
         new BaseMaterial("board/vert.glsl", "board/frag.glsl") // TODO: Ensure you can actually pass through shaders
+    };
+
+    const renderable_data pawn_data = {
+        board_vertices, // TODO: obviously change this
+        std::vector<unsigned int>{0,1,3, 1,2,3},
+        new BaseMaterial("pieces/vert.glsl", "pieces/frag.glsl")
     };
     
     std::vector<Entity*> entities;

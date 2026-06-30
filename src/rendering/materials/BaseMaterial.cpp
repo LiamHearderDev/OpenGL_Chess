@@ -1,37 +1,37 @@
 #include "BaseMaterial.h"
 
 #include <glad/glad.h>
-#include <fstream>      // For _loadShaderSource()
-#include <filesystem>
-#include <iostream>
+#include <fstream>      // for `_loadShaderSource()`
+#include <filesystem>   // for `_get_shader_path()`
+#include <iostream>     // for logs
+
 #include "rendering/components/TextureLoader.h"
 
-namespace
-{
-    void log_shader_errors(GLuint shader, const char* label)
-    {
-        GLint success = 0;
-        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
-            GLchar infoLog[1024];
-            glGetShaderInfoLog(shader, sizeof(infoLog), nullptr, infoLog);
-            std::cerr << label << " compilation failed:\n" << infoLog << std::endl;
-        }
-    }
 
-    void log_program_errors(GLuint program)
+void log_shader_errors(GLuint shader, const char* label)
+{
+    GLint success = 0;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if (!success)
     {
-        GLint success = 0;
-        glGetProgramiv(program, GL_LINK_STATUS, &success);
-        if (!success)
-        {
-            GLchar infoLog[1024];
-            glGetProgramInfoLog(program, sizeof(infoLog), nullptr, infoLog);
-            std::cerr << "Shader program link failed:\n" << infoLog << std::endl;
-        }
+        GLchar infoLog[1024];
+        glGetShaderInfoLog(shader, sizeof(infoLog), nullptr, infoLog);
+        std::cerr << label << " compilation failed:\n" << infoLog << std::endl;
     }
 }
+
+void log_program_errors(GLuint program)
+{
+    GLint success = 0;
+    glGetProgramiv(program, GL_LINK_STATUS, &success);
+    if (!success)
+    {
+        GLchar infoLog[1024];
+        glGetProgramInfoLog(program, sizeof(infoLog), nullptr, infoLog);
+        std::cerr << "Shader program link failed:\n" << infoLog << std::endl;
+    }
+}
+
 
 void BaseMaterial::init()
 {

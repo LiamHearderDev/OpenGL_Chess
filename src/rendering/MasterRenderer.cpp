@@ -20,6 +20,9 @@ int MasterRenderer::init()
 	Entity* square = new Entity("board", board_data);
 	entities.push_back(square);
 
+	Entity* pawn = new PieceEntity("white pawn", pawn_data, 0, 0);
+	entities.push_back(pawn);
+
 	// 3. Initialise new entities
 	for (Entity* element : entities) {
 		element->init();
