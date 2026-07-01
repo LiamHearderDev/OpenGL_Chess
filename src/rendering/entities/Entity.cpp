@@ -5,13 +5,35 @@
 
 glm::mat4 LocalTransformComponent::calc_model_matrix() const
 {
-    glm::mat4 model{};
+    glm::mat4 model{1.f};
     model = glm::translate(model, position);
     model = glm::rotate(model, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
     model = glm::rotate(model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::rotate(model, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
     model = glm::scale(model, scale);
     return model;
+}
+
+void LocalTransformComponent::set_scale(glm::vec3 new_scale)
+{
+    scale = new_scale;
+    transform = calc_model_matrix();
+}
+
+void LocalTransformComponent::set_scale(float new_scale)
+{
+    scale = glm::vec3(new_scale, new_scale, new_scale);
+    transform = calc_model_matrix();
+}
+
+void LocalTransformComponent::set_position(glm::vec3 new_position)
+{
+    position = new_position;
+}
+
+void LocalTransformComponent::set_rotation(glm::vec3 new_rotation)
+{
+    rotation = new_rotation;
 }
 
 void Renderable::init()
@@ -37,16 +59,15 @@ void Renderable::init()
 
 void Renderable::render()
 {
-    /**
-     * 1. Use shader
-     * 2. Set shader data (such as projection view matrix, view position, instance model matrix, etc...)
-     * 3. Set active texture (GL_TEXTURE0 to start), then bind texture.
-     * 4. Bind VAO
-     * 5. Draw()
-     */
-
     material->use();
     set_uniform_data();
+
+
+    unsigned int texture_loc = glGetUniformLocation(get_shader_program(), "screenTexture");
+    glUniform1i(texture_loc, 0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, get_texture_id());
+
 
     glBindVertexArray(VAO);
 
@@ -64,7 +85,7 @@ void Renderable::finish()
 void Entity::set_uniform_data()
 {
     unsigned int model_mat_loc = glGetUniformLocation(get_shader_program(), "model_mat");
-    glUniform4fv(model_mat_loc, 1, glm::value_ptr(calc_model_matrix()));
+    glUniformMatrix4fv(model_mat_loc, 1, GL_FALSE, glm::value_ptr(get_transform()));
 }
 
 void Entity::setup_attrib_pointers()

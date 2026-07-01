@@ -13,8 +13,11 @@ void PieceEntity::set_uniform_data()
 {
     Entity::set_uniform_data();
 
-    unsigned int player_team_loc = glGetUniformLocation(get_shader_program(), "team");
-    unsigned int piece_id_loc = glGetUniformLocation(get_shader_program(), "piece_id");
+    unsigned int shader = get_shader_program();
+
+    unsigned int player_team_loc = glGetUniformLocation(shader, "team");
+    unsigned int piece_id_loc = glGetUniformLocation(shader, "piece_id");
+    
     glUniform1ui(player_team_loc, player_team);
     glUniform1ui(piece_id_loc, piece_id);
 }

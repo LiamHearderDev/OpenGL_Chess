@@ -53,11 +53,6 @@ void MasterRenderer::draw()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	//glDrawArrays(GL_LINES, 0, static_cast<GLsizei>(sizeof(squareVertices)/3));
-	//glDrawArrays(GL_LINE_LOOP, 0, static_cast<GLsizei>(board_vertices.size()));
-	
-	//const std::array<uint64_t, 12> pieces = game_board.getPieces();
-
 	for (const auto& element : entities) {
 		element->render();
 	}

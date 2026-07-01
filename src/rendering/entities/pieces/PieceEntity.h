@@ -8,10 +8,13 @@ class PieceEntity : public Entity {
     unsigned int piece_id;
 public:
     PieceEntity(std::string name, renderable_data&& render_data, unsigned int player_team, unsigned int piece_id) :
-        Entity(name, std::move(render_data)), player_team(player_team), piece_id(piece_id) {}
+        Entity(name, std::move(render_data)), player_team(player_team), piece_id(piece_id) 
+        {
+            Renderable::init();
+            set_scale(1.f/8.f);
+        }
 
     void setup_attrib_pointers() override;
-
     void set_uniform_data() override;
 };
 

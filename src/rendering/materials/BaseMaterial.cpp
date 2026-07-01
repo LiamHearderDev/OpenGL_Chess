@@ -72,6 +72,7 @@ void BaseMaterial::init()
     glDeleteShader(vertex);
     glDeleteShader(fragment);
 
+    // 6. Load and bind any texture used by this material.
     init_textures();
 }
 
@@ -93,10 +94,7 @@ void BaseMaterial::init_textures()
     if (texture_file_path.empty()) { return; }
 
     std::string full_path = _get_texture_file_path(texture_file_path.c_str());
-
-	glActiveTexture(GL_TEXTURE0);
-	texture_id = TextureLoader::loadTexture(full_path.c_str());
-    glBindTexture(GL_TEXTURE_2D, texture_id);
+    texture_id = TextureLoader::loadTexture(full_path.c_str());
 }
 
 std::string BaseMaterial::_load_shader_source(const char* filepath) {

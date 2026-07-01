@@ -27,15 +27,22 @@ struct renderable_data {
 // ====== Local Transform Component ====== //
 
 class LocalTransformComponent {
-public:
     glm::vec3 position;
     glm::vec3 rotation;
     glm::vec3 scale;
+    glm::mat4 transform{1.f};
+
+    [[nodiscard]] glm::mat4 calc_model_matrix() const;
+
 public:
     LocalTransformComponent(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale) : 
-        position(position), rotation(rotation), scale(scale) {}
+        position(position), rotation(rotation), scale(scale) { transform = calc_model_matrix(); }
 
-    [[nodiscard]] glm::mat4 calc_model_matrix() const; 
+    glm::mat4 get_transform() const { return transform; }
+    void set_scale(glm::vec3 new_scale);
+    void set_scale(float new_scale);
+    void set_position(glm::vec3 new_position);
+    void set_rotation(glm::vec3 new_rotation);
 };
 
 
@@ -47,9 +54,9 @@ private:
     std::vector<unsigned int> indices;
     std::unique_ptr<BaseMaterial> material;
 
-    unsigned int VAO;
-    unsigned int VBO_vertices;
-    unsigned int VBO_indices;
+    unsigned int VAO{};
+    unsigned int VBO_vertices{};
+    unsigned int VBO_indices{};
 
 protected:
     unsigned int vertex_offset = 0; // Currently unused. Perhaps override this in an `InstancedEntity` derived class?
@@ -74,9 +81,11 @@ public:
     unsigned int get_vertex_offset() { return vertex_offset; }
     unsigned int get_vao() { return VAO; }
     unsigned int get_shader_program() { return material->get_shader_program(); }
+    unsigned int get_texture_id() { return material->get_texture_id(); }
     
-    const char* get_vert_shader_path();
-    const char* get_frag_shader_path();
+    
+    //const char* get_vert_shader_path();
+    //const char* get_frag_shader_path();
 };
 
 
