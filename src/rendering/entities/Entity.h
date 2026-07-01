@@ -67,10 +67,13 @@ public:
     void render();
     void finish();
 
+    virtual void set_uniform_data() {}
+
     unsigned int get_vertices_count() { return vertices.size(); }
     unsigned int get_indices_count() { return indices.size(); }
     unsigned int get_vertex_offset() { return vertex_offset; }
     unsigned int get_vao() { return VAO; }
+    unsigned int get_shader_program() { return material->get_shader_program(); }
     
     const char* get_vert_shader_path();
     const char* get_frag_shader_path();
@@ -90,6 +93,8 @@ public:
         name(name), 
         LocalTransformComponent(glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)),
         Renderable(std::move(render_data)) {}
+    
+    void set_uniform_data() override;
 
 protected:
     void setup_attrib_pointers() override;

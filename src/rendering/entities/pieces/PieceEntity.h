@@ -11,6 +11,8 @@ public:
         Entity(name, std::move(render_data)), player_team(player_team), piece_id(piece_id) {}
 
     void setup_attrib_pointers() override;
+
+    void set_uniform_data() override;
 };
 
 #endif // PIECE_ENTITY_H

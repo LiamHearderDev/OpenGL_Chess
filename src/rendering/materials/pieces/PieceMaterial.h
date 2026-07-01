@@ -14,8 +14,6 @@ public:
         piece_id(piece_id) {}
 
     ~PieceMaterial() { finish(); }
-
-    void set_uniform_data() override;
 };
 
 

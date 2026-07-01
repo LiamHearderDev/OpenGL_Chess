@@ -7,9 +7,6 @@
 #include <iostream>
 
 
-
-
-
 int MasterRenderer::init()
 {
     finish();
@@ -33,7 +30,7 @@ int MasterRenderer::init()
 			std::make_unique<PieceMaterial>(0,0)
 		};
 
-		//entities.emplace_back(std::make_unique<PieceEntity>("white pawn", std::move(pawn_data), 0, 0));
+		entities.emplace_back(std::make_unique<PieceEntity>("white pawn", std::move(pawn_data), 0, 0));
 
 	} catch (const std::bad_alloc& e) {
 		fprintf(stderr, "std::bad_alloc during renderer init: %s\n", e.what());

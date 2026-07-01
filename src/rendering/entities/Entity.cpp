@@ -1,7 +1,7 @@
 #include "Entity.h"
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
-// #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 glm::mat4 LocalTransformComponent::calc_model_matrix() const
 {
@@ -46,7 +46,7 @@ void Renderable::render()
      */
 
     material->use();
-    material->set_uniform_data();
+    set_uniform_data();
 
     glBindVertexArray(VAO);
 
@@ -59,6 +59,12 @@ void Renderable::finish()
     glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO_vertices);
     glDeleteBuffers(1, &VBO_indices);
+}
+
+void Entity::set_uniform_data()
+{
+    unsigned int model_mat_loc = glGetUniformLocation(get_shader_program(), "model_mat");
+    glUniform4fv(model_mat_loc, 1, glm::value_ptr(calc_model_matrix()));
 }
 
 void Entity::setup_attrib_pointers()

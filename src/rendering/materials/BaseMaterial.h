@@ -30,10 +30,9 @@ public:
     void use();
     void init_textures();
 
-    virtual void set_uniform_data() {}
-
     unsigned int get_texture_id() { return texture_id; }
     std::string _get_texture_file_path(const char* filepath);
+    unsigned int get_shader_program() { return shader_program; }
 
 private:
     std::string get_vert_shader_path();
