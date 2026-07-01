@@ -3,6 +3,7 @@
 
 #include <glad/glad.h>
 #include <array>
+#include <exception>
 #include <iostream>
 
 
@@ -11,20 +12,39 @@
 
 int MasterRenderer::init()
 {
+    finish();
+
 	// 1. Reset the screen.
 	glClearColor(0.0, 0.0, 0.0, 0.0); // Draw black background
 
 	// 2. Handle all the new entities being rendered.
+	try {
+		renderable_data board_data = {
+			board_vertices,
+			std::vector<unsigned int>{0,1,3, 1,2,3},
+			std::make_unique<BaseMaterial>("board/vert.glsl", "board/frag.glsl")
+		};
 
-	// TODO: Make this a different function somewhere.
-	Entity* square = new Entity("board", board_data);
-	entities.push_back(square);
+		entities.emplace_back(std::make_unique<Entity>("board", std::move(board_data)));
 
-	Entity* pawn = new PieceEntity("white pawn", pawn_data, 0, 0);
-	entities.push_back(pawn);
+		renderable_data pawn_data{
+			piece_vertices,
+			std::vector<unsigned int>{0,1,3, 1,2,3},
+			std::make_unique<PieceMaterial>(0,0)
+		};
+
+		//entities.emplace_back(std::make_unique<PieceEntity>("white pawn", std::move(pawn_data), 0, 0));
+
+	} catch (const std::bad_alloc& e) {
+		fprintf(stderr, "std::bad_alloc during renderer init: %s\n", e.what());
+		return 1;
+	} catch (const std::exception& e) {
+		fprintf(stderr, "Exception during renderer init: %s\n", e.what());
+		return 1;
+	}
 
 	// 3. Initialise new entities
-	for (Entity* element : entities) {
+	for (const auto& element : entities) {
 		element->init();
 	}
 
@@ -41,16 +61,18 @@ void MasterRenderer::draw()
 	
 	//const std::array<uint64_t, 12> pieces = game_board.getPieces();
 
-	for (Entity* element : entities) {
+	for (const auto& element : entities) {
 		element->render();
 	}
 }
 
 void MasterRenderer::finish()
 {
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteProgram(shaderProgram);
+	entities.clear();
+
+	if (VAO != 0) { glDeleteVertexArrays(1, &VAO); }
+	if (VBO != 0) {	glDeleteBuffers(1, &VBO); }
+	if (shaderProgram != 0) { glDeleteProgram(shaderProgram); }
 }
 
 

@@ -3,12 +3,8 @@
 
 void PieceEntity::setup_attrib_pointers()
 {
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(piece_vertex_data, position) );
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(piece_vertex_data, texture_coordinate) );
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(piece_vertex_data, player_team) );
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(piece_vertex_data, piece_id) );
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(vertex_data, position) );
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(vertex_data, texture_coordinate) );
     glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-    glEnableVertexAttribArray(3);
 }

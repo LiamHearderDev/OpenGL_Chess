@@ -1,9 +1,9 @@
 #version 330 core
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in vec2 vTexCoord;
-layout (location = 2) in bool team;
-layout (location = 3) in int piece_id;
 
+uniform uint team;
+uniform uint piece_id;
 out vec2 TexCoord;
 
 void main()

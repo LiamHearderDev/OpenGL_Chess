@@ -77,7 +77,10 @@ void BaseMaterial::init()
 
 void BaseMaterial::finish() 
 {
-    glDeleteProgram(shader_program);
+    if (shader_program != 0) {
+        glDeleteProgram(shader_program);
+        shader_program = 0;
+    }
 }
 
 void BaseMaterial::use()
@@ -92,7 +95,7 @@ void BaseMaterial::init_textures()
     std::string full_path = _get_texture_file_path(texture_file_path.c_str());
 
 	glActiveTexture(GL_TEXTURE0);
-	unsigned int texture_id = TextureLoader::loadTexture(full_path.c_str());
+	texture_id = TextureLoader::loadTexture(full_path.c_str());
     glBindTexture(GL_TEXTURE_2D, texture_id);
 }
 

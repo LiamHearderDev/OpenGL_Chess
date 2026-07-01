@@ -46,7 +46,7 @@ void Renderable::render()
      */
 
     material->use();
-
+    material->set_uniform_data();
 
     glBindVertexArray(VAO);
 

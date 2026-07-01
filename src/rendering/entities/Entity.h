@@ -5,6 +5,8 @@
 
 #include <vector>
 #include <string>
+#include <memory>
+#include <utility>
 #include <glm/glm.hpp>
 
 
@@ -18,7 +20,7 @@ struct vertex_data {
 struct renderable_data {
     std::vector<vertex_data> vertices;
     std::vector<unsigned int> indices;
-    BaseMaterial* material;
+    std::unique_ptr<BaseMaterial> material;
 };
 
 
@@ -43,7 +45,7 @@ class Renderable {
 private:
     std::vector<vertex_data> vertices;
     std::vector<unsigned int> indices;
-    BaseMaterial* material;
+    std::unique_ptr<BaseMaterial> material;
 
     unsigned int VAO;
     unsigned int VBO_vertices;
@@ -54,8 +56,10 @@ protected:
     virtual void setup_attrib_pointers() {}
 
 public:
-    Renderable(renderable_data render_data) : 
-        vertices(render_data.vertices), indices(render_data.indices), material(render_data.material) {}
+    Renderable(renderable_data&& render_data) : 
+        vertices(std::move(render_data.vertices)),
+        indices(std::move(render_data.indices)),
+        material(std::move(render_data.material)) {}
     
     ~Renderable() { finish(); }
 
@@ -82,10 +86,10 @@ public:
 class Entity : public Renderable, public LocalTransformComponent {
     std::string name;
 public:
-    Entity(const std::string name, renderable_data render_data) :
+    Entity(const std::string name, renderable_data&& render_data) :
         name(name), 
         LocalTransformComponent(glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)),
-        Renderable(render_data) {}
+        Renderable(std::move(render_data)) {}
 
 protected:
     void setup_attrib_pointers() override;
