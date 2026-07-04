@@ -9,7 +9,7 @@ class PieceMaterial : public BaseMaterial {
 
 public:
     PieceMaterial(unsigned int player_team, unsigned int piece_id) :
-        BaseMaterial("pieces/vert.glsl", "pieces/frag.glsl"),
+        BaseMaterial("pieces/vert.glsl", "pieces/frag.glsl", "chess/piece_spritesheet.png"),
         player_team(player_team),
         piece_id(piece_id) {}
 

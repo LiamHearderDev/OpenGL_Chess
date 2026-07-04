@@ -62,12 +62,13 @@ void Renderable::render()
     material->use();
     set_uniform_data();
 
+    //material->init_textures();
 
-    unsigned int texture_loc = glGetUniformLocation(get_shader_program(), "screenTexture");
-    glUniform1i(texture_loc, 0);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, get_texture_id());
 
+    unsigned int texture_loc = glGetUniformLocation(get_shader_program(), "screenTexture");
+    glUniform1i(texture_loc, 0);
 
     glBindVertexArray(VAO);
 
