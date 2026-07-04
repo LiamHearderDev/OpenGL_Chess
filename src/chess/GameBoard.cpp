@@ -21,3 +21,18 @@ void GameBoard::init()
     pieces[PieceNames::BLACK_QUEEN] = 0x0800000000000000;
     pieces[PieceNames::BLACK_KING] = 0x1000000000000000;
 }
+
+bool GameBoard::is_square_occupied(PiecePositions position)
+{
+    unsigned int row = position / 8;
+    unsigned int col = position % 8;
+
+    uint64_t mask = 1ULL << (row * 8 + col);
+
+    for (const auto& piece : pieces) {
+        if (piece & mask) {
+            return true; // Square is occupied
+        }
+    }
+    return false; // Square is not occupied
+}

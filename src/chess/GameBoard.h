@@ -22,7 +22,8 @@ public:
     unsigned int get_pieces_count() { return pieces.size(); }
     uint64_t get_piece(PieceNames name) { return pieces[name]; }
 
-    
+    // The following methods are used to extract data about the board state, such as the positions of pieces, and whether a square is occupied by a piece.
+    bool is_square_occupied(PiecePositions position);
 };
 
 
