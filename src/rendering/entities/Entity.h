@@ -96,10 +96,9 @@ public:
  * Including vertices, indices, etc.
  */
 class Entity : public Renderable, public LocalTransformComponent {
-    std::string name;
+
 public:
-    Entity(const std::string name, renderable_data&& render_data) :
-        name(name), 
+    Entity(renderable_data&& render_data) :
         LocalTransformComponent(glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)),
         Renderable(std::move(render_data)) {}
     

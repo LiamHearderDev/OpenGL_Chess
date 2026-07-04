@@ -14,11 +14,7 @@
 
 class MasterRenderer {
 
-    unsigned int VAO{};
-    unsigned int VBO{};
-    unsigned int shaderProgram{};
-
-    GameBoard game_board{};
+    std::unique_ptr<GameBoard> game_board;
 
     const std::vector<vertex_data> board_vertices = {
         vertex_data{ {-0.5f, 0.5f, -1.f},      {0.f, 1.0f}    },  // Top-left
