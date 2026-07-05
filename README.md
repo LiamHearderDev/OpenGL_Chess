@@ -5,15 +5,21 @@ While many modern rendering engines (such as Unreal Engine and Unity) do all of 
 This project will start out as a 2D game of chess, simplifying the rendering process and allowing game systems to be developed quickly, but will eventually expand to be a fully 3D game of chess utilising 3D models and Physically Based Rendering (PBR) techniques. The purpose of this is to create a project where gameplay systems are totally independent from the rendering pipeline, and to show how both 2D and 3D are fundamentally handled in the same way.
 
 ## Languages Used
-- C++ (for all source code)
-- C (for modules implemented)
+| Name | Purpose |
+| --- | --- |
+| C++ | For all source code |
+| C | For any libraries or modules implemented. |
+
 
 ## Technologies Used
-- OpenGL
-- GLFW3
-- GLAD
-- GLM
-- STB
+| Name | Purpose |
+| --- | --- |
+| OpenGL | A cross-platform API for rendering 2D and 3D graphics. |
+| GLFW3 | Used for window management and creation. |
+| GLAD | Initialising and managing OpenGL function pointers at runtime. |
+| GLM | A math library used for vectors, transformations, matrices, etc. |
+| STB | Primarily used for loading textures. |
+
 
 ## Resources Used
 - https://learnopengl.com/Getting-started
