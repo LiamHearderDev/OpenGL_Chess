@@ -1,4 +1,4 @@
-# OpenGL_Chess
+# 2D/3D Game of Chess using C++ and OpenGL
 The goal of this project is to create a 3D playable chess game using <u>**C++**</u> and the <u>**OpenGL**</u> graphics API.
 While many modern rendering engines (such as Unreal Engine and Unity) do all of the low-level rendering for developers, it's incredibly important to recognise *how* every polygon is actually rendered. This project showcases how low-level graphics API's can be interfaced with to create something just as realistic as a modern-day engine. Additionally, this project showcases all of the minor aspects of 3D game development and rendering that most developers take for granted.
 
