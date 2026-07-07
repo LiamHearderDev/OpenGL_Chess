@@ -2,24 +2,24 @@
 
 void GameBoard::init()
 {
-    pieces.fill(0);
+    pieces.fill(UniquePieceData{});
+    for (int i = 0; i < 12; i++){
+        pieces[i].name = static_cast<PieceNames>(i);
+    }
 
-    // The following sets every piece to its starting position on the board. 
-    // The board is represented as a 64-bit integer, where each bit corresponds to a square on the chessboard. 
-    // A bit set to 1 indicates that a piece of that type is present on that square.
-    pieces[PieceNames::WHITE_PAWN] = 0x000000000000FF00;
-    pieces[PieceNames::WHITE_KNIGHT] = 0x0000000000000042;
-    pieces[PieceNames::WHITE_BISHOP] = 0x0000000000000024;
-    pieces[PieceNames::WHITE_ROOK] = 0x0000000000000081;
-    pieces[PieceNames::WHITE_QUEEN] = 0x0000000000000008;
-    pieces[PieceNames::WHITE_KING] = 0x0000000000000010;
+    pieces[WHITE_PAWN].positions = {A2, B2, C2, D2, E2, F2, G2, H2};
+    pieces[WHITE_KNIGHT].positions = {B1, G1};
+    pieces[WHITE_BISHOP].positions = {C1, F1};
+    pieces[WHITE_ROOK].positions = {A1, H1};
+    pieces[WHITE_QUEEN].positions = {D1};
+    pieces[WHITE_KING].positions = {E1};
 
-    pieces[PieceNames::BLACK_PAWN] = 0x00FF000000000000;
-    pieces[PieceNames::BLACK_KNIGHT] = 0x4200000000000000;
-    pieces[PieceNames::BLACK_BISHOP] = 0x2400000000000000;
-    pieces[PieceNames::BLACK_ROOK] = 0x8100000000000000;
-    pieces[PieceNames::BLACK_QUEEN] = 0x0800000000000000;
-    pieces[PieceNames::BLACK_KING] = 0x1000000000000000;
+    pieces[BLACK_PAWN].positions = {A7, B7, C7, D7, E7, F7, G7, H7};
+    pieces[BLACK_KNIGHT].positions = {B8, G8};
+    pieces[BLACK_BISHOP].positions = {C8, F8};
+    pieces[BLACK_ROOK].positions = {A8, H8};
+    pieces[BLACK_QUEEN].positions = {D8};
+    pieces[BLACK_KING].positions = {E8};
 }
 
 bool GameBoard::is_square_occupied(PiecePositions position)

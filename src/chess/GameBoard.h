@@ -3,18 +3,31 @@
 
 #include <cstdint>
 #include <array>
+#include <set>
+
 #include <chess/ChessEnums.h>
+
+/**
+ * A structure representing each unique piece type on the board.
+ * 
+ * At all times, there should be only 12 instances of this 
+ * structure as there are 6 unique piece types per team, and 
+ * 2 teams make a total of 12.
+ */
+struct UniquePieceData {
+    PieceNames name;
+    std::set<PiecePositions> positions;
+}
 
 /**
  * A class used for storing the game board, and game state.
  */
 class GameBoard {
-    std::array<uint64_t, 12> pieces;
-
+    std::array<UniquePieceData, 12> pieces;
     void init();
 
 protected:
-    std::array<uint64_t, 12> get_pieces() { return pieces; }    
+    std::array<UniquePieceData, 12> get_pieces() { return pieces; }
 
 public:
     GameBoard() { init(); }
