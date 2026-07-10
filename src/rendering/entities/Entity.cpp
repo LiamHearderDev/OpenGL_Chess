@@ -53,3 +53,22 @@ void Entity::setup_attrib_pointers()
 }
 
 
+
+// ===== Instanced Entity ===== //
+
+void InstancedEntity::set_uniform_data()
+{
+    return;
+}
+
+void InstancedEntity::setup_attrib_pointers()
+{
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(instanced_vertex_data), (void*)offsetof(instanced_vertex_data, position) );
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(instanced_vertex_data), (void*)offsetof(instanced_vertex_data, texture_coordinate) );
+    glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+    // Instance Transform Data
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(instanced_vertex_data), (void*)offsetof(instanced_vertex_data, instance_transform));
+    glEnableVertexAttribArray(3);
+}

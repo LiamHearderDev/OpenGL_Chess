@@ -63,9 +63,10 @@ protected:
  * Instanced entities are renderable objects that is placed multiple times where each instance
  * can be transformed within the scene.
  */
-class InstancedEntity : public InstancedRenderable {
+class InstancedEntity : public InstancedRenderable, public LocalTransformComponent {
 public:
     InstancedEntity(instanced_renderable_data&& render_data) : 
+        LocalTransformComponent(glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)),
         InstancedRenderable(std::move(render_data)) {}
     
     void set_uniform_data() override;

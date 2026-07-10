@@ -5,11 +5,13 @@
 #include <chess/ChessEnums.h>
 #include <rendering/materials/pieces/PieceMaterial.h>
 
+#include <set>
+
 
 class PieceEntity : public Entity {
     unsigned int player_team;
     unsigned int piece_id;
-    std::vector<PiecePositions> positions{};
+    std::set<PiecePositions> positions{};
 
     const float piece_scale = 1.f/8.f;
 
@@ -32,7 +34,8 @@ public:
      * @param name The name of the piece, as defined in the PieceNames enum.
      * @param positions A vector of PiecePositions that this type of piece occupies on the board.
     */
-    PieceEntity(PieceNames name, std::vector<PiecePositions>&& positions) :
+    PieceEntity(PieceNames name, std::set<PiecePositions>&& positions) :
+        positions(positions),
         Entity(renderable_data{
             std::vector<vertex_data>{
                 vertex_data{ {-0.5f, 0.5f, 0.f},      {0.f, 1.0f}    },  // Top-left
@@ -45,7 +48,6 @@ public:
         {
             player_team = (name < 6) ? 0 : 1;
             piece_id = name % 6;
-            PieceEntity::positions = positions;
 
             set_scale(piece_scale);
         };

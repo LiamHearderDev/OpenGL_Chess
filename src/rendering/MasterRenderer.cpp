@@ -31,11 +31,7 @@ int MasterRenderer::init()
 
 		for (int i = 0; i < game_board->get_pieces_count(); i++){
 			UniquePieceData data = game_board->get_piece_data(static_cast<PieceNames>(i));
-			
-			for (const PiecePositions& pos : data.positions){
-				entities.emplace_back(std::make_unique<PieceEntity>(data.name, pos));
-			}
-			
+			entities.emplace_back(std::make_unique<PieceEntity>(data.name, std::move(data.positions)));
 		}
 
 

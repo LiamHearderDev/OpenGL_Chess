@@ -55,7 +55,7 @@ protected:
     std::string vert_file_path;
 
     /** The file path of the desired fragment shader. Must be overriden. */
-    std::string frag_file_path = "frag.glsl";
+    std::string frag_file_path;
 
     virtual void setup_attrib_pointers() {}
 

@@ -92,7 +92,7 @@ void InstancedRenderable::init()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, (long)(sizeof(unsigned int) * get_indices_count()), indices.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(0); // Unbind, so we don't accidentally write to the above VAO
-
+    
     // 2. Initialise shader
     init_material();
 }
