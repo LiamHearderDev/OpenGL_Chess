@@ -2,36 +2,13 @@
 #define ENTITY_H
 
 #include "rendering/components/Renderable.h"
+#include "rendering/components/TransformComponent.h"
 
 #include <vector>
 #include <string>
 #include <memory>
 #include <utility>
 #include <glm/glm.hpp>
-
-
-
-
-// ====== Local Transform Component ====== //
-
-class LocalTransformComponent {
-    glm::vec3 position;
-    glm::vec3 rotation;
-    glm::vec3 scale;
-    glm::mat4 transform{1.f};
-
-    [[nodiscard]] glm::mat4 calc_model_matrix() const;
-
-public:
-    LocalTransformComponent(const glm::vec3& position, const glm::vec3& rotation, const glm::vec3& scale) : 
-        position(position), rotation(rotation), scale(scale) { transform = calc_model_matrix(); }
-
-    glm::mat4 get_transform() const { return transform; }
-    void set_scale(glm::vec3 new_scale);
-    void set_scale(float new_scale);
-    void set_position(glm::vec3 new_position);
-    void set_rotation(glm::vec3 new_rotation);
-};
 
 
 
