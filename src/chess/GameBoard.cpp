@@ -24,15 +24,10 @@ void GameBoard::init()
 
 bool GameBoard::is_square_occupied(PiecePositions position)
 {
-    unsigned int row = position / 8;
-    unsigned int col = position % 8;
-
-    uint64_t mask = 1ULL << (row * 8 + col);
-
-    for (const auto& piece : pieces) {
-        if (piece & mask) {
-            return true; // Square is occupied
+    for (const auto& piece_data : pieces) {
+        if (piece_data.positions.find(position) != piece_data.positions.end()) {
+            return true;
         }
     }
-    return false; // Square is not occupied
+    return false;
 }

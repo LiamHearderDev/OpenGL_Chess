@@ -3,6 +3,7 @@
 
 #include <rendering/entities/Entity.h>
 #include <chess/ChessEnums.h>
+#include <rendering/materials/pieces/PieceMaterial.h>
 
 class PieceEntity : public Entity {
     unsigned int player_team;
@@ -28,6 +29,18 @@ public:
             set_scale(piece_scale);
             set_board_position(static_cast<PiecePositions>(name));
         };
+    
+    PieceEntity(PieceNames name) :
+        Entity(std::make_unique<renderable_data>(
+            std::vector<vertex_data>{
+                vertex_data{ {-0.5f, 0.5f, 0.f},      {0.f, 1.0f}    },  // Top-left
+                vertex_data{ {0.5f, 0.5f, 0.f},       {1.0f, 1.0f}   },  // Top-right
+                vertex_data{ {0.5f, -0.5f, 0.f},      {1.0f, 0.f}    },  // Bottom-right
+                vertex_data{ {-0.5f, -0.5f, 0.f},     {0.f, 0.f}     },  // Bottom-left
+            },
+            std::vector<unsigned int>{0,1,3, 1,2,3},
+			std::make_unique<PieceMaterial>(0,0)
+        )) {}
         
     
     void set_board_position(PiecePositions position);

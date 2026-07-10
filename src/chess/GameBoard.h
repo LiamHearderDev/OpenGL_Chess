@@ -17,7 +17,7 @@
 struct UniquePieceData {
     PieceNames name;
     std::set<PiecePositions> positions;
-}
+};
 
 /**
  * A class used for storing the game board, and game state.
@@ -33,7 +33,7 @@ public:
     GameBoard() { init(); }
 
     unsigned int get_pieces_count() { return pieces.size(); }
-    uint64_t get_piece(PieceNames name) { return pieces[name]; }
+    UniquePieceData get_piece_data(PieceNames name) { return pieces.at(name); }
 
     // The following methods are used to extract data about the board state, such as the positions of pieces, and whether a square is occupied by a piece.
     bool is_square_occupied(PiecePositions position);

@@ -102,6 +102,10 @@ public:
         LocalTransformComponent(glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)),
         Renderable(std::move(render_data)) {}
     
+    Entity(std::unique_ptr<renderable_data>& render_data) :
+        LocalTransformComponent(glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)),
+        Renderable(std::move(render_data)) {}
+    
     void set_uniform_data() override;
 
 protected:

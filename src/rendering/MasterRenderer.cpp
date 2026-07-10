@@ -26,11 +26,18 @@ int MasterRenderer::init()
 
 		entities.emplace_back(std::make_unique<Entity>(std::move(board_data)));
 
-		renderable_data pawn_data{
+		renderable_data piece_renderable_data{
 			piece_vertices,
 			std::vector<unsigned int>{0,1,3, 1,2,3},
 			std::make_unique<PieceMaterial>(0,0)
 		};
+
+		for (int i = 0; i < game_board->get_pieces_count(); i++){
+			UniquePieceData data = game_board->get_piece_data(static_cast<PieceNames>(i));
+
+			entities.emplace_back(std::make_unique<PieceEntity>(data.name));
+		}
+		
 
 		//entities.emplace_back(std::make_unique<PieceEntity>(std::move(pawn_data), 0, 0));
 
