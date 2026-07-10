@@ -3,6 +3,21 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+void PieceEntity::init_shader_paths()
+{
+    vert_file_path = "pieces/vert.glsl";
+    frag_file_path = "pieces/frag.glsl";
+}
+
+void PieceEntity::init_material()
+{
+    init_shader_paths();
+    if (vert_file_path.empty() || frag_file_path.empty()) { return; }
+
+    material = std::make_unique<PieceMaterial>(vert_file_path, frag_file_path);
+    material->init();
+}
+
 void PieceEntity::set_board_position(PiecePositions position)
 {
     unsigned int row = position / 8;

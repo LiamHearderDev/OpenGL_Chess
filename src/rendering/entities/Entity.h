@@ -20,7 +20,6 @@ struct vertex_data {
 struct renderable_data {
     std::vector<vertex_data> vertices;
     std::vector<unsigned int> indices;
-    std::unique_ptr<BaseMaterial> material;
 };
 
 
@@ -52,29 +51,50 @@ class Renderable {
 private:
     std::vector<vertex_data> vertices;
     std::vector<unsigned int> indices;
-    std::unique_ptr<BaseMaterial> material;
 
     unsigned int VAO{};
     unsigned int VBO_vertices{};
     unsigned int VBO_indices{};
 
+    /** Finishes up the class so that it can be safely unloaded. This should only be called by the destructor. */
+    void finish();
+
 protected:
+
+    std::unique_ptr<BaseMaterial> material;
+
+    /** The file path of the desired vertex shader. Must be overriden. */
+    std::string vert_file_path;
+
+    /** The file path of the desired fragment shader. Must be overriden. */
+    std::string frag_file_path = "frag.glsl";
+
     unsigned int vertex_offset = 0; // Currently unused. Perhaps override this in an `InstancedEntity` derived class?
     virtual void setup_attrib_pointers() {}
+
+    /** Sets the variable `material` to be a valid pointer, i.e., used for material initialisation in `init()`. */
+    virtual void init_material();
+
+    /** Initialises the file paths for shaders. Designed to be overriden for derived classes. */
+    virtual void init_shader_paths();
 
 public:
     Renderable(renderable_data&& render_data) : 
         vertices(std::move(render_data.vertices)),
-        indices(std::move(render_data.indices)),
-        material(std::move(render_data.material)) {}
+        indices(std::move(render_data.indices)) { }
     
     ~Renderable() { finish(); }
 
+    /** Initialisation Function. Should only be called by the constructor, and not by the user. */
     void init();
-    void render();
-    void finish();
 
+    /** Render the entity. This should be called every frame, and only called by the MasterRenderer. */ 
+    void render();
+
+    /** Sets uniform variable data used by shaders. */
     virtual void set_uniform_data() {}
+
+    // === Public Functions used for retrieving information about an instance of this class. === //
 
     unsigned int get_vertices_count() { return vertices.size(); }
     unsigned int get_indices_count() { return indices.size(); }
@@ -82,10 +102,6 @@ public:
     unsigned int get_vao() { return VAO; }
     unsigned int get_shader_program() { return material->get_shader_program(); }
     unsigned int get_texture_id() { return material->get_texture_id(); }
-    
-    
-    //const char* get_vert_shader_path();
-    //const char* get_frag_shader_path();
 };
 
 
@@ -102,9 +118,9 @@ public:
         LocalTransformComponent(glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)),
         Renderable(std::move(render_data)) {}
     
-    Entity(std::unique_ptr<renderable_data>& render_data) :
-        LocalTransformComponent(glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)),
-        Renderable(std::move(render_data)) {}
+    // Entity(std::unique_ptr<renderable_data>& render_data) :
+    //     LocalTransformComponent(glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f)),
+    //     Renderable(std::move(render_data)) {}
     
     void set_uniform_data() override;
 

@@ -56,7 +56,7 @@ void Renderable::init()
     glBindVertexArray(0); // Unbind, so we don't accidentally write to the above VAO
 
     // 2. Initialise shader
-    material->init();
+    init_material();
 }
 
 void Renderable::render()
@@ -83,6 +83,21 @@ void Renderable::finish()
     glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO_vertices);
     glDeleteBuffers(1, &VBO_indices);
+}
+
+void Renderable::init_material()
+{
+    init_shader_paths();
+    if (vert_file_path.empty() || frag_file_path.empty()) { return; }
+
+    material = std::make_unique<BaseMaterial>(vert_file_path, frag_file_path);
+    material->init();
+}
+
+void Renderable::init_shader_paths()
+{
+    vert_file_path = "vert.glsl";
+    frag_file_path = "frag.glsl";
 }
 
 void Entity::set_uniform_data()

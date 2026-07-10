@@ -5,8 +5,6 @@
 #include "../chess/GameBoard.h"
 #include "rendering/materials/BaseMaterial.h"
 #include "rendering/entities/Entity.h"
-#include "rendering/entities/pieces/PieceEntity.h"
-#include "rendering/materials/pieces/PieceMaterial.h"
 
 #include <vector>
 #include <string>

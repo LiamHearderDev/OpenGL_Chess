@@ -4,14 +4,10 @@
 #include <rendering/materials/BaseMaterial.h>
 
 class PieceMaterial : public BaseMaterial {
-    unsigned int player_team;
-    unsigned int piece_id;
 
 public:
-    PieceMaterial(unsigned int player_team, unsigned int piece_id) :
-        BaseMaterial("pieces/vert.glsl", "pieces/frag.glsl", "chess/piece_spritesheet.png"),
-        player_team(player_team),
-        piece_id(piece_id) {}
+    PieceMaterial(std::string vert_file_path, std::string frag_file_path) :
+        BaseMaterial(vert_file_path, frag_file_path, "chess/piece_spritesheet.png") {}
 
     ~PieceMaterial() { finish(); }
 };
