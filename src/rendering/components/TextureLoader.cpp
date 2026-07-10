@@ -15,8 +15,6 @@ unsigned int TextureLoader::loadTexture(const char *filepath)
 	// Load the image using stb
 	unsigned char* data = stbi_load(filepath, &width, &height, &channels, 4);
 
-	fprintf(stdout, "width=%d, height=%d\n", width, height);
-
 	if (!data) {
 		fprintf(stderr, "Error: Failed to load texture at [%s]", filepath);
 		return 0;
