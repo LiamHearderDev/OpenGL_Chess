@@ -31,7 +31,7 @@ int main(int arc, char** argv) {
 	// ======== Window setup ======== //
 	fprintf(stdout, "Beginning Window Manager...\n");
 	WindowManager::init();
-	window_manager.createWindow(512, 512);
+	window_manager.createWindow(800, 800);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		fprintf(stderr, "Error: Failed to initialize GLAD.\n");

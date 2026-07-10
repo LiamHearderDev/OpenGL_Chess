@@ -29,19 +29,15 @@ int MasterRenderer::init()
 
 		entities.emplace_back(std::make_unique<BoardEntity>(std::move(board_data)));
 
-		renderable_data piece_renderable_data{
-			piece_vertices,
-			std::vector<unsigned int>{0,1,3, 1,2,3}
-		};
+		for (int i = 0; i < game_board->get_pieces_count(); i++){
+			UniquePieceData data = game_board->get_piece_data(static_cast<PieceNames>(i));
+			
+			for (const PiecePositions& pos : data.positions){
+				entities.emplace_back(std::make_unique<PieceEntity>(data.name, pos));
+			}
+			
+		}
 
-		entities.emplace_back(std::make_unique<PieceEntity>(std::move(piece_renderable_data), BLACK_PAWN));
-
-		// for (int i = 0; i < game_board->get_pieces_count(); i++){
-		// 	UniquePieceData data = game_board->get_piece_data(static_cast<PieceNames>(i));
-
-		// 	entities.emplace_back(std::make_unique<PieceEntity>(data.name));
-		// }
-		
 
 	} catch (const std::bad_alloc& e) {
 		fprintf(stderr, "std::bad_alloc during renderer init: %s\n", e.what());

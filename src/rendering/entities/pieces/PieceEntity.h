@@ -25,6 +25,26 @@ public:
             set_board_position(static_cast<PiecePositions>(name));
         };
     
+    /** An alternative constructor that only takes a name, creating a new render data object in the constructor. */
+    PieceEntity(PieceNames name, PiecePositions position) :
+        Entity(renderable_data{
+            std::vector<vertex_data>{
+                vertex_data{ {-0.5f, 0.5f, 0.f},      {0.f, 1.0f}    },  // Top-left
+                vertex_data{ {0.5f, 0.5f, 0.f},       {1.0f, 1.0f}   },  // Top-right
+                vertex_data{ {0.5f, -0.5f, 0.f},      {1.0f, 0.f}    },  // Bottom-right
+                vertex_data{ {-0.5f, -0.5f, 0.f},     {0.f, 0.f}     },  // Bottom-left
+            },
+            std::vector<unsigned int>{0,1,3, 1,2,3}
+        })
+        {
+            player_team = (name < 6) ? 0 : 1;
+            piece_id = name % 6;
+
+            set_scale(piece_scale);
+            set_board_position(position);
+        };
+
+    
     /** A method of setting a piece's position on the board, using chess notation. */
     void set_board_position(PiecePositions position);
 
