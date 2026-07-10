@@ -29,12 +29,37 @@ void PieceEntity::set_board_position(PiecePositions position)
     set_position({x, y, 0.f});
 }
 
+void PieceEntity::render()
+{
+    // Shader setup
+    material->use();
+    set_uniform_data();
+
+    // Texture setup
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, get_texture_id());
+    unsigned int texture_loc = glGetUniformLocation(get_shader_program(), "screenTexture");
+    glUniform1i(texture_loc, 0);
+
+    // Bind the VAO we plan to use
+    glBindVertexArray(get_vao());
+
+    // Draw
+    glDrawElementsInstanced(GL_TRIANGLES, get_indices_count(), GL_UNSIGNED_INT, nullptr, positions.size());
+
+    // Unbind this entity's VAO, so that we cannot accidentally draw this entity again.
+    glBindVertexArray(0);
+}
+
 void PieceEntity::setup_attrib_pointers()
 {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(vertex_data, position) );
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(vertex_data, texture_coordinate) );
     glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+
+    // Instancing Data
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(vertex_data, texture_coordinate) );
 }
 
 void PieceEntity::set_uniform_data()

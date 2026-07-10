@@ -5,9 +5,11 @@
 #include <chess/ChessEnums.h>
 #include <rendering/materials/pieces/PieceMaterial.h>
 
+
 class PieceEntity : public Entity {
     unsigned int player_team;
     unsigned int piece_id;
+    std::vector<PiecePositions> positions{};
 
     const float piece_scale = 1.f/8.f;
 
@@ -25,8 +27,12 @@ public:
             set_board_position(static_cast<PiecePositions>(name));
         };
     
-    /** An alternative constructor that only takes a name, creating a new render data object in the constructor. */
-    PieceEntity(PieceNames name, PiecePositions position) :
+    /**
+     * A constructor for PieceEntity.
+     * @param name The name of the piece, as defined in the PieceNames enum.
+     * @param positions A vector of PiecePositions that this type of piece occupies on the board.
+    */
+    PieceEntity(PieceNames name, std::vector<PiecePositions>&& positions) :
         Entity(renderable_data{
             std::vector<vertex_data>{
                 vertex_data{ {-0.5f, 0.5f, 0.f},      {0.f, 1.0f}    },  // Top-left
@@ -39,15 +45,16 @@ public:
         {
             player_team = (name < 6) ? 0 : 1;
             piece_id = name % 6;
+            PieceEntity::positions = positions;
 
             set_scale(piece_scale);
-            set_board_position(position);
         };
 
     
     /** A method of setting a piece's position on the board, using chess notation. */
     void set_board_position(PiecePositions position);
 
+    void render() override;
     void setup_attrib_pointers() override;
     void set_uniform_data() override;
 };
