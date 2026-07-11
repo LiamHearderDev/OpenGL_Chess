@@ -121,8 +121,7 @@ void InstancedRenderable::render()
     glBindVertexArray(get_vao());
 
     // Draw
-    const GLsizei instance_count = static_cast<GLsizei>(transforms.size());
-    glDrawElementsInstanced(GL_TRIANGLES, get_indices_count(), GL_UNSIGNED_INT, nullptr, instance_count);
+    glDrawElementsInstanced(GL_TRIANGLES, get_indices_count(), GL_UNSIGNED_INT, nullptr, transforms.size());
 
     // Unbind this entity's VAO, so that we cannot accidentally draw this entity again.
     glBindVertexArray(0);

@@ -35,30 +35,6 @@ glm::vec3 PieceEntity::board_to_world_position(PiecePositions board_position) co
     return glm::vec3(x, y, 0.f);
 }
 
-// void PieceEntity::render()
-// {
-//     // Bind the VAO we plan to use
-//     glBindVertexArray(get_vao());
-
-//     // Shader setup
-//     material->use();
-//     set_uniform_data();
-
-//     // Texture setup
-//     glActiveTexture(GL_TEXTURE0);
-//     glBindTexture(GL_TEXTURE_2D, get_texture_id());
-//     unsigned int texture_loc = glGetUniformLocation(get_shader_program(), "screenTexture");
-//     glUniform1i(texture_loc, 0);
-
-//     // fprintf(stdout, "position=(%f, %f, %f)\n", get_.x, world_pos.y, world_pos.z); //TODO delete
-
-//     // Draw
-//     glDrawElementsInstanced(GL_TRIANGLES, get_indices_count(), GL_UNSIGNED_INT, 0, positions.size());
-
-//     // Unbind this entity's VAO, so that we cannot accidentally draw this entity again.
-//     glBindVertexArray(0);
-// }
-
 void PieceEntity::set_uniform_data()
 {
     InstancedEntity::set_uniform_data();

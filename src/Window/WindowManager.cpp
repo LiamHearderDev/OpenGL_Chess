@@ -4,11 +4,50 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <cstdio>
 
+// TODO: replace the following global variables with GLFW window user pointers
+
+// Mouse Variables (Dragging)
+bool isDragging = false;
+double last_x = 0.0;
+double last_y = 0.0;
+
+// ====== CALLBACKS ====== //
 
 void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
 }
+
+void on_mouse_button(GLFWwindow *window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT) {
+		switch(action) {
+			case GLFW_PRESS:
+				isDragging = true;
+				glfwGetCursorPos(window, &last_x, &last_y);
+				break;
+			case GLFW_RELEASE:
+				isDragging = false;
+				break;
+		}
+	}
+}
+
+void on_mouse_moved(GLFWwindow *window, double pos_x, double pos_y)
+{
+	if (isDragging) {
+		const double delta_x = pos_x - last_x;
+		const double delta_y = pos_y - last_y;
+
+		last_x = pos_x;
+		last_y = pos_y;
+
+		fprintf(stdout, "x=%lf,	y=%lf\n", pos_x, pos_y);
+	}
+}
+
+
+// ======================== //
 
 void WindowManager::init()
 {
@@ -21,23 +60,28 @@ void WindowManager::init()
 	glfwSetErrorCallback(error_callback);
 	
 	// Needed for apple devices, as only forward compatability is supported
-#ifdef __APPLE__
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#else
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-#endif
+	#ifdef __APPLE__
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	#else
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	#endif
 
-glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 }
 
 void WindowManager::createWindow(unsigned int width, unsigned int height)
-{
+{	
+	if (window != NULL){
+		fprintf(stderr, "Error: Cannot open multiple windows.\n");
+		return;
+	}
+
 	// Create Window
 	window = glfwCreateWindow(width, height, "OpenGL Chess", NULL, NULL);
-	if (NULL == window) {
+	if (window == NULL) {
 		fprintf(stderr, "Error: Failed to create GLFW window.\n");
 		glfwTerminate();
 		return;
@@ -45,6 +89,10 @@ void WindowManager::createWindow(unsigned int width, unsigned int height)
 
 	// Activate the GLFW context
 	glfwMakeContextCurrent(window);
+
+	// Callbacks
+	glfwSetMouseButtonCallback(window, on_mouse_button);
+	glfwSetCursorPosCallback(window, on_mouse_moved);
 }
 
 bool WindowManager::ShouldWindowClose()

@@ -11,7 +11,8 @@ class WindowManager {
     GLFWwindow* window;
     double delta_time = 0.0;
 
-    glm::ivec2 calculateScreenSize();
+    //glm::ivec2 calculateScreenSize();
+
 
 public:
     static void init();
