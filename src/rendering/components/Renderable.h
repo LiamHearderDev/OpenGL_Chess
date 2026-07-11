@@ -16,27 +16,29 @@ struct vertex_data {
     glm::vec2 texture_coordinate;
 };
 
-struct instanced_vertex_data {
-    glm::vec3 position;
-    glm::vec2 texture_coordinate;
-    glm::mat4 instance_transform;
-};
-
 struct renderable_data {
     std::vector<vertex_data> vertices;
     std::vector<unsigned int> indices;
 };
 
-struct instanced_renderable_data {
-    std::vector<instanced_vertex_data> vertices;
-    std::vector<unsigned int> indices;
-};
 
+
+class RenderableBase {
+protected:
+    virtual void setup_attrib_pointers() {}
+    virtual void init_material() {}
+    virtual void init_shader_paths() {}
+public:
+    virtual void init() {}
+    virtual void finish() {}
+    virtual void render() {}
+    virtual void set_uniform_data() {}
+};
 
 
 // ====== Renderable Component ====== //
 
-class Renderable {
+class Renderable : public RenderableBase {
 private:
     std::vector<vertex_data> vertices;
     std::vector<unsigned int> indices;
@@ -46,7 +48,7 @@ private:
     unsigned int VBO_indices{};
 
     /** Finishes up the class so that it can be safely unloaded. This should only be called by the destructor. */
-    void finish();
+    void finish() override;
 
 protected:
     std::unique_ptr<BaseMaterial> material;
@@ -57,13 +59,13 @@ protected:
     /** The file path of the desired fragment shader. Must be overriden. */
     std::string frag_file_path;
 
-    virtual void setup_attrib_pointers() {}
+    virtual void setup_attrib_pointers() override {}
 
     /** Sets the variable `material` to be a valid pointer, i.e., used for material initialisation in `init()`. */
-    virtual void init_material();
+    virtual void init_material() override;
 
     /** Initialises the file paths for shaders. Designed to be overriden for derived classes. */
-    virtual void init_shader_paths();
+    virtual void init_shader_paths() override;
 
 public:
     Renderable(renderable_data&& render_data) : 
@@ -73,13 +75,13 @@ public:
     ~Renderable() { finish(); }
 
     /** Initialisation Function. Should only be called by the constructor, and not by the user. */
-    void init();
+    void init() override;
 
     /** Render the entity. This should be called every frame, and only called by the MasterRenderer. */ 
-    virtual void render();
+    virtual void render() override;
 
     /** Sets uniform variable data used by shaders. */
-    virtual void set_uniform_data() {}
+    virtual void set_uniform_data() override {}
 
     // === Public Functions used for retrieving information about an instance of this class. === //
 
@@ -88,23 +90,26 @@ public:
     unsigned int get_vao() { return VAO; }
     unsigned int get_shader_program() { return material->get_shader_program(); }
     unsigned int get_texture_id() { return material->get_texture_id(); }
+    unsigned int get_vbo_vertices() { return VBO_vertices; }
 };
 
 
 
 // ====== Instanced Renderable Component ====== //
 
-class InstancedRenderable {
+class InstancedRenderable : public RenderableBase {
 private:
-    std::vector<instanced_vertex_data> vertices;
+    std::vector<vertex_data> vertices;
     std::vector<unsigned int> indices;
+    std::vector<glm::mat4> transforms;
 
     unsigned int VAO{};
     unsigned int VBO_vertices{};
     unsigned int VBO_indices{};
+    unsigned int VBO_instances{};
 
     /** Finishes up the class so that it can be safely unloaded. This should only be called by the destructor. */
-    void finish();
+    void finish() override;
 
 protected:
 
@@ -116,37 +121,44 @@ protected:
     /** The file path of the desired fragment shader. Must be overriden. */
     std::string frag_file_path;
 
-    virtual void setup_attrib_pointers() {}
+    virtual void setup_attrib_pointers() override {}
 
     /** Sets the variable `material` to be a valid pointer, i.e., used for material initialisation in `init()`. */
-    virtual void init_material();
+    virtual void init_material() override;
 
     /** Initialises the file paths for shaders. Designed to be overriden for derived classes. */
-    virtual void init_shader_paths();
+    virtual void init_shader_paths() override;
 
 public:
-    InstancedRenderable(instanced_renderable_data&& render_data) : 
+    InstancedRenderable(renderable_data&& render_data) : 
         vertices(std::move(render_data.vertices)),
         indices(std::move(render_data.indices)) { }
     
     ~InstancedRenderable() { finish(); }
 
     /** Initialisation Function. Should only be called by the constructor, and not by the user. */
-    void init();
+    void init() override;
 
     /** Render the entity. This should be called every frame, and only called by the MasterRenderer. */ 
-    virtual void render();
+    virtual void render() override;
 
     /** Sets uniform variable data used by shaders. */
-    virtual void set_uniform_data() {}
+    virtual void set_uniform_data() override {}
 
-    // === Public Functions used for retrieving information about an instance of this class. === //
+
+    // === Getters === //
 
     unsigned int get_vertices_count() { return vertices.size(); }
     unsigned int get_indices_count() { return indices.size(); }
     unsigned int get_vao() { return VAO; }
     unsigned int get_shader_program() { return material->get_shader_program(); }
     unsigned int get_texture_id() { return material->get_texture_id(); }
+    unsigned int get_vbo_vertices() { return VBO_vertices; }
+    unsigned int get_vbo_instances() { return VBO_instances; }
+
+    // === Setters === //
+
+    void set_transforms(std::vector<glm::mat4>&& new_transforms) { transforms = new_transforms; }
 };
 
 #endif // RENDERABLE_H

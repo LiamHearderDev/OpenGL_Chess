@@ -82,14 +82,22 @@ void InstancedRenderable::init()
     glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
+    // VERTICES
     glGenBuffers(1, &VBO_vertices);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_vertices);
     glBufferData(GL_ARRAY_BUFFER, (long)(sizeof(vertex_data) * get_vertices_count()), vertices.data(), GL_STATIC_DRAW);
-    setup_attrib_pointers();
-
+    
+    // INDICES
     glGenBuffers(1, &VBO_indices);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_indices);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, (long)(sizeof(unsigned int) * get_indices_count()), indices.data(), GL_STATIC_DRAW);
+
+    // INSTANCESS
+    glGenBuffers(1, &VBO_instances);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_instances);
+    glBufferData(GL_ARRAY_BUFFER, (long)(sizeof(glm::mat4) * transforms.size()), transforms.data(), GL_STATIC_DRAW);
+
+    setup_attrib_pointers();
 
     glBindVertexArray(0); // Unbind, so we don't accidentally write to the above VAO
     
@@ -113,7 +121,7 @@ void InstancedRenderable::render()
     glBindVertexArray(get_vao());
 
     // Draw
-    glDrawElementsInstanced(GL_TRIANGLES, get_indices_count(), GL_UNSIGNED_INT, nullptr, 1);
+    glDrawElementsInstanced(GL_TRIANGLES, get_indices_count(), GL_UNSIGNED_INT, 0, transforms.size());
 
     // Unbind this entity's VAO, so that we cannot accidentally draw this entity again.
     glBindVertexArray(0);
@@ -124,6 +132,7 @@ void InstancedRenderable::finish()
     glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO_vertices);
     glDeleteBuffers(1, &VBO_indices);
+    glDeleteBuffers(1, &VBO_instances);
 }
 
 void InstancedRenderable::init_material()

@@ -42,7 +42,7 @@ protected:
  */
 class InstancedEntity : public InstancedRenderable, public InstancedTransformComponent {
 public:
-    InstancedEntity(instanced_renderable_data&& render_data) : 
+    InstancedEntity(renderable_data&& render_data) : 
         InstancedTransformComponent(),
         InstancedRenderable(std::move(render_data)) {}
     
