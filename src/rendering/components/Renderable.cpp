@@ -113,7 +113,7 @@ void InstancedRenderable::render()
     glBindVertexArray(get_vao());
 
     // Draw
-    glDrawElements(GL_TRIANGLES, get_indices_count(), GL_UNSIGNED_INT, nullptr);
+    glDrawElementsInstanced(GL_TRIANGLES, get_indices_count(), GL_UNSIGNED_INT, nullptr, 1);
 
     // Unbind this entity's VAO, so that we cannot accidentally draw this entity again.
     glBindVertexArray(0);

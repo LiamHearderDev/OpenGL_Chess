@@ -43,6 +43,8 @@ public:
     InstancedTransformComponent() {}
     ~InstancedTransformComponent() {}
 
+    [[nodiscard]] glm::mat4 calc_instance_transform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) const;
+
     void set_transforms(std::vector<glm::mat4>&& new_transforms);
     void set_transform_at(glm::mat4 new_transform, unsigned int index);
 };
