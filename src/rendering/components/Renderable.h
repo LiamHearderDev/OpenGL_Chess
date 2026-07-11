@@ -158,7 +158,7 @@ public:
 
     // === Setters === //
 
-    void set_transforms(std::vector<glm::mat4>&& new_transforms) { transforms = new_transforms; }
+    void set_transforms(std::vector<glm::mat4>&& new_transforms);
 };
 
 #endif // RENDERABLE_H

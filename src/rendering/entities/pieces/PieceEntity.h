@@ -36,15 +36,14 @@ public:
             std::vector<unsigned int>{0,1,3, 1,2,3}
         })
         {
-            player_team = (name < 6) ? 0 : 1;
-            piece_id = name % 6;
+            player_team = (name < 6) ? 0 : 1; 
+            piece_id = name % 6; 
 
             std::vector<glm::mat4> temp_transforms;
             for (const PiecePositions& pos : positions) {
                 glm::vec3 world_pos = board_to_world_position(pos);
                 glm::mat4 instance_transform = calc_instance_transform(world_pos, glm::vec3(0.f), glm::vec3(piece_scale));
                 temp_transforms.emplace_back(instance_transform);
-                fprintf(stdout, "position=(%f, %f, %f)\n", world_pos.x, world_pos.y, world_pos.z); //TODO delete
             }
             set_transforms(std::move(temp_transforms));
         };
@@ -54,8 +53,6 @@ public:
     
     [[nodiscard]] glm::vec3 board_to_world_position(PiecePositions board_position) const;
 
-    void render() override;
-    void setup_attrib_pointers() override {}
     void set_uniform_data() override;
 };
 

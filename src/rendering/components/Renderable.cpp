@@ -82,26 +82,26 @@ void InstancedRenderable::init()
     glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
-    // VERTICES
+    // VERTICES 
     glGenBuffers(1, &VBO_vertices);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_vertices);
     glBufferData(GL_ARRAY_BUFFER, (long)(sizeof(vertex_data) * get_vertices_count()), vertices.data(), GL_STATIC_DRAW);
+
+    // INSTANCES 
+    glGenBuffers(1, &VBO_instances);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO_instances);
+    glBufferData(GL_ARRAY_BUFFER, (long)(sizeof(glm::mat4) * transforms.size()), transforms.data(), GL_STATIC_DRAW);
     
-    // INDICES
+    // INDICES 
     glGenBuffers(1, &VBO_indices);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_indices);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, (long)(sizeof(unsigned int) * get_indices_count()), indices.data(), GL_STATIC_DRAW);
 
-    // INSTANCESS
-    glGenBuffers(1, &VBO_instances);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO_instances);
-    glBufferData(GL_ARRAY_BUFFER, (long)(sizeof(glm::mat4) * transforms.size()), transforms.data(), GL_STATIC_DRAW);
-
     setup_attrib_pointers();
 
-    glBindVertexArray(0); // Unbind, so we don't accidentally write to the above VAO
+    glBindVertexArray(0); // Unbind, so we don't accidentally write to the above VAO 
     
-    // 2. Initialise shader
+    // 2. Initialise shader 
     init_material();
 }
 
@@ -121,10 +121,16 @@ void InstancedRenderable::render()
     glBindVertexArray(get_vao());
 
     // Draw
-    glDrawElementsInstanced(GL_TRIANGLES, get_indices_count(), GL_UNSIGNED_INT, 0, transforms.size());
+    const GLsizei instance_count = static_cast<GLsizei>(transforms.size());
+    glDrawElementsInstanced(GL_TRIANGLES, get_indices_count(), GL_UNSIGNED_INT, nullptr, instance_count);
 
     // Unbind this entity's VAO, so that we cannot accidentally draw this entity again.
     glBindVertexArray(0);
+}
+
+void InstancedRenderable::set_transforms(std::vector<glm::mat4>&& new_transforms)
+{
+    transforms = new_transforms;
 }
 
 void InstancedRenderable::finish()
