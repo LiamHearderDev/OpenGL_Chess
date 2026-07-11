@@ -54,10 +54,10 @@ glm::mat4 InstancedTransformComponent::calc_instance_transform(glm::vec3 positio
     return model;
 }
 
-// void InstancedTransformComponent::set_transforms(std::vector<glm::mat4> &&new_transforms)
-// {
-//     transformations = new_transforms;
-// }
+void InstancedTransformComponent::set_transforms(std::vector<glm::mat4> &&new_transforms)
+{
+    transformations = new_transforms;
+}
 
 void InstancedTransformComponent::set_transform_at(glm::mat4 new_transform, unsigned int index)
 {

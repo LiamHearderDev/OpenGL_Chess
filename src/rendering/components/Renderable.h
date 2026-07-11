@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <span>
 #include <glm/glm.hpp>
 
 
@@ -101,7 +102,7 @@ class InstancedRenderable : public RenderableBase {
 private:
     std::vector<vertex_data> vertices;
     std::vector<unsigned int> indices;
-    std::vector<glm::mat4> transforms;
+    unsigned int instance_count = 0;
 
     unsigned int VAO{};
     unsigned int VBO_vertices{};
@@ -129,8 +130,13 @@ protected:
     /** Initialises the file paths for shaders. Designed to be overriden for derived classes. */
     virtual void init_shader_paths() override;
 
+    void set_instance_count(unsigned int new_count);
+
+    virtual std::span<glm::mat4> get_instance_transforms() {}
+
 public:
-    InstancedRenderable(renderable_data&& render_data) : 
+    InstancedRenderable(renderable_data&& render_data, unsigned int instance_count) : 
+        instance_count(instance_count),
         vertices(std::move(render_data.vertices)),
         indices(std::move(render_data.indices)) { }
     
@@ -148,17 +154,18 @@ public:
 
     // === Getters === //
 
-    unsigned int get_vertices_count() { return vertices.size(); }
-    unsigned int get_indices_count() { return indices.size(); }
-    unsigned int get_vao() { return VAO; }
-    unsigned int get_shader_program() { return material->get_shader_program(); }
-    unsigned int get_texture_id() { return material->get_texture_id(); }
-    unsigned int get_vbo_vertices() { return VBO_vertices; }
-    unsigned int get_vbo_instances() { return VBO_instances; }
+    unsigned int get_vertices_count() const { return vertices.size(); }
+    unsigned int get_indices_count() const  { return indices.size(); }
+    unsigned int get_instance_count() const { return instance_count; }
+    unsigned int get_vao() const            { return VAO; }
+    unsigned int get_shader_program() const { return material->get_shader_program(); }
+    unsigned int get_texture_id() const     { return material->get_texture_id(); }
+    unsigned int get_vbo_vertices() const   { return VBO_vertices; }
+    unsigned int get_vbo_instances() const  { return VBO_instances; }
 
     // === Setters === //
 
-    void set_transforms(std::vector<glm::mat4>&& new_transforms);
+    //void set_transforms(std::vector<glm::mat4>&& new_transforms);
 };
 
 #endif // RENDERABLE_H

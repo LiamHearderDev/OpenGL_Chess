@@ -26,15 +26,17 @@ public:
     */
     PieceEntity(PieceNames name, std::set<PiecePositions>&& positions) :
         positions(positions),
-        InstancedEntity(renderable_data{
-            std::vector<vertex_data>{
-                vertex_data{{-0.5f, 0.5f, 0.f}, {0.f, 1.0f}    },  // Top-left
-                vertex_data{{0.5f, 0.5f, 0.f},  {1.0f, 1.0f}   },  // Top-right
-                vertex_data{{0.5f, -0.5f, 0.f}, {1.0f, 0.f}    },  // Bottom-right
-                vertex_data{{-0.5f, -0.5f, 0.f},{0.f, 0.f}     },  // Bottom-left
-            },
-            std::vector<unsigned int>{0,1,3, 1,2,3}
-        })
+        InstancedEntity(
+            renderable_data{
+                std::vector<vertex_data>{
+                    vertex_data{{-0.5f, 0.5f, 0.f}, {0.f, 1.0f}    },  // Top-left
+                    vertex_data{{0.5f, 0.5f, 0.f},  {1.0f, 1.0f}   },  // Top-right
+                    vertex_data{{0.5f, -0.5f, 0.f}, {1.0f, 0.f}    },  // Bottom-right
+                    vertex_data{{-0.5f, -0.5f, 0.f},{0.f, 0.f}     },  // Bottom-left
+                },
+                std::vector<unsigned int>{0,1,3, 1,2,3} 
+            }, 
+            positions.size() )
         {
             player_team = (name < 6) ? 0 : 1; 
             piece_id = name % 6; 

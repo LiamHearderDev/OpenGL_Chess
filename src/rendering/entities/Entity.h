@@ -42,14 +42,18 @@ protected:
  */
 class InstancedEntity : public InstancedRenderable, public InstancedTransformComponent {
 public:
-    InstancedEntity(renderable_data&& render_data) : 
+    InstancedEntity(renderable_data&& render_data, unsigned int instance_count) : 
         InstancedTransformComponent(),
-        InstancedRenderable(std::move(render_data)) {}
+        InstancedRenderable(std::move(render_data), instance_count) {}
     
     void set_uniform_data() override;
 
+    void set_instance_count();
+
 protected:
     void setup_attrib_pointers() override;
+
+    std::span<glm::mat4> get_instance_transforms() override { return std::span<glm::mat4>(get_transforms()); }
 };
 
 #endif // ENTITY_H

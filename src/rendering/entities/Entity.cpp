@@ -25,6 +25,11 @@ void InstancedEntity::set_uniform_data()
     return;
 }
 
+void InstancedEntity::set_instance_count()
+{
+    
+}
+
 void InstancedEntity::setup_attrib_pointers()
 {
     glBindBuffer(GL_ARRAY_BUFFER, get_vbo_vertices());

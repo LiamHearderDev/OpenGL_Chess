@@ -90,7 +90,7 @@ void InstancedRenderable::init()
     // INSTANCES 
     glGenBuffers(1, &VBO_instances);
     glBindBuffer(GL_ARRAY_BUFFER, VBO_instances);
-    glBufferData(GL_ARRAY_BUFFER, (long)(sizeof(glm::mat4) * transforms.size()), transforms.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (long)(sizeof(glm::mat4) * get_instance_transforms().size()), get_instance_transforms(), GL_STATIC_DRAW);
     
     // INDICES 
     glGenBuffers(1, &VBO_indices);
@@ -121,15 +121,10 @@ void InstancedRenderable::render()
     glBindVertexArray(get_vao());
 
     // Draw
-    glDrawElementsInstanced(GL_TRIANGLES, get_indices_count(), GL_UNSIGNED_INT, nullptr, transforms.size());
+    glDrawElementsInstanced(GL_TRIANGLES, get_indices_count(), GL_UNSIGNED_INT, nullptr, instance_count);
 
     // Unbind this entity's VAO, so that we cannot accidentally draw this entity again.
     glBindVertexArray(0);
-}
-
-void InstancedRenderable::set_transforms(std::vector<glm::mat4>&& new_transforms)
-{
-    transforms = new_transforms;
 }
 
 void InstancedRenderable::finish()
@@ -155,3 +150,7 @@ void InstancedRenderable::init_shader_paths()
     frag_file_path = "frag.glsl";
 }
 
+void InstancedRenderable::set_instance_count(unsigned int new_count)
+{
+    instance_count = new_count;
+}
