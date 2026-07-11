@@ -10,8 +10,6 @@ unsigned int TextureLoader::loadTexture(const char *filepath)
     int width, height, channels;
 	stbi_set_flip_vertically_on_load(true);
 
-	fprintf(stdout, "Loading texture at: %s\n", filepath);
-
 	// Load the image using stb
 	unsigned char* data = stbi_load(filepath, &width, &height, &channels, 4);
 

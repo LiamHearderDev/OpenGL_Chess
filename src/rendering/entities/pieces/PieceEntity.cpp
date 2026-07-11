@@ -18,28 +18,50 @@ void PieceEntity::init_material()
     material->init();
 }
 
-void PieceEntity::set_board_position(PiecePositions position)
+void PieceEntity::change_board_position(PiecePositions original_position, PiecePositions new_position)
 {
-    unsigned int row = position / 8;
-    unsigned int col = position % 8;
-
-    float x = (row - 3.5f) * piece_scale; 
-    float y = (col - 3.5f) * piece_scale;
-
-    set_position({x, y, 0.f});
+    positions.erase(original_position);
+    positions.insert(new_position);
 }
 
-void PieceEntity::setup_attrib_pointers()
+glm::vec3 PieceEntity::board_to_world_position(PiecePositions board_position) const
 {
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(vertex_data, position) );
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(vertex_data, texture_coordinate) );
-    glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
+    const unsigned int row = board_position / 8;
+    const unsigned int col = board_position % 8;
+
+    const float x = (row - 3.5f) * piece_scale;
+    const float y = (col - 3.5f) * piece_scale;
+
+    return glm::vec3(x, y, 0.f);
 }
+
+// void PieceEntity::render()
+// {
+//     // Bind the VAO we plan to use
+//     glBindVertexArray(get_vao());
+
+//     // Shader setup
+//     material->use();
+//     set_uniform_data();
+
+//     // Texture setup
+//     glActiveTexture(GL_TEXTURE0);
+//     glBindTexture(GL_TEXTURE_2D, get_texture_id());
+//     unsigned int texture_loc = glGetUniformLocation(get_shader_program(), "screenTexture");
+//     glUniform1i(texture_loc, 0);
+
+//     // fprintf(stdout, "position=(%f, %f, %f)\n", get_.x, world_pos.y, world_pos.z); //TODO delete
+
+//     // Draw
+//     glDrawElementsInstanced(GL_TRIANGLES, get_indices_count(), GL_UNSIGNED_INT, 0, positions.size());
+
+//     // Unbind this entity's VAO, so that we cannot accidentally draw this entity again.
+//     glBindVertexArray(0);
+// }
 
 void PieceEntity::set_uniform_data()
 {
-    Entity::set_uniform_data();
+    InstancedEntity::set_uniform_data();
 
     constexpr glm::vec2 sprite_scale = {(1.f / 6.f), (1.f / 2.f)};
     const glm::vec2 sprite_offset = {(piece_id * (1.f / 6.f)), ((1-player_team) * (1.f / 2.f))};

@@ -28,9 +28,7 @@ class MasterRenderer {
         vertex_data{ {-0.5f, -0.5f, 0.f},     {0.f, 0.f}     },  // Bottom-left
     };
 
-    std::vector<std::unique_ptr<Entity>> entities;
-
-    void drawPiece();
+    std::vector<std::unique_ptr<RenderableBase>> renderables;
 
 public:
     MasterRenderer() = default;
@@ -38,9 +36,6 @@ public:
     int init();
     void draw();
     void finish();
-    
-private:
-    
 };
 
 
