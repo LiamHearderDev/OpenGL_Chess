@@ -13,21 +13,6 @@
 class MasterRenderer {
 
     std::unique_ptr<GameBoard> game_board;
-
-    const std::vector<vertex_data> board_vertices = {
-        vertex_data{ {-0.5f, 0.5f, -1.f},      {0.f, 1.0f}    },  // Top-left
-        vertex_data{ {0.5f, 0.5f, -1.f},       {1.0f, 1.0f}   },  // Top-right
-        vertex_data{ {0.5f, -0.5f, -1.f},      {1.0f, 0.f}    },  // Bottom-right
-        vertex_data{ {-0.5f, -0.5f, -1.f},     {0.f, 0.f}     },  // Bottom-left
-    };
-
-    const std::vector<vertex_data> piece_vertices = {
-        vertex_data{ {-0.5f, 0.5f, 0.f},      {0.f, 1.0f}    },  // Top-left
-        vertex_data{ {0.5f, 0.5f, 0.f},       {1.0f, 1.0f}   },  // Top-right
-        vertex_data{ {0.5f, -0.5f, 0.f},      {1.0f, 0.f}    },  // Bottom-right
-        vertex_data{ {-0.5f, -0.5f, 0.f},     {0.f, 0.f}     },  // Bottom-left
-    };
-
     std::vector<std::unique_ptr<RenderableBase>> renderables;
 
 public:

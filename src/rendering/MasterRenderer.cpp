@@ -22,12 +22,7 @@ int MasterRenderer::init()
 
 	// 2. Handle all the new entities being rendered.
 	try {
-		renderable_data board_data = {
-			board_vertices,
-			std::vector<unsigned int>{0,1,3, 1,2,3}
-		};
-
-		renderables.emplace_back(std::make_unique<BoardEntity>(std::move(board_data)));
+		renderables.emplace_back(std::make_unique<BoardEntity>());
 
 		for (int i = 0; i < game_board->get_pieces_count(); i++){
 			UniquePieceData data = game_board->get_piece_data(static_cast<PieceNames>(i));
