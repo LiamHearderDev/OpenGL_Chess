@@ -24,9 +24,8 @@ struct UniquePieceData {
  */
 class GameBoard {
     std::array<UniquePieceData, 12> pieces;
-    void init();
 
-protected:
+    void init();
     std::array<UniquePieceData, 12> get_pieces() { return pieces; }
 
 public:
