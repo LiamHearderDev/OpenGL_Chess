@@ -11,12 +11,19 @@ class WindowManager {
     GLFWwindow* window;
     double delta_time = 0.0;
 
-    //glm::ivec2 calculateScreenSize();
-
-
 public:
-    static void init();
 
+    // ====== Callback variables ====== //
+
+    // Mouse Variables (Dragging)
+    bool isDragging = false;
+    double last_x = 0.0;
+    double last_y = 0.0;
+    
+
+    // Functions
+
+    static void init();
     WindowManager() = default;
 
     void createWindow(unsigned int width, unsigned int height);
