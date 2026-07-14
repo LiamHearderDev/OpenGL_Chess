@@ -17,8 +17,8 @@ class PieceEntity : public InstancedEntity {
 
     void init_shader_paths() override;
     void init_material() override;
-public:
 
+public:
     /**
      * The constructor for PieceEntity.
      * @param name The name of the piece, as defined in the PieceNames enum.

@@ -26,14 +26,25 @@ struct renderable_data {
 
 class RenderableBase {
 protected:
-    virtual void setup_attrib_pointers() {}
-    virtual void init_material() {}
-    virtual void init_shader_paths() {}
+    virtual void setup_attrib_pointers() = 0;
+
+    /** Sets the variable `material` to be a valid pointer, i.e., used for material initialisation in `init()`. */
+    virtual void init_material() = 0;
+
+    /** Initialises the file paths for shaders. Designed to be overriden for derived classes. */
+    virtual void init_shader_paths() = 0;
+
 public:
-    virtual void init() {}
-    virtual void finish() {}
-    virtual void render() {}
-    virtual void set_uniform_data() {}
+    /** Initialisation Function. Must be manually called after construction. */
+    virtual void init() = 0;
+
+    virtual void finish() = 0;
+
+    /** Render the entity. This should be called every frame, and only after initialisation. */ 
+    virtual void render() = 0;
+
+    /** Sets uniform variable data used by shaders. */
+    virtual void set_uniform_data() = 0;
 };
 
 
@@ -60,12 +71,11 @@ protected:
     /** The file path of the desired fragment shader. Must be overriden. */
     std::string frag_file_path;
 
+
+    // === Overrides from `RenderableBase` === //
+
     virtual void setup_attrib_pointers() override {}
-
-    /** Sets the variable `material` to be a valid pointer, i.e., used for material initialisation in `init()`. */
     virtual void init_material() override;
-
-    /** Initialises the file paths for shaders. Designed to be overriden for derived classes. */
     virtual void init_shader_paths() override;
 
 public:
@@ -75,15 +85,6 @@ public:
     
     ~Renderable() { finish(); }
 
-    /** Initialisation Function. Should only be called by the constructor, and not by the user. */
-    void init() override;
-
-    /** Render the entity. This should be called every frame, and only called by the MasterRenderer. */ 
-    virtual void render() override;
-
-    /** Sets uniform variable data used by shaders. */
-    virtual void set_uniform_data() override {}
-
     // === Public Functions used for retrieving information about an instance of this class. === //
 
     unsigned int get_vertices_count() { return vertices.size(); }
@@ -92,6 +93,13 @@ public:
     unsigned int get_shader_program() { return material->get_shader_program(); }
     unsigned int get_texture_id() { return material->get_texture_id(); }
     unsigned int get_vbo_vertices() { return VBO_vertices; }
+
+
+    // === Overrides from `RenderableBase` === //
+
+    virtual void init() override;
+    virtual void render() override;
+    virtual void set_uniform_data() override {}
 };
 
 
@@ -122,34 +130,25 @@ protected:
     /** The file path of the desired fragment shader. Must be overriden. */
     std::string frag_file_path;
 
-    virtual void setup_attrib_pointers() override {}
-
-    /** Sets the variable `material` to be a valid pointer, i.e., used for material initialisation in `init()`. */
-    virtual void init_material() override;
-
-    /** Initialises the file paths for shaders. Designed to be overriden for derived classes. */
-    virtual void init_shader_paths() override;
-
     void set_instance_count(unsigned int new_count);
+    virtual std::vector<glm::mat4> get_instance_transforms() const = 0;
 
-    virtual std::span<glm::mat4> get_instance_transforms() {}
+
+    // === Overrides from `RenderableBase` === //
+
+    virtual void setup_attrib_pointers() override {}
+    virtual void init_material() override;
+    virtual void init_shader_paths() override;
 
 public:
     InstancedRenderable(renderable_data&& render_data, unsigned int instance_count) : 
         instance_count(instance_count),
         vertices(std::move(render_data.vertices)),
-        indices(std::move(render_data.indices)) { }
+        indices(std::move(render_data.indices)) 
+        {}
     
-    ~InstancedRenderable() { finish(); }
-
-    /** Initialisation Function. Should only be called by the constructor, and not by the user. */
-    void init() override;
-
-    /** Render the entity. This should be called every frame, and only called by the MasterRenderer. */ 
-    virtual void render() override;
-
-    /** Sets uniform variable data used by shaders. */
-    virtual void set_uniform_data() override {}
+    ~InstancedRenderable()
+        { finish(); }
 
 
     // === Getters === //
@@ -163,9 +162,12 @@ public:
     unsigned int get_vbo_vertices() const   { return VBO_vertices; }
     unsigned int get_vbo_instances() const  { return VBO_instances; }
 
-    // === Setters === //
 
-    //void set_transforms(std::vector<glm::mat4>&& new_transforms);
+    // === Overrides from `RenderableBase` === //
+
+    virtual void init() override;
+    virtual void render() override;
+    virtual void set_uniform_data() override {}
 };
 
 #endif // RENDERABLE_H

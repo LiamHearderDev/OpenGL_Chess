@@ -90,7 +90,7 @@ void InstancedRenderable::init()
     // INSTANCES 
     glGenBuffers(1, &VBO_instances);
     glBindBuffer(GL_ARRAY_BUFFER, VBO_instances);
-    glBufferData(GL_ARRAY_BUFFER, (long)(sizeof(glm::mat4) * get_instance_transforms().size()), get_instance_transforms(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (long)(sizeof(glm::mat4) * get_instance_transforms().size()), get_instance_transforms().data(), GL_STATIC_DRAW);
     
     // INDICES 
     glGenBuffers(1, &VBO_indices);
