@@ -17,6 +17,7 @@
 struct UniquePieceData {
     PieceNames name;
     std::set<PiecePositions> positions;
+    int dragged_piece_id = -1;
 };
 
 /**

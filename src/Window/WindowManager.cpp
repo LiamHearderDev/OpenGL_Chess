@@ -12,38 +12,6 @@ void error_callback(int error, const char* description)
     fprintf(stderr, "Error: %s\n", description);
 }
 
-void on_mouse_button(GLFWwindow *window, int button, int action, int mods)
-{
-	WindowManager* manager = static_cast<WindowManager*>(glfwGetWindowUserPointer(window));
-	if (!manager) { return; }
-
-	if (button == GLFW_MOUSE_BUTTON_LEFT) {
-		switch(action) {
-			case GLFW_PRESS:
-				manager->isDragging = true;
-				glfwGetCursorPos(window, &(manager->last_x), &(manager->last_y));
-				break;
-			case GLFW_RELEASE:
-				manager->isDragging = false;
-				break;
-		}
-	}
-}
-
-void on_mouse_moved(GLFWwindow *window, double pos_x, double pos_y)
-{
-	WindowManager* manager = static_cast<WindowManager*>(glfwGetWindowUserPointer(window));
-	if (manager->isDragging) {
-		const double delta_x = pos_x - manager->last_x;
-		const double delta_y = pos_y - manager->last_y;
-
-		manager->last_x = pos_x;
-		manager->last_y = pos_y;
-
-		fprintf(stdout, "x=%lf,	y=%lf\n", pos_x, pos_y);
-	}
-}
-
 
 // ======================== //
 
@@ -88,12 +56,27 @@ void WindowManager::createWindow(unsigned int width, unsigned int height)
 	// Activate the GLFW context
 	glfwMakeContextCurrent(window);
 
-	// Callbacks
-	glfwSetMouseButtonCallback(window, on_mouse_button);
-	glfwSetCursorPosCallback(window, on_mouse_moved);
-
 	// Set this class as a User Pointer, giving each GLFWwindow access to this class
 	glfwSetWindowUserPointer(window, this);
+
+	if (input_handler){
+		// Callbacks
+		glfwSetMouseButtonCallback(window, on_mouse_button);
+		glfwSetCursorPosCallback(window, on_mouse_moved);
+	}
+}
+
+void WindowManager::register_input_handler(InputHandler& new_input_handler)
+{
+	if (input_handler) { return; }
+
+	input_handler = &new_input_handler;
+
+	if (window) {
+		// Callbacks
+		glfwSetMouseButtonCallback(window, on_mouse_button);
+		glfwSetCursorPosCallback(window, on_mouse_moved);
+	}
 }
 
 bool WindowManager::ShouldWindowClose()

@@ -62,7 +62,7 @@ void InstancedTransformComponent::set_transforms(std::vector<glm::mat4> &&new_tr
 void InstancedTransformComponent::set_transform_at(glm::mat4 new_transform, unsigned int index)
 {
     if (transformations.size() <= index) {
-        fprintf(stderr, "Error: InstancedTransformComponent: Could not edit transform at index=%d, max index=%d\n", index, transformations.size()-1);
+        fprintf(stderr, "Error: InstancedTransformComponent: Could not edit transform at index=%d, max index=%lu\n", index, transformations.size()-1);
         return;
     }
     transformations[index] = new_transform;
