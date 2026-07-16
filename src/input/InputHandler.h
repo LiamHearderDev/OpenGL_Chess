@@ -11,7 +11,20 @@ class InputHandler {
     GameBoard* game_board;
     GLFWwindow* window;
 
+    
+
 public:
+
+    // ====== Callback variables ====== //
+
+    // Mouse Variables (Dragging)
+    bool isDragging = false;
+    double last_x = 0.0;
+    double last_y = 0.0;
+
+
+    // ====== Functions ====== //
+
     void register_game_board(GameBoard& game_board_ptr);
     void register_window(GLFWwindow& window);
 };

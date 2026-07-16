@@ -15,15 +15,7 @@ class WindowManager {
 
     double delta_time = 0.0;
 
-public:
-
-    // ====== Callback variables ====== //
-
-    // Mouse Variables (Dragging)
-    bool isDragging = false;
-    double last_x = 0.0;
-    double last_y = 0.0;
-    
+public:    
 
     // Functions
 

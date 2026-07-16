@@ -56,13 +56,9 @@ void WindowManager::createWindow(unsigned int width, unsigned int height)
 	// Activate the GLFW context
 	glfwMakeContextCurrent(window);
 
-	// Set this class as a User Pointer, giving each GLFWwindow access to this class
-	glfwSetWindowUserPointer(window, this);
-
+	// Link the window to the input handler
 	if (input_handler){
-		// Callbacks
-		glfwSetMouseButtonCallback(window, on_mouse_button);
-		glfwSetCursorPosCallback(window, on_mouse_moved);
+		input_handler->register_window(*window);
 	}
 }
 
@@ -73,9 +69,7 @@ void WindowManager::register_input_handler(InputHandler& new_input_handler)
 	input_handler = &new_input_handler;
 
 	if (window) {
-		// Callbacks
-		glfwSetMouseButtonCallback(window, on_mouse_button);
-		glfwSetCursorPosCallback(window, on_mouse_moved);
+		input_handler->register_window(*window);
 	}
 }
 

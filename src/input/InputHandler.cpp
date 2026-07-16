@@ -1,26 +1,29 @@
 #include "InputHandler.h"
 
+#include <cstdio>
+
+
 // ===== Callbacks ===== //
 
-void on_mouse_button(GLFWwindow *window, int button, int action, int mods)
+void glfw_callback_mouse_button(GLFWwindow *window, int button, int action, int mods)
 {
-	InputHandler* manager = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
-	if (!manager) { return; }
+	InputHandler* input_handler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
+	if (!input_handler) { return; }
 
 	if (button == GLFW_MOUSE_BUTTON_LEFT) {
 		switch(action) {
 			case GLFW_PRESS:
-				manager->isDragging = true;
-				glfwGetCursorPos(window, &(manager->last_x), &(manager->last_y));
+				input_handler->isDragging = true;
+				glfwGetCursorPos(window, &(input_handler->last_x), &(input_handler->last_y));
 				break;
 			case GLFW_RELEASE:
-				manager->isDragging = false;
+				input_handler->isDragging = false;
 				break;
 		}
 	}
 }
 
-void on_mouse_moved(GLFWwindow *window, double pos_x, double pos_y)
+void glfw_callback_mouse_moved(GLFWwindow *window, double pos_x, double pos_y)
 {
 	InputHandler* manager = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
 	if (manager->isDragging) {
@@ -47,4 +50,11 @@ void InputHandler::register_window(GLFWwindow& new_window)
 {
     if (window) { return; }
     window = &new_window;
+
+	// Set this class as a User Pointer, giving each GLFWwindow access to this class
+	glfwSetWindowUserPointer(window, this);
+
+	// Callbacks
+	glfwSetCursorPosCallback(window, glfw_callback_mouse_moved);
+	glfwSetMouseButtonCallback(window, glfw_callback_mouse_button);
 }
