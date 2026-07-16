@@ -10,9 +10,8 @@
 
 #include "window/WindowManager.h"
 #include "rendering/MasterRenderer.h"
+#include "input/InputHandler.h"
 
-WindowManager window_manager{};
-MasterRenderer master_renderer{};
 
 constexpr auto squareVertices = std::array{
     -0.5f, 0.5f, 0.0f,  // Top-left
@@ -28,10 +27,19 @@ constexpr auto squareVertices = std::array{
 int main(int arc, char** argv) {
 	fprintf(stdout, "Beginning OpenGL_Chess...\n");
 
+	//WindowManager window_manager{};
+	//MasterRenderer master_renderer{};
+	//InputHandler input_handler{};
+
+	std::shared_ptr<WindowManager>	window_manager{};
+	std::shared_ptr<MasterRenderer> master_renderer{};
+	std::shared_ptr<InputHandler> 	input_handler{};
+
 	// ======== Window setup ======== //
 	fprintf(stdout, "Beginning Window Manager...\n");
 	WindowManager::init();
-	window_manager.createWindow(800, 800);
+	window_manager->register_input_handler(*input_handler);
+	window_manager->createWindow(800, 800);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		fprintf(stderr, "Error: Failed to initialize GLAD.\n");
@@ -41,21 +49,24 @@ int main(int arc, char** argv) {
 
 	// ======== OpenGL setup ======== //
 	fprintf(stdout, "Beginning renderer...\n");
-	if (master_renderer.init() != 0) {
+	if (master_renderer->init() != 0) {
 		fprintf(stderr, "Error: Could not initialise renderer.");
 		return 1;
 	}
-	
+
+
 	// ======== Main Event Loop ======== //
 	fprintf(stdout, "Beginning main loop...\n");
-	while (!(window_manager.ShouldWindowClose())) {
-		master_renderer.draw();
-		window_manager.update();
-		window_manager.swapBuffers();
+	while (!(window_manager->ShouldWindowClose())) {
+		master_renderer->draw();
+		window_manager->update();
+		window_manager->swapBuffers();
 		glfwPollEvents();
 	}
 
-	master_renderer.finish();
+
+	// ======== Finish ======== //
+	master_renderer->finish();
 
 	return 0;
 }

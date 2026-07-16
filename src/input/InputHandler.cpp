@@ -13,6 +13,10 @@ void glfw_callback_mouse_button(GLFWwindow *window, int button, int action, int 
 	if (button == GLFW_MOUSE_BUTTON_LEFT) {
 		switch(action) {
 			case GLFW_PRESS:
+
+				// Detect if we are beginning a drag, and retrieve info from the GameBoard if we are.
+
+
 				input_handler->isDragging = true;
 				glfwGetCursorPos(window, &(input_handler->last_x), &(input_handler->last_y));
 				break;
