@@ -2,7 +2,7 @@
 #define MASTER_RENDERER_H
 
 #include <glm/glm.hpp>
-#include "../chess/GameBoard.h"
+#include "chess/GameBoard.h"
 #include "rendering/materials/BaseMaterial.h"
 #include "rendering/entities/Entity.h"
 
@@ -12,15 +12,18 @@
 
 class MasterRenderer {
 
-    std::unique_ptr<GameBoard> game_board;
+    GameBoard* game_board;
     std::vector<std::unique_ptr<RenderableBase>> renderables;
 
 public:
     MasterRenderer() = default;
     ~MasterRenderer() { finish(); }
+
     int init();
     void draw();
     void finish();
+
+    void register_game_board(GameBoard& new_game_board);
 };
 
 

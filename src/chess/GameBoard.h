@@ -26,11 +26,14 @@ struct UniquePieceData {
 class GameBoard {
     std::array<UniquePieceData, 12> pieces;
 
-    void init();
+    
     std::array<UniquePieceData, 12> get_pieces() { return pieces; }
 
 public:
-    GameBoard() { init(); }
+    GameBoard() {}
+    ~GameBoard() {}
+
+    void init();
 
     unsigned int get_pieces_count() { return pieces.size(); }
     UniquePieceData get_piece_data(PieceNames name) { return pieces.at(name); }

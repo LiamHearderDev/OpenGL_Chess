@@ -11,6 +11,7 @@
 #include "window/WindowManager.h"
 #include "rendering/MasterRenderer.h"
 #include "input/InputHandler.h"
+#include "gamestate/GameState.h"
 
 
 constexpr auto squareVertices = std::array{
@@ -27,13 +28,11 @@ constexpr auto squareVertices = std::array{
 int main(int arc, char** argv) {
 	fprintf(stdout, "Beginning OpenGL_Chess...\n");
 
-	//WindowManager window_manager{};
-	//MasterRenderer master_renderer{};
-	//InputHandler input_handler{};
-
-	std::shared_ptr<WindowManager>	window_manager{};
-	std::shared_ptr<MasterRenderer> master_renderer{};
-	std::shared_ptr<InputHandler> 	input_handler{};
+	// Generate Engine Components
+	std::shared_ptr<WindowManager>	window_manager 	= std::make_shared<WindowManager>();
+	std::shared_ptr<MasterRenderer> master_renderer = std::make_shared<MasterRenderer>();
+	std::shared_ptr<InputHandler> 	input_handler 	= std::make_shared<InputHandler>();
+	std::shared_ptr<GameState>		game_state 		= std::make_shared<GameState>();
 
 	// ======== Window setup ======== //
 	fprintf(stdout, "Beginning Window Manager...\n");
@@ -47,8 +46,13 @@ int main(int arc, char** argv) {
 	}
 
 
-	// ======== OpenGL setup ======== //
+	// ======== Game State setup ======== //
+	game_state->init();
+	
+
+	// ======== Renderer setup ======== //
 	fprintf(stdout, "Beginning renderer...\n");
+	master_renderer->register_game_board(*(game_state->game_board));
 	if (master_renderer->init() != 0) {
 		fprintf(stderr, "Error: Could not initialise renderer.");
 		return 1;
