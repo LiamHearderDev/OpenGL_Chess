@@ -15,7 +15,7 @@ void glfw_callback_mouse_button(GLFWwindow *window, int button, int action, int 
 			case GLFW_PRESS:
 
 				// Detect if we are beginning a drag, and retrieve info from the GameBoard if we are.
-
+				
 
 				input_handler->isDragging = true;
 				glfwGetCursorPos(window, &(input_handler->last_x), &(input_handler->last_y));
@@ -37,17 +37,20 @@ void glfw_callback_mouse_moved(GLFWwindow *window, double pos_x, double pos_y)
 		manager->last_x = pos_x;
 		manager->last_y = pos_y;
 
-		fprintf(stdout, "x=%lf,	y=%lf\n", pos_x, pos_y);
+		float x, y, z;
+		manager->screen_to_world_space(pos_x, pos_y, &x, &y, &z);
+
+		fprintf(stdout, "x=%f,	y=%f,	z=%f\n", x, y, z);
 	}
 }
 
 
 // ================== //
 
-void InputHandler::register_game_board(GameBoard &game_board_ptr)
+void InputHandler::register_game_state(GameState& new_game_state)
 {
-    if (game_board) { return; }
-    game_board = &game_board_ptr;
+    if (game_state) { return; }
+    game_state = &new_game_state;
 }
 
 void InputHandler::register_window(GLFWwindow& new_window)
@@ -61,4 +64,16 @@ void InputHandler::register_window(GLFWwindow& new_window)
 	// Callbacks
 	glfwSetCursorPosCallback(window, glfw_callback_mouse_moved);
 	glfwSetMouseButtonCallback(window, glfw_callback_mouse_button);
+}
+
+void InputHandler::screen_to_world_space(double screen_x, double screen_y, float* world_x, float* world_y, float* world_z)
+{
+	if (!window || !world_x || !world_y || !world_z) { return; }
+	
+	int screen_width, screen_height;
+	glfwGetWindowSize(window, &screen_width, &screen_height);
+
+	*world_x = screen_x / screen_width * 2 - 1;
+	*world_y = 1 - screen_y / screen_height * 2;
+	*world_z = 0.f;
 }

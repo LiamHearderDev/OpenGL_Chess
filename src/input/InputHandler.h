@@ -3,15 +3,15 @@
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 #include "chess/GameBoard.h"
+#include "gamestate/GameState.h"
 
 class InputHandler {
 
-    GameBoard* game_board;
+    GameState* game_state;
     GLFWwindow* window;
-
-    
 
 public:
 
@@ -25,8 +25,13 @@ public:
 
     // ====== Functions ====== //
 
-    void register_game_board(GameBoard& game_board_ptr);
+    void register_game_state(GameState& new_game_state);
     void register_window(GLFWwindow& window);
+
+    void screen_to_world_space(double screen_x, double screen_y, float* world_x, float* world_y, float* world_z);
+
+    // A new function to determine if a click event is hovering over a piece on the board
+        // Calls a function in the game board which converts a 2D screen location to a board position.
 };
 
 #endif // INPUT_HANDLER_H

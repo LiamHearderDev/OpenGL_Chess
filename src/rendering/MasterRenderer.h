@@ -2,7 +2,7 @@
 #define MASTER_RENDERER_H
 
 #include <glm/glm.hpp>
-#include "chess/GameBoard.h"
+#include "gamestate/GameState.h"
 #include "rendering/materials/BaseMaterial.h"
 #include "rendering/entities/Entity.h"
 
@@ -12,7 +12,7 @@
 
 class MasterRenderer {
 
-    GameBoard* game_board;
+    GameState* game_state;
     std::vector<std::unique_ptr<RenderableBase>> renderables;
 
 public:
@@ -23,7 +23,7 @@ public:
     void draw();
     void finish();
 
-    void register_game_board(GameBoard& new_game_board);
+    void register_game_state(GameState& new_game_state);
 };
 
 

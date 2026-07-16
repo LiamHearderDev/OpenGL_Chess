@@ -26,8 +26,8 @@ int MasterRenderer::init()
 		renderables.emplace_back(std::make_unique<BoardEntity>());
 
 		// Create all pieces
-		for (int i = 0; i < game_board->get_pieces_count(); i++){
-			UniquePieceData data = game_board->get_piece_data(static_cast<PieceNames>(i));
+		for (int i = 0; i < game_state->game_board->get_pieces_count(); i++){
+			UniquePieceData data = game_state->game_board->get_piece_data(static_cast<PieceNames>(i));
 			renderables.emplace_back(std::make_unique<PieceEntity>(data.name, std::move(data.positions)));
 		}
 
@@ -62,7 +62,7 @@ void MasterRenderer::finish()
 	renderables.clear();
 }
 
-void MasterRenderer::register_game_board(GameBoard& new_game_board)
+void MasterRenderer::register_game_state(GameState& new_game_state)
 {
-	game_board = &new_game_board;
+	game_state = &new_game_state;
 }

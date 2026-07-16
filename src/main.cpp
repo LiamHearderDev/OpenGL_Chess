@@ -46,13 +46,17 @@ int main(int arc, char** argv) {
 	}
 
 
+	// ======== Input Handler setup ======== //
+	input_handler->register_game_state(*game_state);
+
+
 	// ======== Game State setup ======== //
 	game_state->init();
 	
 
 	// ======== Renderer setup ======== //
 	fprintf(stdout, "Beginning renderer...\n");
-	master_renderer->register_game_board(*(game_state->game_board));
+	master_renderer->register_game_state(*game_state);
 	if (master_renderer->init() != 0) {
 		fprintf(stderr, "Error: Could not initialise renderer.");
 		return 1;
@@ -74,4 +78,3 @@ int main(int arc, char** argv) {
 
 	return 0;
 }
-
