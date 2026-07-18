@@ -1,9 +1,9 @@
 #ifndef MULTICAST_DELEGATE_H
 #define MULTICAST_DELEGATE_H
 
-#include <iostream>
-#include <vector>
 #include <functional>
+#include <utility>
+#include <vector>
 
 
 /** A multicast delegate is a design pattern container that holds a list of
@@ -13,7 +13,7 @@
  * How to use:
  *  1. Create a MulticastDelegate object using the DECLARE_MULTICAST_DELEGATE macro,
  *  2. Add listeners using the `add()` method,
- *  3. Broadcast to all listeners using the `broadcasts()` method.
+ *  3. Broadcast to all listeners using the `broadcast()` method.
  * */
 
 
@@ -27,16 +27,31 @@ class MulticastDelegate {
     std::vector<std::function<void(Args...)>> listeners;
 
 public:
-    /** Adds a listener to the delegate */
+
+    /** Binds a member function to listen to this delegate. */
+    template <typename T>
+    void add(T* object, void (T::*member)(Args...)) {
+        if (!object) {
+            return;
+        }
+
+        listeners.emplace_back([object, member](Args... args) {
+            (object->*member)(std::forward<Args>(args)...);
+        });
+    }
+
+    /** Binds a raw function pointer to listen to this delegate. */
     void add(std::function<void(Args...)> listener) {
-        listeners.push_back(listener);
+        if (listener) {
+            listeners.emplace_back(std::move(listener));
+        }
     }
 
     /** Broadcasts to all current listeners. */
     void broadcast(Args... args) {
         for (const auto& listener : listeners) {
-            if (listener) { 
-                listener(args...); 
+            if (listener) {
+                listener(args...);
             }
         }
     }
