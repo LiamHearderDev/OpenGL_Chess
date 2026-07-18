@@ -37,7 +37,7 @@ int main(int arc, char** argv) {
 	// ======== Window setup ======== //
 	fprintf(stdout, "Beginning Window Manager...\n");
 	WindowManager::init();
-	window_manager->register_input_handler(*input_handler);
+	
 	window_manager->createWindow(800, 800);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -47,9 +47,10 @@ int main(int arc, char** argv) {
 
 
 	// ======== Input Handler setup ======== //
-	input_handler->register_game_state(*game_state);
+	window_manager->register_input_handler(*input_handler);
+		// TODO: here you set up all other classes that should read player inputs
 
-
+		
 	// ======== Game State setup ======== //
 	game_state->init();
 	

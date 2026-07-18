@@ -73,6 +73,8 @@ void WindowManager::register_input_handler(InputHandler& new_input_handler)
 	}
 }
 
+
+
 bool WindowManager::ShouldWindowClose()
 {
     return (window) ? (glfwWindowShouldClose(window)) : (true);
