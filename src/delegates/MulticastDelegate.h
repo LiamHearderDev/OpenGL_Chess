@@ -5,15 +5,21 @@
 #include <vector>
 #include <functional>
 
+
 /** A multicast delegate is a design pattern container that holds a list of
  * references to multiple functions that can all be executed sequentially 
  * via a single trigger call. Based on the Unreal Engine implementation.
  * 
  * How to use:
- *  1. Create a MulticastDelegate object, 
+ *  1. Create a MulticastDelegate object using the DECLARE_MULTICAST_DELEGATE macro,
  *  2. Add listeners using the `add()` method,
  *  3. Broadcast to all listeners using the `broadcasts()` method.
  * */
+
+
+#define DECLARE_MULTICAST_DELEGATE(name, ...) \
+    const std::unique_ptr<MulticastDelegate<__VA_ARGS__>> name = std::make_unique<MulticastDelegate<__VA_ARGS__>>();
+
 
 template <typename... Args>
 class MulticastDelegate {
