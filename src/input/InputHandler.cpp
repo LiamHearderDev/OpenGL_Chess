@@ -10,48 +10,59 @@ void glfw_callback_mouse_button(GLFWwindow *window, int button, int action, int 
 	InputHandler* input_handler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
 	if (!input_handler) { return; }
 
-	if (button == GLFW_MOUSE_BUTTON_LEFT) {
-		switch(action) {
-			case GLFW_PRESS:
+	glm::dvec2 cursor_pos{};
+	glfwGetCursorPos(window, &(cursor_pos.x), &(cursor_pos.y));
 
-				// Detect if we are beginning a drag, and retrieve info from the GameBoard if we are.
+	mouse_click_data data = { button, action, mods, cursor_pos };
+	input_handler->on_mouse_button->broadcast(data);
+
+
+	// if (button == GLFW_MOUSE_BUTTON_LEFT) {
+	// 	switch(action) {
+	// 		case GLFW_PRESS:
+
+	// 			// Detect if we are beginning a drag, and retrieve info from the GameBoard if we are.
 				
 
-				input_handler->isDragging = true;
-				glfwGetCursorPos(window, &(input_handler->last_x), &(input_handler->last_y));
-				break;
-			case GLFW_RELEASE:
-				input_handler->isDragging = false;
-				break;
-		}
-	}
+	// 			input_handler->isDragging = true;
+	// 			glfwGetCursorPos(window, &(input_handler->last_x), &(input_handler->last_y));
+	// 			break;
+	// 		case GLFW_RELEASE:
+	// 			input_handler->isDragging = false;
+	// 			break;
+	// 	}
+	// }
 }
 
 void glfw_callback_mouse_moved(GLFWwindow *window, double pos_x, double pos_y)
 {
-	InputHandler* manager = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
-	if (manager->isDragging) {
-		const double delta_x = pos_x - manager->last_x;
-		const double delta_y = pos_y - manager->last_y;
+	InputHandler* input_handler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
+	if(!input_handler) { return; }
 
-		manager->last_x = pos_x;
-		manager->last_y = pos_y;
+	input_handler->on_mouse_move->broadcast(glm::dvec2(pos_x, pos_y));
+	
+	// if (input_handler->isDragging) {
+	// 	const double delta_x = pos_x - input_handler->last_x;
+	// 	const double delta_y = pos_y - input_handler->last_y;
 
-		float x, y, z;
-		manager->screen_to_world_space(pos_x, pos_y, &x, &y, &z);
+	// 	input_handler->last_x = pos_x;
+	// 	input_handler->last_y = pos_y;
 
-		fprintf(stdout, "x=%f,	y=%f,	z=%f\n", x, y, z);
-	}
+	// 	float x, y, z;
+	// 	input_handler->screen_to_world_space(pos_x, pos_y, &x, &y, &z);
+
+	// 	fprintf(stdout, "x=%f,	y=%f,	z=%f\n", x, y, z);
+	// }
 }
 
 
 // ================== //
 
-void InputHandler::register_game_state(GameState& new_game_state)
-{
-    if (game_state) { return; }
-    game_state = &new_game_state;
-}
+// void InputHandler::register_game_state(GameState& new_game_state)
+// {
+//     if (game_state) { return; }
+//     game_state = &new_game_state;
+// }
 
 void InputHandler::register_window(GLFWwindow& new_window)
 {

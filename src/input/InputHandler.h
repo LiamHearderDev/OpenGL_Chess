@@ -7,14 +7,24 @@
 
 #include "chess/GameBoard.h"
 #include "gamestate/GameState.h"
+#include "delegates/MulticastDelegate.h"
 
+
+/** Data that's passed to mouse click input events. */
+struct mouse_click_data {
+    int button;
+    int action;
+    int mods;
+    glm::dvec2 cursor_position;
+};
+
+
+/** A class for handling all user inputs on a given window. */
 class InputHandler {
-
-    GameState* game_state;
+    //GameState* game_state;
     GLFWwindow* window;
 
 public:
-
     // ====== Callback variables ====== //
 
     // Mouse Variables (Dragging)
@@ -23,15 +33,15 @@ public:
     double last_y = 0.0;
 
 
+    // ====== Delegates ====== //
+    DECLARE_MULTICAST_DELEGATE(on_mouse_button, mouse_click_data /* data */);
+    DECLARE_MULTICAST_DELEGATE(on_mouse_move, glm::dvec2 /* position*/);
+
     // ====== Functions ====== //
 
-    void register_game_state(GameState& new_game_state);
+    //void register_game_state(GameState& new_game_state);
     void register_window(GLFWwindow& window);
-
     void screen_to_world_space(double screen_x, double screen_y, float* world_x, float* world_y, float* world_z);
-
-    // A new function to determine if a click event is hovering over a piece on the board
-        // Calls a function in the game board which converts a 2D screen location to a board position.
 };
 
 #endif // INPUT_HANDLER_H
