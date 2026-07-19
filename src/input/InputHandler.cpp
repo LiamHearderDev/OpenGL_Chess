@@ -55,15 +55,6 @@ void glfw_callback_mouse_moved(GLFWwindow *window, double pos_x, double pos_y)
 	// }
 }
 
-
-// ================== //
-
-// void InputHandler::register_game_state(GameState& new_game_state)
-// {
-//     if (game_state) { return; }
-//     game_state = &new_game_state;
-// }
-
 void InputHandler::register_window(GLFWwindow& new_window)
 {
     if (window) { return; }

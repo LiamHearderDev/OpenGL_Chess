@@ -5,8 +5,6 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-#include "chess/GameBoard.h"
-#include "gamestate/GameState.h"
 #include "delegates/MulticastDelegate.h"
 
 
@@ -21,10 +19,9 @@ struct mouse_click_data {
 
 /** A class for handling all user inputs on a given window. */
 class InputHandler {
-    //GameState* game_state;
     GLFWwindow* window;
 
-public:
+
     // ====== Callback variables ====== //
 
     // Mouse Variables (Dragging)
@@ -33,13 +30,19 @@ public:
     double last_y = 0.0;
 
 
+public:
+    InputHandler() {};
+    ~InputHandler() {};
+
+
     // ====== Delegates ====== //
+    
     DECLARE_MULTICAST_DELEGATE(on_mouse_button, mouse_click_data /* data */);
     DECLARE_MULTICAST_DELEGATE(on_mouse_move, glm::dvec2 /* position*/);
 
+
     // ====== Functions ====== //
 
-    //void register_game_state(GameState& new_game_state);
     void register_window(GLFWwindow& window);
     void screen_to_world_space(double screen_x, double screen_y, float* world_x, float* world_y, float* world_z);
 };

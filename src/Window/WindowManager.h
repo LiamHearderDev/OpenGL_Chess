@@ -1,12 +1,12 @@
 #ifndef WINDOW_MANAGER_H
 #define WINDOW_MANAGER_H
 
-
 #define GLFW_INCLUDE_NONE
-
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
-#include "input/InputHandler.h"
+
+// Forward declarations
+class InputHandler;
 
 /// A class used to managed open windows.
 class WindowManager {
