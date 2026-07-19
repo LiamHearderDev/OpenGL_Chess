@@ -22,6 +22,10 @@ class InputHandler {
     GLFWwindow* window;
 
 
+public:
+    InputHandler() {};
+    ~InputHandler() {};
+
     // ====== Callback variables ====== //
 
     // Mouse Variables (Dragging)
@@ -30,21 +34,20 @@ class InputHandler {
     double last_y = 0.0;
 
 
-public:
-    InputHandler() {};
-    ~InputHandler() {};
-
-
     // ====== Delegates ====== //
     
     DECLARE_MULTICAST_DELEGATE(on_mouse_button, mouse_click_data /* data */);
+    DECLARE_MULTICAST_DELEGATE(on_mouse_pressed, mouse_click_data /* data */);
+    DECLARE_MULTICAST_DELEGATE(on_mouse_released, mouse_click_data /* data */);
     DECLARE_MULTICAST_DELEGATE(on_mouse_move, glm::dvec2 /* position*/);
-
+    
 
     // ====== Functions ====== //
 
     void register_window(GLFWwindow& window);
     void screen_to_world_space(double screen_x, double screen_y, float* world_x, float* world_y, float* world_z);
+
+    bool get_is_dragging() { return isDragging; }
 };
 
 #endif // INPUT_HANDLER_H

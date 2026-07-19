@@ -10,28 +10,31 @@ void glfw_callback_mouse_button(GLFWwindow *window, int button, int action, int 
 	InputHandler* input_handler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
 	if (!input_handler) { return; }
 
+	if (button == GLFW_MOUSE_BUTTON_LEFT) {
+		switch(action) {
+			case GLFW_PRESS:
+				input_handler->isDragging = true;
+				glfwGetCursorPos(window, &(input_handler->last_x), &(input_handler->last_y));
+				break;
+			case GLFW_RELEASE:
+				input_handler->isDragging = false;
+				break;
+		}
+	}
+
+
+	// === BROADCASTING === //
 	glm::dvec2 cursor_pos{};
 	glfwGetCursorPos(window, &(cursor_pos.x), &(cursor_pos.y));
 
 	mouse_click_data data = { button, action, mods, cursor_pos };
 	input_handler->on_mouse_button->broadcast(data);
 
-
-	// if (button == GLFW_MOUSE_BUTTON_LEFT) {
-	// 	switch(action) {
-	// 		case GLFW_PRESS:
-
-	// 			// Detect if we are beginning a drag, and retrieve info from the GameBoard if we are.
-				
-
-	// 			input_handler->isDragging = true;
-	// 			glfwGetCursorPos(window, &(input_handler->last_x), &(input_handler->last_y));
-	// 			break;
-	// 		case GLFW_RELEASE:
-	// 			input_handler->isDragging = false;
-	// 			break;
-	// 	}
-	// }
+	if (action == GLFW_PRESS) {
+		input_handler->on_mouse_pressed->broadcast(data);
+	} else if (action == GLFW_RELEASE) {
+		input_handler->on_mouse_released->broadcast(data);
+	}
 }
 
 void glfw_callback_mouse_moved(GLFWwindow *window, double pos_x, double pos_y)

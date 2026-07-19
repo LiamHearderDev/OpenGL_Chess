@@ -4,10 +4,11 @@
 #include <functional>
 #include <utility>
 #include <vector>
+#include <memory>
 
 
-/** A multicast delegate is a design pattern container that holds a list of
- * references to multiple functions that can all be executed sequentially 
+/** A `Multicast Delegate` is a container that holds a list of references 
+ * to multiple functions that can all be executed sequentially 
  * via a single trigger call. Based on the Unreal Engine implementation.
  * 
  * How to use:
@@ -24,6 +25,7 @@
 template <typename... Args>
 class MulticastDelegate {
 
+    /** The array of listening objects/functions. */
     std::vector<std::function<void(Args...)>> listeners;
 
 public:
@@ -61,4 +63,5 @@ public:
         listeners.clear();
     }
 };
+
 #endif // MULTICAST_DELEGATE_H

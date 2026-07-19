@@ -41,7 +41,7 @@ int main(int arc, char** argv) {
 
 	// ======== Input Handler setup ======== //
 	window_manager->register_input_handler(*input_handler);
-	//game_state->register_input_handler(*input_handler);
+	game_state->register_input_handler(*input_handler);
 		// TODO: here you set up all other classes that should read player inputs
 
 
