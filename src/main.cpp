@@ -14,17 +14,6 @@
 #include "gamestate/GameState.h"
 
 
-constexpr auto squareVertices = std::array{
-    -0.5f, 0.5f, 0.0f,  // Top-left
-    0.5f, 0.5f, 0.0f,   // Top-right
-    0.5f, 0.5f, 0.0f,   // Top-right
-    0.5f, -0.5f, 0.0f,  // Bottom-right
-    0.5f, -0.5f, 0.0f,  // Bottom-right
-    -0.5f, -0.5f, 0.0f, // Bottom-left
-    -0.5f, -0.5f, 0.0f, // Bottom-left
-    -0.5f, 0.5f, 0.0f   // Top-left
-};
-
 int main(int arc, char** argv) {
 	fprintf(stdout, "Beginning OpenGL_Chess...\n");
 
@@ -45,15 +34,16 @@ int main(int arc, char** argv) {
 		return 1;
 	}
 
-
-	// ======== Input Handler setup ======== //
-	window_manager->register_input_handler(*input_handler);
-		// TODO: here you set up all other classes that should read player inputs
-
 		
 	// ======== Game State setup ======== //
 	game_state->init();
 	
+
+	// ======== Input Handler setup ======== //
+	window_manager->register_input_handler(*input_handler);
+	//game_state->register_input_handler(*input_handler);
+		// TODO: here you set up all other classes that should read player inputs
+
 
 	// ======== Renderer setup ======== //
 	fprintf(stdout, "Beginning renderer...\n");
