@@ -6,6 +6,9 @@ void Entity::set_uniform_data()
 {
     unsigned int model_mat_loc = glGetUniformLocation(get_shader_program(), "model_mat");
     glUniformMatrix4fv(model_mat_loc, 1, GL_FALSE, glm::value_ptr(get_transform()));
+
+    unsigned int cursor_pos_loc = glGetUniformLocation(get_shader_program(), "cursor_pos");
+    glUniform2fv(cursor_pos_loc, 1, glm::value_ptr(cursor_position));
 }
 
 void Entity::setup_attrib_pointers()
@@ -22,12 +25,8 @@ void Entity::setup_attrib_pointers()
 
 void InstancedEntity::set_uniform_data()
 {
-    return;
-}
-
-void InstancedEntity::set_instance_count()
-{
-    
+    unsigned int cursor_pos_loc = glGetUniformLocation(get_shader_program(), "cursor_pos");
+    glUniform2fv(cursor_pos_loc, 1, glm::value_ptr(cursor_position));
 }
 
 void InstancedEntity::setup_attrib_pointers()

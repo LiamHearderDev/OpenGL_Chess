@@ -45,6 +45,9 @@ public:
 
     /** Sets uniform variable data used by shaders. */
     virtual void set_uniform_data() = 0;
+
+    /** Sets the cursor position variable. This is used as a uniform variable in shaders. */
+    virtual void set_cursor_position(glm::dvec2 pos) = 0;
 };
 
 

@@ -29,6 +29,10 @@ public:
 
 protected:
     void setup_attrib_pointers() override;
+
+    void set_cursor_position(glm::dvec2 pos) override { cursor_position = glm::vec2(static_cast<float>(pos.x), static_cast<float>(pos.y)); }
+
+    glm::vec2 cursor_position{};
 };
 
 
@@ -47,13 +51,14 @@ public:
         InstancedRenderable(std::move(render_data), instance_count) {}
     
     void set_uniform_data() override;
-    
-    void set_instance_count();
 
 protected:
     void setup_attrib_pointers() override;
 
+    void set_cursor_position(glm::dvec2 pos) override { cursor_position = glm::vec2(static_cast<float>(pos.x), static_cast<float>(pos.y)); }
+
     std::vector<glm::mat4> get_instance_transforms() const override { return get_transforms(); }
+    glm::vec2 cursor_position{};
 };
 
 #endif // ENTITY_H

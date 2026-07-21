@@ -90,6 +90,7 @@ void InstancedRenderable::init()
     // INSTANCES 
     glGenBuffers(1, &VBO_instances);
     glBindBuffer(GL_ARRAY_BUFFER, VBO_instances);
+    // TODO: Make a copy of get_instance_transforms(), where the position is set to the mouse
     glBufferData(GL_ARRAY_BUFFER, (long)(sizeof(glm::mat4) * get_instance_transforms().size()), get_instance_transforms().data(), GL_STATIC_DRAW);
     
     // INDICES 
