@@ -5,6 +5,9 @@
 #include "rendering/materials/pieces/PieceMaterial.h"
 #include "rendering/entities/board/BoardEntity.h"
 
+#include <gamestate/GameState.h>
+#include <input/InputHandler.h>
+
 #include <glad/glad.h>
 #include <array>
 #include <exception>
@@ -65,4 +68,9 @@ void MasterRenderer::finish()
 void MasterRenderer::register_game_state(GameState& new_game_state)
 {
 	game_state = &new_game_state;
+}
+
+void MasterRenderer::register_input_handler(InputHandler &new_input_handler)
+{
+	input_handler = &new_input_handler;
 }

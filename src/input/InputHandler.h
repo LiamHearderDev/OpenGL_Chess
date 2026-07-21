@@ -1,18 +1,19 @@
 #ifndef INPUT_HANDLER_H
 #define INPUT_HANDLER_H
 
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
 #include "delegates/MulticastDelegate.h"
 #include "input/InputData.h"
 
 
+// Forward Declarations
+class GLFWwindow;
+
+
 /** A class for handling all user inputs on a given window. */
 class InputHandler {
     GLFWwindow* window;
-
 
 public:
     InputHandler() {};
@@ -39,7 +40,8 @@ public:
     void register_window(GLFWwindow& window);
     void screen_to_world_space(double screen_x, double screen_y, float* world_x, float* world_y, float* world_z);
     
-    bool get_is_dragging() { return isDragging; }
+    bool get_is_dragging() const;
+    glm::dvec2 get_cursor_position() const;
 };
 
 #endif // INPUT_HANDLER_H

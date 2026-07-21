@@ -33,21 +33,21 @@ int main(int arc, char** argv) {
 		fprintf(stderr, "Error: Failed to initialize GLAD.\n");
 		return 1;
 	}
-
-		
+	
+	
 	// ======== Game State setup ======== //
 	game_state->init();
+	master_renderer->register_game_state(*game_state);
 	
 
-	// ======== Input Handler setup ======== //
+	// ======== Input Handler linking ======== //
 	window_manager->register_input_handler(*input_handler);
 	game_state->register_input_handler(*input_handler);
-		// TODO: here you set up all other classes that should read player inputs
+	master_renderer->register_input_handler(*input_handler);
 
 
 	// ======== Renderer setup ======== //
 	fprintf(stdout, "Beginning renderer...\n");
-	master_renderer->register_game_state(*game_state);
 	if (master_renderer->init() != 0) {
 		fprintf(stderr, "Error: Could not initialise renderer.");
 		return 1;

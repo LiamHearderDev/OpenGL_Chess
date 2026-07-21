@@ -6,8 +6,6 @@
 #include <rendering/materials/pieces/PieceMaterial.h>
 #include <chess/ChessUtility.h>
 
-#include <set>
-
 
 class PieceEntity : public InstancedEntity {
     unsigned int player_team;

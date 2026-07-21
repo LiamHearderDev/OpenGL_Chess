@@ -28,17 +28,6 @@ void PieceEntity::change_board_position(PiecePositions original_position, PieceP
     }
 }
 
-// glm::vec3 PieceEntity::board_to_world_position(PiecePositions board_position) const
-// {
-//     const unsigned int row = board_position / 8;
-//     const unsigned int col = board_position % 8;
-
-//     const float x = (row - 3.5f) * piece_scale;
-//     const float y = (col - 3.5f) * piece_scale;
-
-//     return glm::vec3(x, y, 0.f);
-// }
-
 void PieceEntity::set_uniform_data()
 {
     InstancedEntity::set_uniform_data();

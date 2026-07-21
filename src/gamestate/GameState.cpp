@@ -1,6 +1,8 @@
 #include "GameState.h"
 
-#include "input/InputHandler.h"
+#include <input/InputHandler.h>
+#include <chess/ChessUtility.h>
+#include <glm/glm.hpp>
 
 void GameState::register_input_handler(InputHandler &handler)
 {
@@ -23,13 +25,15 @@ void GameState::on_mouse_pressed(mouse_click_data data)
     double pos_y = data.cursor_pos_y;
 
     // Convert into world coordinates
-    float world_x, world_y, world_z;
+    glm::vec3 world_pos;
     input_handler->screen_to_world_space( pos_x, pos_y,
-        &world_x, &world_y, &world_z );
-    
-    
+        &world_pos.x, &world_pos.y, &world_pos.z );
+
+    const PiecePositions board_pos = ChessUtility::world_to_board_position(world_pos);
+    game_board->try_pickup_piece_at_location(board_pos);
 }
 
 void GameState::on_mouse_released(mouse_click_data data)
 {
+    game_board->drop_piece();
 }

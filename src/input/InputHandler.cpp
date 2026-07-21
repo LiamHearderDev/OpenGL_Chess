@@ -1,5 +1,8 @@
 #include "InputHandler.h"
 
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+
 #include <cstdio>
 
 
@@ -81,4 +84,16 @@ void InputHandler::screen_to_world_space(double screen_x, double screen_y, float
 	*world_x = screen_x / screen_width * 2 - 1;
 	*world_y = 1 - screen_y / screen_height * 2;
 	*world_z = 0.f;
+}
+
+bool InputHandler::get_is_dragging() const
+{
+    return isDragging;
+}
+
+glm::dvec2 InputHandler::get_cursor_position() const
+{
+	double x, y;
+	glfwGetCursorPos(window, &x, &y);
+    return glm::dvec2(x, y);
 }
