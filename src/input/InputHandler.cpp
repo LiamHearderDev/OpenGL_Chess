@@ -24,10 +24,10 @@ void glfw_callback_mouse_button(GLFWwindow *window, int button, int action, int 
 
 
 	// === BROADCASTING === //
-	glm::dvec2 cursor_pos{};
-	glfwGetCursorPos(window, &(cursor_pos.x), &(cursor_pos.y));
+	double pos_x, pos_y;
+	glfwGetCursorPos(window, &pos_x, &pos_y);
 
-	mouse_click_data data = { button, action, mods, cursor_pos };
+	mouse_click_data data = { button, action, mods, pos_x, pos_y };
 	input_handler->on_mouse_button->broadcast(data);
 
 	if (action == GLFW_PRESS) {
@@ -42,7 +42,7 @@ void glfw_callback_mouse_moved(GLFWwindow *window, double pos_x, double pos_y)
 	InputHandler* input_handler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
 	if(!input_handler) { return; }
 
-	input_handler->on_mouse_move->broadcast(glm::dvec2(pos_x, pos_y));
+	input_handler->on_mouse_move->broadcast(pos_x, pos_y);
 	
 	// if (input_handler->isDragging) {
 	// 	const double delta_x = pos_x - input_handler->last_x;

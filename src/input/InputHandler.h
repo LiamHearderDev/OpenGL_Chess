@@ -6,15 +6,7 @@
 #include <glm/glm.hpp>
 
 #include "delegates/MulticastDelegate.h"
-
-
-/** Data that's passed to mouse click input events. */
-struct mouse_click_data {
-    int button;
-    int action;
-    int mods;
-    glm::dvec2 cursor_position;
-};
+#include "input/InputData.h"
 
 
 /** A class for handling all user inputs on a given window. */
@@ -39,7 +31,7 @@ public:
     DECLARE_MULTICAST_DELEGATE(on_mouse_button, mouse_click_data /* data */);
     DECLARE_MULTICAST_DELEGATE(on_mouse_pressed, mouse_click_data /* data */);
     DECLARE_MULTICAST_DELEGATE(on_mouse_released, mouse_click_data /* data */);
-    DECLARE_MULTICAST_DELEGATE(on_mouse_move, glm::dvec2 /* position*/);
+    DECLARE_MULTICAST_DELEGATE(on_mouse_move, double /* position x */, double /* position y*/);
     
 
     // ====== Functions ====== //
