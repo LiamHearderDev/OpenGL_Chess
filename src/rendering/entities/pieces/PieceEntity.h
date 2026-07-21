@@ -4,6 +4,7 @@
 #include <rendering/entities/Entity.h>
 #include <chess/ChessEnums.h>
 #include <rendering/materials/pieces/PieceMaterial.h>
+#include <chess/ChessUtility.h>
 
 #include <set>
 
@@ -12,8 +13,6 @@ class PieceEntity : public InstancedEntity {
     unsigned int player_team;
     unsigned int piece_id;
     std::vector<PiecePositions> positions{};
-
-    const float piece_scale = 1.f/8.f;
 
     void init_shader_paths() override;
     void init_material() override;
@@ -43,8 +42,8 @@ public:
 
             std::vector<glm::mat4> temp_transforms;
             for (const PiecePositions& pos : positions) {
-                glm::vec3 world_pos = board_to_world_position(pos);
-                glm::mat4 instance_transform = calc_instance_transform(world_pos, glm::vec3(0.f), glm::vec3(piece_scale));
+                glm::vec3 world_pos = ChessUtility::board_to_world_position(pos);
+                glm::mat4 instance_transform = calc_instance_transform(world_pos, glm::vec3(0.f), glm::vec3(ChessUtility::get_piece_scale()));
                 temp_transforms.emplace_back(instance_transform);
             }
             set_transforms(std::move(temp_transforms));
@@ -52,8 +51,6 @@ public:
     
     /** A method of changing a piece's position on the board, using chess notation. */
     void change_board_position(PiecePositions original_position, PiecePositions new_position);
-    
-    [[nodiscard]] glm::vec3 board_to_world_position(PiecePositions board_position) const;
 
     void set_uniform_data() override;
 };

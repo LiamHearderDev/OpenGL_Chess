@@ -22,7 +22,10 @@ public:
     void init();
 
 private:
+
+    // DELEGATE BINDINGS
     void on_mouse_pressed(mouse_click_data data);
+    void on_mouse_released(mouse_click_data data);
 
 };
 

@@ -38,7 +38,7 @@ public:
 
     void register_window(GLFWwindow& window);
     void screen_to_world_space(double screen_x, double screen_y, float* world_x, float* world_y, float* world_z);
-
+    
     bool get_is_dragging() { return isDragging; }
 };
 
