@@ -25,9 +25,29 @@ void GameBoard::init()
 bool GameBoard::is_square_occupied(PiecePositions position)
 {
     for (const auto& piece_data : pieces) {
-        if (piece_data.positions.find(position) != piece_data.positions.end()) {
-            return true;
+        for (const PiecePositions& pos : piece_data.positions) {
+            if (pos == position) {
+                return true;
+            }
         }
     }
     return false;
+}
+
+void GameBoard::try_pickup_piece_at_location(PiecePositions position)
+{
+    for (auto& piece_data : pieces) {
+        for (int i = 0; i < piece_data.positions.size(); i++) {
+            if (piece_data.positions[i] == position) {
+                piece_data.dragged_piece_id = i;
+                return;
+            }
+        }
+    }
+}
+
+void GameBoard::drop_piece() {
+    for (auto& piece_data : pieces) {
+        piece_data.dragged_piece_id = -1;
+    }
 }

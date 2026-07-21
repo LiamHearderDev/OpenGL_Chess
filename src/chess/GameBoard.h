@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <array>
 #include <set>
+#include <vector>
 
 #include <chess/ChessEnums.h>
 
@@ -16,7 +17,7 @@
  */
 struct UniquePieceData {
     PieceNames name;
-    std::set<PiecePositions> positions;
+    std::vector<PiecePositions> positions;
     int dragged_piece_id = -1;
 };
 
@@ -25,9 +26,6 @@ struct UniquePieceData {
  */
 class GameBoard {
     std::array<UniquePieceData, 12> pieces;
-
-    
-    std::array<UniquePieceData, 12> get_pieces() { return pieces; }
 
 public:
     GameBoard() {}
@@ -40,6 +38,10 @@ public:
 
     // The following methods are used to extract data about the board state, such as the positions of pieces, and whether a square is occupied by a piece.
     bool is_square_occupied(PiecePositions position);
+
+    void try_pickup_piece_at_location(PiecePositions location);
+
+    void drop_piece();
 };
 
 

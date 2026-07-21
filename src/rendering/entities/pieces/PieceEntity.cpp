@@ -20,8 +20,12 @@ void PieceEntity::init_material()
 
 void PieceEntity::change_board_position(PiecePositions original_position, PiecePositions new_position)
 {
-    positions.erase(original_position);
-    positions.insert(new_position);
+    for (int i = 0; i < positions.size(); i++){
+        if (positions[i] == original_position) {
+            positions[i] = new_position;
+            return;
+        }
+    }
 }
 
 glm::vec3 PieceEntity::board_to_world_position(PiecePositions board_position) const

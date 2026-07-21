@@ -11,7 +11,7 @@
 class PieceEntity : public InstancedEntity {
     unsigned int player_team;
     unsigned int piece_id;
-    std::set<PiecePositions> positions{};
+    std::vector<PiecePositions> positions{};
 
     const float piece_scale = 1.f/8.f;
 
@@ -24,7 +24,7 @@ public:
      * @param name The name of the piece, as defined in the PieceNames enum.
      * @param positions A vector of PiecePositions that this type of piece occupies on the board.
     */
-    PieceEntity(PieceNames name, std::set<PiecePositions>&& positions) :
+    PieceEntity(PieceNames name, std::vector<PiecePositions>&& positions) :
         positions(positions),
         InstancedEntity(
             renderable_data{
