@@ -1,6 +1,7 @@
 #include "GameBoard.h"
 
 #include <cstdio>
+#include <chess/ChessUtility.h>
 
 void GameBoard::init()
 {
@@ -42,6 +43,9 @@ void GameBoard::try_pickup_piece_at_location(PiecePositions position)
         for (int i = 0; i < piece_data.positions.size(); i++) {
             if (piece_data.positions[i] == position) {
                 piece_data.dragged_piece_id = i;
+
+                on_update->broadcast();
+
                 fprintf(stdout, "STARTED DRAGGING: %d, at %d\n", piece_data.name, position);
                 return;
             }
@@ -55,7 +59,6 @@ void GameBoard::drop_piece() {
         if (piece_data.dragged_piece_id != -1) {
             fprintf(stdout, "STOPPED DRAGGING: %d\n", piece_data.name);
             piece_data.dragged_piece_id = -1;
-            return;
         }
     }
     return;

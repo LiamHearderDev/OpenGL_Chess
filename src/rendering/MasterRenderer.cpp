@@ -29,9 +29,11 @@ int MasterRenderer::init()
 		renderables.emplace_back(std::make_unique<BoardEntity>());
 
 		// Create all pieces
-		for (int i = 0; i < game_state->game_board->get_pieces_count(); i++){
+		for (int i = 0; i < game_state->game_board->get_pieces_count(); i++) {
 			UniquePieceData data = game_state->game_board->get_piece_data(static_cast<PieceNames>(i));
-			renderables.emplace_back(std::make_unique<PieceEntity>(data.name, std::move(data.positions)));
+			renderables.emplace_back(std::make_unique<PieceEntity>(
+				data.name, std::move(data.positions), *(game_state->game_board), *input_handler)
+			);
 		}
 
 	} catch (const std::bad_alloc& e) {
@@ -55,8 +57,7 @@ void MasterRenderer::draw()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	for (int i = 0; i < renderables.size(); i++) {
-		const auto& element = renderables[i];
+	for (const auto& element : renderables) {
 		element->update();
 		element->render();
 	}

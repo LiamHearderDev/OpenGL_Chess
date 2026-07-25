@@ -61,16 +61,38 @@ void InputHandler::register_window(GLFWwindow& new_window)
 	glfwSetMouseButtonCallback(window, glfw_callback_mouse_button);
 }
 
-void InputHandler::screen_to_world_space(double screen_x, double screen_y, float* world_x, float* world_y, float* world_z)
+void InputHandler::screen_to_world_space(double screen_x, double screen_y, float& world_x, float& world_y, float& world_z)
 {
-	if (!window || !world_x || !world_y || !world_z) { return; }
+	if (!window) {
+		fprintf(stderr, "ERROR: InputHandler::screen_to_world_space() error caused by uninitialised window.\n");
+		return;
+	}
 	
 	int screen_width, screen_height;
 	glfwGetWindowSize(window, &screen_width, &screen_height);
 
-	*world_x = screen_x / screen_width * 2 - 1;
-	*world_y = 1 - screen_y / screen_height * 2;
-	*world_z = 0.f;
+	world_x = screen_x / screen_width * 2 - 1;
+	world_y = 1 - screen_y / screen_height * 2;
+	world_z = 0.f;
+}
+
+void InputHandler::screen_to_world_space(double screen_x, double screen_y, glm::vec3 &world)
+{
+	float x, y, z;
+	screen_to_world_space(screen_x, screen_y, x, y, z);
+	world = glm::vec3(x, y, z);
+}
+
+void InputHandler::screen_to_world_space(glm::dvec2 screen, float &world_x, float &world_y, float &world_z)
+{
+	screen_to_world_space(screen.x, screen.y, world_x, world_y, world_z);
+}
+
+void InputHandler::screen_to_world_space(glm::dvec2 screen, glm::vec3& world)
+{
+	float x, y, z;
+	screen_to_world_space(screen.x, screen.y, x, y, z);
+	world = glm::vec3(x, y, z);
 }
 
 bool InputHandler::get_is_dragging() const

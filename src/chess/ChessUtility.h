@@ -26,6 +26,9 @@ public:
      * @return true if the conversion was successful, or false if the world position is out of bounds.
      */
     [[nodiscard]] static bool world_to_board_position(glm::vec3 world_position, PiecePositions& board_pos);
+
+    static void position_to_string(PiecePositions position, std::string& output);
+    // TODO: make this just straight up print the position
 };
 
 

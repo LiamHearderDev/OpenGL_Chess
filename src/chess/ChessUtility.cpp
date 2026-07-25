@@ -32,3 +32,11 @@ bool ChessUtility::world_to_board_position(glm::vec3 world_position, PiecePositi
     
     return false;
 }
+
+void ChessUtility::position_to_string(PiecePositions position, std::string &output)
+{
+    const char file = static_cast<char>('A' + (position / 8));
+    const char rank = static_cast<char>('1' + (position % 8));
+    output.push_back(file);
+    output.push_back(rank);
+}

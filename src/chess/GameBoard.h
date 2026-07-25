@@ -8,6 +8,8 @@
 
 #include <chess/ChessEnums.h>
 
+#include "delegates/MulticastDelegate.h"
+
 /**
  * A structure representing each unique piece type on the board.
  * 
@@ -31,16 +33,30 @@ public:
     GameBoard() {}
     ~GameBoard() {}
 
+    /** A delegate that is triggered when the game board is updated. */
+    DECLARE_MULTICAST_DELEGATE(on_update);
+
     void init();
 
     unsigned int get_pieces_count() { return pieces.size(); }
     UniquePieceData get_piece_data(PieceNames name) { return pieces.at(name); }
 
-    // The following methods are used to extract data about the board state, such as the positions of pieces, and whether a square is occupied by a piece.
+    /** 
+     * Checks if a square on the board is occupied.
+     * @param position The position to check.
+     * @return true if the square is occupied, false otherwise.
+     */
     bool is_square_occupied(PiecePositions position);
 
+    /** 
+     * Attempts to pick up a piece at the specified location.
+     * @param location The location of the piece to pick up.
+    */
     void try_pickup_piece_at_location(PiecePositions location);
 
+    /** 
+     * Attempts to drop any picked up piece.
+    */
     void drop_piece();
 };
 

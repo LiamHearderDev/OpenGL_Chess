@@ -38,7 +38,10 @@ public:
     // ====== Functions ====== //
 
     void register_window(GLFWwindow& window);
-    void screen_to_world_space(double screen_x, double screen_y, float* world_x, float* world_y, float* world_z);
+    void screen_to_world_space(double screen_x, double screen_y, float& world_x, float& world_y, float& world_z);
+    void screen_to_world_space(double screen_x, double screen_y, glm::vec3& world);
+    void screen_to_world_space(glm::dvec2 screen, float& world_x, float& world_y, float& world_z);
+    void screen_to_world_space(glm::dvec2 screen, glm::vec3& world);
     
     bool get_is_dragging() const;
     glm::dvec2 get_cursor_position() const;
