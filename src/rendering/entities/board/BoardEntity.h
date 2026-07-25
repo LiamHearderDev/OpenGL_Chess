@@ -19,6 +19,8 @@ public:
                 std::vector<unsigned int>{0,1,3, 1,2,3}
             }
         ) {}
+    
+    void update() override {}
 };
 
 #endif // BOARD_ENTITY_H

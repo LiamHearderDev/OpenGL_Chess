@@ -1,5 +1,7 @@
 #include "GameBoard.h"
 
+#include <cstdio>
+
 void GameBoard::init()
 {
     pieces.fill(UniquePieceData{});
@@ -40,14 +42,21 @@ void GameBoard::try_pickup_piece_at_location(PiecePositions position)
         for (int i = 0; i < piece_data.positions.size(); i++) {
             if (piece_data.positions[i] == position) {
                 piece_data.dragged_piece_id = i;
+                fprintf(stdout, "STARTED DRAGGING: %d, at %d\n", piece_data.name, position);
                 return;
             }
         }
     }
+    return;
 }
 
 void GameBoard::drop_piece() {
     for (auto& piece_data : pieces) {
-        piece_data.dragged_piece_id = -1;
+        if (piece_data.dragged_piece_id != -1) {
+            fprintf(stdout, "STOPPED DRAGGING: %d\n", piece_data.name);
+            piece_data.dragged_piece_id = -1;
+            return;
+        }
     }
+    return;
 }

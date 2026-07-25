@@ -1,6 +1,7 @@
 #include "PieceEntity.h"
 #include <glad/glad.h>
 
+#include <rendering/materials/pieces/PieceMaterial.h>
 #include <glm/gtc/type_ptr.hpp>
 
 void PieceEntity::init_shader_paths()
@@ -26,6 +27,12 @@ void PieceEntity::change_board_position(PiecePositions original_position, PieceP
             return;
         }
     }
+}
+
+void PieceEntity::update()
+{
+    /* TODO Get a reference to the game board and find the position data for this piece.
+    Then, update this class with that new data. */
 }
 
 void PieceEntity::set_uniform_data()

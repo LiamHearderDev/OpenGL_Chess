@@ -55,8 +55,9 @@ void MasterRenderer::draw()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	for (const auto& element : renderables) {
-		element->set_cursor_position(input_handler->get_cursor_position());
+	for (int i = 0; i < renderables.size(); i++) {
+		const auto& element = renderables[i];
+		element->update();
 		element->render();
 	}
 }

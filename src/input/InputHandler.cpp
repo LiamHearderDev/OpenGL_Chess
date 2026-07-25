@@ -3,7 +3,7 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#include <cstdio>
+// #include <cstdio>
 
 
 // ===== Callbacks ===== //
@@ -46,19 +46,6 @@ void glfw_callback_mouse_moved(GLFWwindow *window, double pos_x, double pos_y)
 	if(!input_handler) { return; }
 
 	input_handler->on_mouse_move->broadcast(pos_x, pos_y);
-	
-	// if (input_handler->isDragging) {
-	// 	const double delta_x = pos_x - input_handler->last_x;
-	// 	const double delta_y = pos_y - input_handler->last_y;
-
-	// 	input_handler->last_x = pos_x;
-	// 	input_handler->last_y = pos_y;
-
-	// 	float x, y, z;
-	// 	input_handler->screen_to_world_space(pos_x, pos_y, &x, &y, &z);
-
-	// 	fprintf(stdout, "x=%f,	y=%f,	z=%f\n", x, y, z);
-	// }
 }
 
 void InputHandler::register_window(GLFWwindow& new_window)

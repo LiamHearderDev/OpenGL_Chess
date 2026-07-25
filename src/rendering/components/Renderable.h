@@ -38,6 +38,10 @@ public:
     /** Initialisation Function. Must be manually called after construction. */
     virtual void init() = 0;
 
+    /** A function used to update the renderable's data. */
+    virtual void update() = 0;
+
+    /** A function used to clean up and finish a class, getting ready for destruction. */
     virtual void finish() = 0;
 
     /** Render the entity. This should be called every frame, and only after initialisation. */ 

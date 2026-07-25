@@ -3,7 +3,6 @@
 
 #include <rendering/entities/Entity.h>
 #include <chess/ChessEnums.h>
-#include <rendering/materials/pieces/PieceMaterial.h>
 #include <chess/ChessUtility.h>
 
 
@@ -49,6 +48,8 @@ public:
     
     /** A method of changing a piece's position on the board, using chess notation. */
     void change_board_position(PiecePositions original_position, PiecePositions new_position);
+
+    void update() override;
 
     void set_uniform_data() override;
 };
