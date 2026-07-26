@@ -1,10 +1,9 @@
-#ifndef INPUT_HANDLER_H
-#define INPUT_HANDLER_H
+#pragma once
 
 #include <glm/glm.hpp>
-
 #include "delegates/MulticastDelegate.h"
-#include "input/InputData.h"
+#include "engine/input/InputData.h"
+#include <engine/EngineContext.h>
 
 
 // Forward Declarations
@@ -13,11 +12,14 @@ class GLFWwindow;
 
 /** A class for handling all user inputs on a given window. */
 class InputHandler {
+    EngineContext* engine;
     GLFWwindow* window;
 
 public:
     InputHandler() {};
     ~InputHandler() {};
+
+    void register_engine_context(EngineContext& new_engine) { engine = &new_engine; }
 
     // ====== Callback variables ====== //
 
@@ -46,5 +48,3 @@ public:
     bool get_is_dragging() const;
     glm::dvec2 get_cursor_position() const;
 };
-
-#endif // INPUT_HANDLER_H

@@ -1,7 +1,7 @@
 #ifndef PIECE_MATERIAL_H
 #define PIECE_MATERIAL_H
 
-#include <rendering/materials/BaseMaterial.h>
+#include <engine/rendering/materials/BaseMaterial.h>
 
 class PieceMaterial : public BaseMaterial {
 

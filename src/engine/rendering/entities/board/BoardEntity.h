@@ -1,7 +1,7 @@
 #ifndef BOARD_ENTITY_H
 #define BOARD_ENTITY_H
 
-#include <rendering/renderables/derived/Renderable.h>
+#include <engine/rendering/renderables/derived/Renderable.h>
 
 class BoardEntity : public Renderable {
     void init_shader_paths() override;

@@ -1,11 +1,11 @@
 #ifndef RENDERABLE_H
 #define RENDERABLE_H
 
-#include <rendering/materials/BaseMaterial.h>
-#include <rendering/components/transform/local/LocalTransformComponent.h>
+#include <engine/rendering/materials/BaseMaterial.h>
+#include <engine/rendering/components/transform/local/LocalTransformComponent.h>
 
-#include <rendering/renderables/base/RenderableBase.h>
-#include <rendering/renderables/data/RenderableData.h>
+#include <engine/rendering/renderables/base/RenderableBase.h>
+#include <engine/rendering/renderables/data/RenderableData.h>
 
 #include <string>
 #include <memory>

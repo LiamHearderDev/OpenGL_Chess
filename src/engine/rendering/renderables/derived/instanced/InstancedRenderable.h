@@ -1,8 +1,8 @@
 #ifndef INSTANCED_RENDERABLE_H
 #define INSTANCED_RENDERABLE_H
 
-#include <rendering/components/transform/instanced/InstancedTransformComponent.h>
-#include <rendering/renderables/derived/Renderable.h>
+#include <engine/rendering/components/transform/instanced/InstancedTransformComponent.h>
+#include <engine/rendering/renderables/derived/Renderable.h>
 
 
 // ====== Instanced Renderable Component ====== //

@@ -21,8 +21,6 @@ message(STATUS "glfw3_DIR is... ${glfw3_DIR}")
 
 find_package(glfw3 REQUIRED CONFIG)
 
-# set(GLEW_USE_STATIC_LIBS ON)
-# find_package(GLEW REQUIRED CONFIG)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../lib/glad ${CMAKE_BINARY_DIR}/glad_build)
 
 # set(SRCS main.cpp)

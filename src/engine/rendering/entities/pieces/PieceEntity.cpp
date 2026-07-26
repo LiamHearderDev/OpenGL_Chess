@@ -1,10 +1,12 @@
 #include "PieceEntity.h"
 #include <glad/glad.h>
 
-#include <rendering/materials/pieces/PieceMaterial.h>
+#include <engine/rendering/materials/pieces/PieceMaterial.h>
 #include <glm/gtc/type_ptr.hpp>
-#include <chess/GameBoard.h>
-#include <input/InputHandler.h>
+
+#include <engine/gamestate/GameState.h>
+#include <engine/input/InputHandler.h>
+#include <engine/window/WindowManager.h>
 
 void PieceEntity::init_shader_paths()
 {
@@ -40,7 +42,7 @@ void PieceEntity::init_piece()
     instanced_transform_component->set_transforms(std::move(temp_transforms));
 
     // Bind to delegates
-    game_board->on_update->add(this, &update);
+    engine.game_state.game_board->on_update->add(this, &update);
 
     // TODO: delete this
     fprintf(stdout, "Initialising piece: ");
@@ -59,7 +61,7 @@ void PieceEntity::change_board_position(PiecePositions original_position, PieceP
 
 void PieceEntity::update()
 {
-    const UniquePieceData data = game_board->get_piece_data(name);
+    const UniquePieceData data = engine.game_state.game_board->get_piece_data(name);
 
     positions = std::move(data.positions);
 
@@ -71,12 +73,17 @@ void PieceEntity::update()
 
         // If this instance is being dragged, the instance transform's location must be the cursor.
         if (i == data.dragged_piece_id) {
-            input_handler->screen_to_world_space(input_handler->get_cursor_position(), world_pos);
+            engine.input_handler.screen_to_world_space(engine.input_handler.get_cursor_position(), world_pos);
         } else {
             ChessUtility::board_to_world_position(piece_pos, world_pos);
         }
 
-        glm::mat4 instance_transform = instanced_transform_component->calc_instance_transform(world_pos, glm::vec3(0.f), glm::vec3(ChessUtility::get_piece_scale()));
+        z_rot += (10.f * engine.window_manager.getDeltaTime());
+
+        glm::mat4 instance_transform = instanced_transform_component->calc_instance_transform(
+            world_pos, glm::vec3(0.f, 0.f, z_rot), glm::vec3(ChessUtility::get_piece_scale())
+        );
+
         temp_transforms.emplace_back(instance_transform);
     }
     instanced_transform_component->set_transforms(std::move(temp_transforms));

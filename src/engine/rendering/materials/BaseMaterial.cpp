@@ -5,7 +5,7 @@
 #include <filesystem>   // for `_get_shader_path()`
 #include <iostream>     // for logs
 
-#include <rendering/components/texture_loader/TextureLoader.h>
+#include <engine/rendering/components/texture_loader/TextureLoader.h>
 
 
 void log_shader_errors(GLuint shader, const char* label)

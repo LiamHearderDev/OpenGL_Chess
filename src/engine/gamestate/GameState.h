@@ -1,16 +1,14 @@
-#ifndef GAME_STATE_H
-#define GAME_STATE_H
+#pragma once
 
 #include <memory>
 
 #include "chess/GameBoard.h"
-#include "input/InputData.h"
+#include "engine/input/InputData.h"
+#include <engine/EngineContext.h>
 
-// Forward declarations
-class InputHandler;
 
 class GameState {
-    InputHandler* input_handler;
+    EngineContext* engine;
 
 public:
     GameState() {}
@@ -18,7 +16,7 @@ public:
 
     std::shared_ptr<GameBoard> game_board{};
 
-    void register_input_handler(InputHandler& handler);
+    void register_engine_context(EngineContext& new_engine) { engine = &new_engine; }
     void init();
 
 private:
@@ -26,7 +24,4 @@ private:
     // DELEGATE BINDINGS
     void on_mouse_pressed(mouse_click_data data);
     void on_mouse_released(mouse_click_data data);
-
 };
-
-#endif // GAME_STATE_H

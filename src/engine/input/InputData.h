@@ -1,5 +1,4 @@
-#ifndef INPUT_DATA_H
-#define INPUT_DATA_H
+#pragma once
 
 /** Data that's passed to mouse click input events. */
 struct mouse_click_data {
@@ -9,5 +8,3 @@ struct mouse_click_data {
     double cursor_pos_x;
     double cursor_pos_y;
 };
-
-#endif // INPUT_DATA_H

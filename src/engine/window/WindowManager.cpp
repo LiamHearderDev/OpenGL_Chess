@@ -2,7 +2,7 @@
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include "input/InputHandler.h"
+#include <engine/input/InputHandler.h>
 
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -19,13 +19,13 @@ void error_callback(int error, const char* description)
 
 // ======================== //
 
-void WindowManager::init()
+int WindowManager::init()
 {
     glfwInit();
     if (!glfwInit())
 	{
 		fprintf(stderr, "Error: Failed to initialise GLFW.\n");
-		return;
+		return 1;
 	}
 	glfwSetErrorCallback(error_callback);
 	
@@ -40,13 +40,14 @@ void WindowManager::init()
 	#endif
 
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	return 0;
 }
 
-void WindowManager::createWindow(unsigned int width, unsigned int height)
+int WindowManager::createWindow(unsigned int width, unsigned int height)
 {	
 	if (window != NULL){
 		fprintf(stderr, "Error: Cannot open multiple windows.\n");
-		return;
+		return 1;
 	}
 
 	// Create Window
@@ -54,29 +55,16 @@ void WindowManager::createWindow(unsigned int width, unsigned int height)
 	if (window == NULL) {
 		fprintf(stderr, "Error: Failed to create GLFW window.\n");
 		glfwTerminate();
-		return;
+		return 2;
 	}
 
 	// Activate the GLFW context
 	glfwMakeContextCurrent(window);
 
 	// Link the window to the input handler
-	if (input_handler){
-		input_handler->register_window(*window);
-	}
+	engine->input_handler.register_window(*window);
+	return 0;
 }
-
-void WindowManager::register_input_handler(InputHandler& new_input_handler)
-{
-	if (input_handler) { return; }
-
-	input_handler = &new_input_handler;
-
-	if (window) {
-		input_handler->register_window(*window);
-	}
-}
-
 
 
 bool WindowManager::ShouldWindowClose()

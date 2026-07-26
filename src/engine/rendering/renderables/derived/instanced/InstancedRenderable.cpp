@@ -83,7 +83,7 @@ void InstancedRenderable::finish()
 
 void InstancedRenderable::update_instance_vbo()
 {
-    fprintf(stdout, "UPDATING VBO...\n");
+    //fprintf(stdout, "UPDATING VBO...\n");
     const size_t offset = (size_t)(sizeof(vertex_data) * get_vertices_count());
     const size_t data_size = (size_t)(sizeof(glm::mat4) * instanced_transform_component->get_transforms().size());
     glBufferSubData(GL_ARRAY_BUFFER, offset, data_size, instanced_transform_component->get_transforms().data());

@@ -1,9 +1,10 @@
 #include "MasterRenderer.h"
 
-#include <gamestate/GameState.h>
-#include <input/InputHandler.h>
-#include "components/texture_loader/TextureLoader.h"
+#include <engine/gamestate/GameState.h>
+#include <engine/input/InputHandler.h>
+#include <engine/window/WindowManager.h>
 
+#include "components/texture_loader/TextureLoader.h"
 #include "entities/pieces/PieceEntity.h"
 #include "entities/board/BoardEntity.h"
 
@@ -28,10 +29,10 @@ int MasterRenderer::init()
 		renderables.emplace_back(std::make_unique<BoardEntity>());
 
 		// Create all pieces
-		for (int i = 0; i < game_state->game_board->get_pieces_count(); i++) {
-			UniquePieceData data = game_state->game_board->get_piece_data(static_cast<PieceNames>(i));
+		for (int i = 0; i < engine->game_state.game_board->get_pieces_count(); i++) {
+			UniquePieceData data = engine->game_state.game_board->get_piece_data(static_cast<PieceNames>(i));
 			renderables.emplace_back(std::make_unique<PieceEntity>(
-				data.name, std::move(data.positions), *(game_state->game_board), *input_handler)
+				data.name, std::move(data.positions), *engine)
 			);
 		}
 
@@ -57,7 +58,7 @@ void MasterRenderer::draw()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	for (const auto& element : renderables) {
-		//element->update();
+		element->update();
 		element->render();
 	}
 }
@@ -65,14 +66,4 @@ void MasterRenderer::draw()
 void MasterRenderer::finish()
 {
 	renderables.clear();
-}
-
-void MasterRenderer::register_game_state(GameState& new_game_state)
-{
-	game_state = &new_game_state;
-}
-
-void MasterRenderer::register_input_handler(InputHandler &new_input_handler)
-{
-	input_handler = &new_input_handler;
 }

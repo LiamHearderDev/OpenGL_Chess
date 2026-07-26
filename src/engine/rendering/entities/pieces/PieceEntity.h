@@ -1,14 +1,10 @@
-#ifndef PIECE_ENTITY_H
-#define PIECE_ENTITY_H
+#pragma once
 
-#include <rendering/renderables/derived/instanced/InstancedRenderable.h>
+#include <engine/EngineContext.h>
+
+#include <engine/rendering/renderables/derived/instanced/InstancedRenderable.h>
 #include <chess/ChessEnums.h>
 #include <chess/ChessUtility.h>
-
-
-// Forward Declarations
-class GameBoard;
-class InputHandler;
 
 
 class PieceEntity : public InstancedRenderable {
@@ -17,9 +13,11 @@ class PieceEntity : public InstancedRenderable {
     PieceNames name;
     std::vector<PiecePositions> positions{};
 
+    // todo: delete
+    float z_rot = 0;
+
     // References
-    GameBoard* game_board;
-    InputHandler* input_handler;
+    EngineContext& engine;
 
 public:
     /**
@@ -27,11 +25,10 @@ public:
      * @param name The name of the piece, as defined in the PieceNames enum.
      * @param positions A vector of PiecePositions that this type of piece occupies on the board.
     */
-    PieceEntity(PieceNames name, std::vector<PiecePositions>&& positions, GameBoard& game_board, InputHandler& input_handler) :
+    PieceEntity(PieceNames name, std::vector<PiecePositions>&& positions, EngineContext& engine) :
         name(name),
         positions(positions),
-        game_board(&game_board),
-        input_handler(&input_handler),
+        engine(engine),
         InstancedRenderable(
             renderable_data{
                 std::vector<vertex_data>{
@@ -62,5 +59,3 @@ private:
 
     void init_piece();
 };
-
-#endif // PIECE_ENTITY_H
