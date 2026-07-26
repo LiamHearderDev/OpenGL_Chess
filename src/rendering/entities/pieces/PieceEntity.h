@@ -1,16 +1,17 @@
 #ifndef PIECE_ENTITY_H
 #define PIECE_ENTITY_H
 
-#include <rendering/entities/base/instanced/InstancedEntity.h>
+#include <rendering/renderables/derived/instanced/InstancedRenderable.h>
 #include <chess/ChessEnums.h>
 #include <chess/ChessUtility.h>
+
 
 // Forward Declarations
 class GameBoard;
 class InputHandler;
 
 
-class PieceEntity : public InstancedEntity {
+class PieceEntity : public InstancedRenderable {
     unsigned int player_team;
     unsigned int piece_id;
     PieceNames name;
@@ -31,7 +32,7 @@ public:
         positions(positions),
         game_board(&game_board),
         input_handler(&input_handler),
-        InstancedEntity(
+        InstancedRenderable(
             renderable_data{
                 std::vector<vertex_data>{
                     vertex_data{{-0.5f, 0.5f, 0.f}, {0.f, 1.0f}    },  // Top-left

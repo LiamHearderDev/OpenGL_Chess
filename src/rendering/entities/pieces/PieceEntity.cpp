@@ -87,7 +87,7 @@ void PieceEntity::update()
 
 void PieceEntity::set_uniform_data()
 {
-    InstancedEntity::set_uniform_data();
+    InstancedRenderable::set_uniform_data();
 
     constexpr glm::vec2 sprite_scale = {(1.f / 6.f), (1.f / 2.f)};
     const glm::vec2 sprite_offset = {(piece_id * (1.f / 6.f)), ((1-player_team) * (1.f / 2.f))};

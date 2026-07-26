@@ -1,6 +1,7 @@
 #ifndef INSTANCED_RENDERABLE_H
 #define INSTANCED_RENDERABLE_H
 
+#include <rendering/components/transform/instanced/InstancedTransformComponent.h>
 #include <rendering/renderables/derived/Renderable.h>
 
 
@@ -30,21 +31,22 @@ protected:
     /** The file path of the desired fragment shader. Must be overriden. */
     std::string frag_file_path;
 
-    void set_instance_count(unsigned int new_count);
-    virtual std::vector<glm::mat4> get_instance_transforms() const = 0;
-
 
     // === Overrides from `RenderableBase` === //
 
-    virtual void setup_attrib_pointers() override {}
+    virtual void setup_attrib_pointers() override;
     virtual void init_material() override;
     virtual void init_shader_paths() override;
 
 public:
+
+    std::unique_ptr<InstancedTransformComponent> instanced_transform_component;
+
     InstancedRenderable(renderable_data&& render_data, unsigned int instance_count) : 
         instance_count(instance_count),
         vertices(std::move(render_data.vertices)),
-        indices(std::move(render_data.indices)) 
+        indices(std::move(render_data.indices)),
+        instanced_transform_component(std::make_unique<InstancedTransformComponent>())
         {}
     
     ~InstancedRenderable()

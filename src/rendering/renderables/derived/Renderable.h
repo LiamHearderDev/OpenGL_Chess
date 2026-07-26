@@ -1,7 +1,8 @@
 #ifndef RENDERABLE_H
 #define RENDERABLE_H
 
-#include "rendering/materials/BaseMaterial.h" // TODO: MOVE TO CPP?
+#include <rendering/materials/BaseMaterial.h>
+#include <rendering/components/transform/local/LocalTransformComponent.h>
 
 #include <rendering/renderables/base/RenderableBase.h>
 #include <rendering/renderables/data/RenderableData.h>
@@ -39,14 +40,18 @@ protected:
 
     // === Overrides from `RenderableBase` === //
 
-    virtual void setup_attrib_pointers() override {}
+    virtual void setup_attrib_pointers() override;
     virtual void init_material() override;
     virtual void init_shader_paths() override;
 
 public:
+    std::unique_ptr<LocalTransformComponent> local_transform_component;
+
     Renderable(renderable_data&& render_data) : 
         vertices(std::move(render_data.vertices)),
-        indices(std::move(render_data.indices)) { }
+        indices(std::move(render_data.indices)),
+        local_transform_component(std::make_unique<LocalTransformComponent>(glm::vec3(0.f), glm::vec3(0.f), glm::vec3(1.f))) 
+        {}
     
     ~Renderable() { finish(); }
 
@@ -64,7 +69,7 @@ public:
 
     virtual void init() override;
     virtual void render() override;
-    virtual void set_uniform_data() override {}
+    virtual void set_uniform_data() override;
 };
 
 #endif // RENDERABLE_H

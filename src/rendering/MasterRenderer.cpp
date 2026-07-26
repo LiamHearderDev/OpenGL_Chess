@@ -4,8 +4,8 @@
 #include <input/InputHandler.h>
 #include "components/texture_loader/TextureLoader.h"
 
-#include "entities/derived/pieces/PieceEntity.h"
-#include "entities/derived/board/BoardEntity.h"
+#include "entities/pieces/PieceEntity.h"
+#include "entities/board/BoardEntity.h"
 
 #include <glad/glad.h>
 #include <array>

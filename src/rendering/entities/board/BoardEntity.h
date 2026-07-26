@@ -1,14 +1,14 @@
 #ifndef BOARD_ENTITY_H
 #define BOARD_ENTITY_H
 
-#include <rendering/entities/base/Entity.h>
+#include <rendering/renderables/derived/Renderable.h>
 
-class BoardEntity : public Entity {
+class BoardEntity : public Renderable {
     void init_shader_paths() override;
 
 public:
     BoardEntity() :
-        Entity(
+        Renderable(
             renderable_data{
                 std::vector<vertex_data>{
                     vertex_data{ {-0.5f, 0.5f, -1.f},      {0.f, 1.0f}    },  // Top-left

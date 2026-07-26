@@ -13,17 +13,32 @@ void InstancedRenderable::init()
     // VERTICES 
     glGenBuffers(1, &VBO_vertices);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_vertices);
-    glBufferData(GL_ARRAY_BUFFER, (long)(sizeof(vertex_data) * get_vertices_count()), vertices.data(), GL_STATIC_DRAW);
+    glBufferData(
+        GL_ARRAY_BUFFER, 
+        (long)(sizeof(vertex_data) * get_vertices_count()),
+        vertices.data(),
+        GL_STATIC_DRAW
+    );
 
     // INSTANCES 
     glGenBuffers(1, &VBO_instances);
     glBindBuffer(GL_ARRAY_BUFFER, VBO_instances);
-    glBufferData(GL_ARRAY_BUFFER, (long)(sizeof(glm::mat4) * get_instance_transforms().size()), get_instance_transforms().data(), GL_STATIC_DRAW);
+    glBufferData(
+        GL_ARRAY_BUFFER, 
+        (long)(sizeof(glm::mat4) * instanced_transform_component->get_transforms().size()), 
+        instanced_transform_component->get_transforms().data(), 
+        GL_STATIC_DRAW
+    );
     
     // INDICES 
     glGenBuffers(1, &VBO_indices);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_indices);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, (long)(sizeof(unsigned int) * get_indices_count()), indices.data(), GL_STATIC_DRAW);
+    glBufferData(
+        GL_ELEMENT_ARRAY_BUFFER, 
+        (long)(sizeof(unsigned int) * get_indices_count()), 
+        indices.data(), 
+        GL_STATIC_DRAW
+    );
 
     setup_attrib_pointers();
 
@@ -63,6 +78,35 @@ void InstancedRenderable::finish()
     glDeleteBuffers(1, &VBO_instances);
 }
 
+void InstancedRenderable::setup_attrib_pointers()
+{
+    glBindBuffer(GL_ARRAY_BUFFER, get_vbo_vertices());
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(vertex_data, position) );
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(vertex_data, texture_coordinate) );
+    glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, get_vbo_instances());
+
+    // Instance Transform Data
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(0));
+    glVertexAttribDivisor(2, 1);
+
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(1 * sizeof(glm::vec4)));
+    glVertexAttribDivisor(3, 1);
+
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+    glVertexAttribDivisor(4, 1);
+
+    glEnableVertexAttribArray(5);
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+    glVertexAttribDivisor(5, 1);
+}
+
 void InstancedRenderable::init_material()
 {
     init_shader_paths();
@@ -76,9 +120,4 @@ void InstancedRenderable::init_shader_paths()
 {
     vert_file_path = "vert.glsl";
     frag_file_path = "frag.glsl";
-}
-
-void InstancedRenderable::set_instance_count(unsigned int new_count)
-{
-    instance_count = new_count;
 }

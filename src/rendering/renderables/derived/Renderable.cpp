@@ -50,11 +50,25 @@ void Renderable::render()
     glBindVertexArray(0);
 }
 
+void Renderable::set_uniform_data()
+{
+    unsigned int model_mat_loc = glGetUniformLocation(get_shader_program(), "model_mat");
+    glUniformMatrix4fv(model_mat_loc, 1, GL_FALSE, glm::value_ptr(local_transform_component->get_transform()));
+}
+
 void Renderable::finish()
 {
     glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO_vertices);
     glDeleteBuffers(1, &VBO_indices);
+}
+
+void Renderable::setup_attrib_pointers()
+{
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(vertex_data, position) );
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_data), (void*)offsetof(vertex_data, texture_coordinate) );
+    glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
 }
 
 void Renderable::init_material()
