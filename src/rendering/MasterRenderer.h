@@ -2,7 +2,7 @@
 #define MASTER_RENDERER_H
 
 #include <glm/glm.hpp>
-#include <rendering/components/Renderable.h>
+#include <rendering/renderables/base/RenderableBase.h>
 
 #include <vector>
 #include <string>
@@ -31,7 +31,5 @@ public:
     void register_game_state(GameState& new_game_state);
     void register_input_handler(InputHandler& new_input_handler);
 };
-
-
 
 #endif //MASTER_RENDERER_H

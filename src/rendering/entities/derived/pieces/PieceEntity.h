@@ -1,7 +1,7 @@
 #ifndef PIECE_ENTITY_H
 #define PIECE_ENTITY_H
 
-#include <rendering/entities/Entity.h>
+#include <rendering/entities/base/instanced/InstancedEntity.h>
 #include <chess/ChessEnums.h>
 #include <chess/ChessUtility.h>
 
