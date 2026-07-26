@@ -6,6 +6,11 @@
 #include <string>
 #include <vector>
 
+
+
+/**
+ * A static utility class for chess-related operations, such as converting between board and world positions, printing piece names, and more.
+ */
 class ChessUtility {
 public:
 
@@ -27,8 +32,26 @@ public:
      */
     [[nodiscard]] static bool world_to_board_position(glm::vec3 world_position, PiecePositions& board_pos);
 
+    /**
+     * Converts a board position to a string representation.
+     * @param position The board position to convert.
+     * @param output A reference to a std::string object that will be set to the converted string.
+     */
     static void position_to_string(PiecePositions position, std::string& output);
-    // TODO: make this just straight up print the position
+
+    /**
+     * Prints the string representation of a board position.
+     * @param position The board position to print.
+     * @param new_line Whether to print a newline character after the position.
+     */
+    static void print_position(PiecePositions position, bool new_line = false);
+
+    /**
+     * Prints the name of a chess piece.
+     * @param name The name of the piece, as defined in the PieceNames enum.
+     * @param new_line Whether to print a newline character after the name.
+     */
+    static void print_piece_name(PieceNames name, bool new_line = false);
 };
 
 

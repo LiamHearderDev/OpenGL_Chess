@@ -46,7 +46,10 @@ void GameBoard::try_pickup_piece_at_location(PiecePositions position)
 
                 on_update->broadcast();
 
-                fprintf(stdout, "STARTED DRAGGING: %d, at %d\n", piece_data.name, position);
+                fprintf(stdout, "STARTED DRAGGING: ");
+                ChessUtility::print_piece_name(piece_data.name, false);
+                fprintf(stdout, " at ");
+                ChessUtility::print_position(piece_data.positions[i], true);
                 return;
             }
         }
@@ -57,7 +60,8 @@ void GameBoard::try_pickup_piece_at_location(PiecePositions position)
 void GameBoard::drop_piece() {
     for (auto& piece_data : pieces) {
         if (piece_data.dragged_piece_id != -1) {
-            fprintf(stdout, "STOPPED DRAGGING: %d\n", piece_data.name);
+            fprintf(stdout, "STOPPED DRAGGING: ");
+            ChessUtility::print_piece_name(piece_data.name, true);
             piece_data.dragged_piece_id = -1;
         }
     }

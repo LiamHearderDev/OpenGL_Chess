@@ -41,6 +41,10 @@ void PieceEntity::init_piece()
 
     // Bind to delegates
     game_board->on_update->add(this, &update);
+
+    // TODO: delete this
+    fprintf(stdout, "Initialising piece: ");
+    ChessUtility::print_piece_name(name, true);
 }
 
 void PieceEntity::change_board_position(PiecePositions original_position, PiecePositions new_position)

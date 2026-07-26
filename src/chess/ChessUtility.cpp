@@ -40,3 +40,41 @@ void ChessUtility::position_to_string(PiecePositions position, std::string &outp
     output.push_back(file);
     output.push_back(rank);
 }
+
+void ChessUtility::print_position(PiecePositions position, bool new_line)
+{
+    const char file = static_cast<char>('A' + (position / 8));
+    const char rank = static_cast<char>('1' + (position % 8));
+    fprintf(stdout, "%c%c", file, rank);
+    if (new_line) {
+        fprintf(stdout, "\n");
+    }
+}
+
+void ChessUtility::print_piece_name(PieceNames name, bool new_line)
+{
+    const char* name_str = nullptr;
+    switch (name) {
+        case PieceNames::WHITE_PAWN: name_str = "White Pawn"; break;
+        case PieceNames::WHITE_ROOK: name_str = "White Rook"; break;
+        case PieceNames::WHITE_KNIGHT: name_str = "White Knight"; break;
+        case PieceNames::WHITE_BISHOP: name_str = "White Bishop"; break;
+        case PieceNames::WHITE_QUEEN: name_str = "White Queen"; break;
+        case PieceNames::WHITE_KING: name_str = "White King"; break;
+        case PieceNames::BLACK_PAWN: name_str = "Black Pawn"; break;
+        case PieceNames::BLACK_ROOK: name_str = "Black Rook"; break;
+        case PieceNames::BLACK_KNIGHT: name_str = "Black Knight"; break;
+        case PieceNames::BLACK_BISHOP: name_str = "Black Bishop"; break;
+        case PieceNames::BLACK_QUEEN: name_str = "Black Queen"; break;
+        case PieceNames::BLACK_KING: name_str = "Black King"; break;
+    }
+    if (name_str) {
+        fprintf(stdout, "%s", name_str);
+    } else {
+        fprintf(stdout, "Unknown Piece");
+    }
+
+    if (new_line) {
+        fprintf(stdout, "\n");
+    }
+}
