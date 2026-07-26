@@ -1,6 +1,7 @@
 #ifndef INSTANCED_TRANSFORM_COMPONENT_H
 #define INSTANCED_TRANSFORM_COMPONENT_H
 
+#include <delegates/MulticastDelegate.h>
 #include <glm/glm.hpp>
 #include <vector>
 
@@ -11,6 +12,8 @@ class InstancedTransformComponent {
     std::vector<glm::mat4> transformations;
     
 public:
+    DECLARE_MULTICAST_DELEGATE(on_update);
+
     InstancedTransformComponent() {}
     ~InstancedTransformComponent() {}
 

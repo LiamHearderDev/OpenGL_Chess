@@ -12,17 +12,13 @@ private:
     std::vector<vertex_data> vertices;
     std::vector<unsigned int> indices;
     unsigned int instance_count = 0;
-
     unsigned int VAO{};
     unsigned int VBO_vertices{};
     unsigned int VBO_indices{};
     unsigned int VBO_instances{};
-
-    /** Finishes up the class so that it can be safely unloaded. This should only be called by the destructor. */
-    void finish() override;
-
+public:
+    std::unique_ptr<InstancedTransformComponent> instanced_transform_component;
 protected:
-
     std::unique_ptr<BaseMaterial> material;
 
     /** The file path of the desired vertex shader. Must be overriden. */
@@ -32,16 +28,7 @@ protected:
     std::string frag_file_path;
 
 
-    // === Overrides from `RenderableBase` === //
-
-    virtual void setup_attrib_pointers() override;
-    virtual void init_material() override;
-    virtual void init_shader_paths() override;
-
 public:
-
-    std::unique_ptr<InstancedTransformComponent> instanced_transform_component;
-
     InstancedRenderable(renderable_data&& render_data, unsigned int instance_count) : 
         instance_count(instance_count),
         vertices(std::move(render_data.vertices)),
@@ -70,6 +57,15 @@ public:
     virtual void init() override;
     virtual void render() override;
     virtual void set_uniform_data() override {}
+private:
+    /** Finishes up the class so that it can be safely unloaded. This should only be called by the destructor. */
+    void finish() override;
+    void update_instance_vbo();
+
+protected:
+    virtual void setup_attrib_pointers() override;
+    virtual void init_material() override;
+    virtual void init_shader_paths() override;
 };
 
 #endif // INSTANCED_RENDERABLE_H

@@ -6,7 +6,7 @@
 
 void InstancedRenderable::init()
 {
-    // 1. Initialise vertices
+    // Initialise VAO
     glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
@@ -15,7 +15,7 @@ void InstancedRenderable::init()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_vertices);
     glBufferData(
         GL_ARRAY_BUFFER, 
-        (long)(sizeof(vertex_data) * get_vertices_count()),
+        (size_t)(sizeof(vertex_data) * get_vertices_count()),
         vertices.data(),
         GL_STATIC_DRAW
     );
@@ -25,7 +25,7 @@ void InstancedRenderable::init()
     glBindBuffer(GL_ARRAY_BUFFER, VBO_instances);
     glBufferData(
         GL_ARRAY_BUFFER, 
-        (long)(sizeof(glm::mat4) * instanced_transform_component->get_transforms().size()), 
+        (size_t)(sizeof(glm::mat4) * instanced_transform_component->get_transforms().size()), 
         instanced_transform_component->get_transforms().data(), 
         GL_STATIC_DRAW
     );
@@ -35,7 +35,7 @@ void InstancedRenderable::init()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_indices);
     glBufferData(
         GL_ELEMENT_ARRAY_BUFFER, 
-        (long)(sizeof(unsigned int) * get_indices_count()), 
+        (size_t)(sizeof(unsigned int) * get_indices_count()), 
         indices.data(), 
         GL_STATIC_DRAW
     );
@@ -44,8 +44,11 @@ void InstancedRenderable::init()
 
     glBindVertexArray(0); // Unbind, so we don't accidentally write to the above VAO 
     
-    // 2. Initialise shader 
+    // Initialise shader 
     init_material();
+
+    // Bind instance updates
+    instanced_transform_component->on_update->add(this, &update_instance_vbo);
 }
 
 void InstancedRenderable::render()
@@ -76,6 +79,14 @@ void InstancedRenderable::finish()
 	glDeleteBuffers(1, &VBO_vertices);
     glDeleteBuffers(1, &VBO_indices);
     glDeleteBuffers(1, &VBO_instances);
+}
+
+void InstancedRenderable::update_instance_vbo()
+{
+    fprintf(stdout, "UPDATING VBO...\n");
+    const size_t offset = (size_t)(sizeof(vertex_data) * get_vertices_count());
+    const size_t data_size = (size_t)(sizeof(glm::mat4) * instanced_transform_component->get_transforms().size());
+    glBufferSubData(GL_ARRAY_BUFFER, offset, data_size, instanced_transform_component->get_transforms().data());
 }
 
 void InstancedRenderable::setup_attrib_pointers()

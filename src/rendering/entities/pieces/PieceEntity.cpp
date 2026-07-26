@@ -75,9 +75,6 @@ void PieceEntity::update()
         } else {
             ChessUtility::board_to_world_position(piece_pos, world_pos);
         }
-        if (data.dragged_piece_id >= 0) {
-            //fprintf(stdout, "dragged id = %d...\n", data.dragged_piece_id);
-        }
 
         glm::mat4 instance_transform = instanced_transform_component->calc_instance_transform(world_pos, glm::vec3(0.f), glm::vec3(ChessUtility::get_piece_scale()));
         temp_transforms.emplace_back(instance_transform);

@@ -17,6 +17,7 @@ glm::mat4 InstancedTransformComponent::calc_instance_transform(glm::vec3 positio
 void InstancedTransformComponent::set_transforms(std::vector<glm::mat4> &&new_transforms)
 {
     transformations = new_transforms;
+    on_update->broadcast();
 }
 
 void InstancedTransformComponent::set_transform_at(glm::mat4 new_transform, unsigned int index)
@@ -25,4 +26,5 @@ void InstancedTransformComponent::set_transform_at(glm::mat4 new_transform, unsi
         return;
     }
     transformations[index] = new_transform;
+    on_update->broadcast();
 }

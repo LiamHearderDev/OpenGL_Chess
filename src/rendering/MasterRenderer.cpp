@@ -57,7 +57,7 @@ void MasterRenderer::draw()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	for (const auto& element : renderables) {
-		element->update();
+		//element->update();
 		element->render();
 	}
 }
