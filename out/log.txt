@@ -1,6 +1,0 @@
-Beginning OpenGL_Chess
-
-Creating engine services...	finished.
-Initialising Window Manager...	finished.
-Creating window...		finished.
-Initialising GLAD...		Error: Failed to initialize GLAD.
