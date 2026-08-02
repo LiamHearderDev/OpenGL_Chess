@@ -41,7 +41,6 @@ void PieceEntity::init_piece()
 
 void PieceEntity::on_game_board_updated(PieceNames piece_updated)
 {
-    fprintf(stdout, "on_board_updated\n");
     if (piece_updated == name) {
         update();
     }
@@ -61,13 +60,13 @@ void PieceEntity::update()
 {
     const UniquePieceData data = engine.game_state->game_board->get_piece_data(name);
 
-    fprintf(stdout, "updated piece.\n");
+    // Update the positions vector with the new positions from the game board
     positions.clear();
-    //positions = std::move(data.positions);
     for (int i = 0; i < data.positions.size(); i++) {
         positions.emplace_back(data.positions[i]);
     }
 
+    // Update the instance transforms for each piece position
     std::vector<glm::mat4> temp_transforms{};
     for (int i = 0; i < positions.size(); i++) {
         const PiecePositions& piece_pos = positions[i];

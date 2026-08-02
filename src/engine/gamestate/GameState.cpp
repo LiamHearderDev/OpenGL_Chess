@@ -1,6 +1,7 @@
 #include "GameState.h"
 
 #include <engine/input/InputHandler.h>
+#include <engine/logger/Logger.h>
 #include <chess/ChessUtility.h>
 #include <glm/glm.hpp>
 

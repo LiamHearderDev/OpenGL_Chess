@@ -16,8 +16,8 @@ class InputHandler {
     GLFWwindow* window;
 
 public:
-    InputHandler() {};
-    ~InputHandler() {};
+    InputHandler() { init(); };
+    ~InputHandler() { finish(); };
 
     void register_engine_context(EngineContext new_engine) { engine = new_engine; }
 
@@ -39,7 +39,7 @@ public:
 
     // ====== Functions ====== //
 
-    void register_window(GLFWwindow& window);
+    void register_window(GLFWwindow* window);
     void screen_to_world_space(double screen_x, double screen_y, float& world_x, float& world_y, float& world_z);
     void screen_to_world_space(double screen_x, double screen_y, glm::vec3& world);
     void screen_to_world_space(glm::dvec2 screen, float& world_x, float& world_y, float& world_z);
@@ -47,4 +47,8 @@ public:
     
     bool get_is_dragging() const;
     glm::dvec2 get_cursor_position() const;
+
+private:
+    void init();
+    void finish();
 };

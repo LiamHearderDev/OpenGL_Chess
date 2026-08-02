@@ -80,42 +80,15 @@ int main(int arc, char** argv) {
 
 
 	// ======== Main Event Loop ======== //
-	// logger->LogMessage("Beginning main loop...		");
-	// while (!(window_manager->ShouldWindowClose())) {
-	// 	master_renderer->draw();
-	// 	window_manager->update();
-	// 	window_manager->swapBuffers();
-	// 	glfwPollEvents();
-	// }
-	// logger->LogMessage("finished.\n");
-
 	logger->LogMessage("Beginning main loop...		");
-	try {
-		if (window_manager->ShouldWindowClose()) {
-			logger->LogMessage("Error: Window closed before main loop.\n");
-		}
-		while (!(window_manager->ShouldWindowClose())) {
-			master_renderer->draw();
-			window_manager->update();
-			window_manager->swapBuffers();
-			glfwPollEvents();
-		}
-		logger->LogMessage("finished.\n");
-	} catch (const std::exception& e) {
-		logger->LogMessage("Exception during main loop: %s\n", e.what());
-	} catch (...) {
-		logger->LogMessage("Unknown exception during main loop.\n");
+	while (!(window_manager->ShouldWindowClose())) {
+		master_renderer->draw();
+		window_manager->update();
+		window_manager->swapBuffers();
+		glfwPollEvents();
 	}
-
-	
-	// ======== Finish ======== //
-	logger->LogMessage("Finishing renderer...		");
-	master_renderer->finish();
 	logger->LogMessage("finished.\n");
 
-	logger->LogMessage("Finishing window manager...	");
-	window_manager->finish();
-	logger->LogMessage("finished.\n");
 
 	logger->LogMessage("Success!\n");
 	return 0;

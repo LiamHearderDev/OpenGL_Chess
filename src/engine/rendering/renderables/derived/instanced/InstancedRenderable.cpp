@@ -84,8 +84,6 @@ void InstancedRenderable::finish()
 
 void InstancedRenderable::update_instance_vbo()
 {
-    fprintf(stdout, "UPDATING VBO...\n");
-
     const auto& transforms = instanced_transform_component->get_transforms();
     if (transforms.empty()) return;
 

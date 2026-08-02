@@ -60,7 +60,7 @@ void MasterRenderer::draw()
 
 	try {
 		for (const auto& element : renderables) {
-			//element->update();
+			element->update();
 			element->render();
 		}
 	} catch (const std::exception& e) {

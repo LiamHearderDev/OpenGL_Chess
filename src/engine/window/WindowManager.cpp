@@ -45,9 +45,9 @@ int WindowManager::init()
 
 int WindowManager::createWindow(unsigned int width, unsigned int height)
 {	
-	if (window != NULL){
-		fprintf(stderr, "Error: Cannot open multiple windows.\n");
-		return 1;
+	if (window) {
+		glfwDestroyWindow(window);
+		window = nullptr;
 	}
 
 	// Create Window
@@ -62,7 +62,7 @@ int WindowManager::createWindow(unsigned int width, unsigned int height)
 	glfwMakeContextCurrent(window);
 
 	// Link the window to the input handler
-	engine.input_handler->register_window(*window);
+	engine.input_handler->register_window(window);
 	return 0;
 }
 
@@ -111,6 +111,7 @@ void WindowManager::finish()
 		glfwDestroyWindow(window);
 		window = nullptr;
 	}
+	glfwTerminate();
 }
 
 void WindowManager::swapBuffers()

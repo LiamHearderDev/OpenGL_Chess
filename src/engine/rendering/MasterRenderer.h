@@ -21,7 +21,9 @@ public:
 
     int init();
     void draw();
-    void finish();
 
     void register_engine_context(EngineContext new_engine) { engine = new_engine; }
+
+private:
+    void finish();
 };

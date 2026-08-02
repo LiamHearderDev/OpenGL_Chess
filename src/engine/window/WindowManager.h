@@ -19,17 +19,19 @@ public:
     static int init();
 
     WindowManager() { finish(); }
-    ~WindowManager() {}
+    ~WindowManager() { finish(); }
 
     int createWindow(unsigned int width, unsigned int height);
 
     bool ShouldWindowClose();
     void update();
-    void finish();
     void swapBuffers();
     double getDeltaTime();
 
     void register_engine_context(EngineContext new_engine) { engine = new_engine; }
 
     glm::ivec2 getFrameBufferSize();
+
+private:
+    void finish();
 };

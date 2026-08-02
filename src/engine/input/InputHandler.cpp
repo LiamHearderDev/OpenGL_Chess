@@ -3,13 +3,13 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-// #include <cstdio>
 
 
 // ===== Callbacks ===== //
 
 void glfw_callback_mouse_button(GLFWwindow *window, int button, int action, int mods)
 {
+	fprintf(stdout, "mouse pressed\n");
 	InputHandler* input_handler = static_cast<InputHandler*>(glfwGetWindowUserPointer(window));
 	if (!input_handler) { return; }
 
@@ -48,10 +48,13 @@ void glfw_callback_mouse_moved(GLFWwindow *window, double pos_x, double pos_y)
 	input_handler->on_mouse_move->broadcast(pos_x, pos_y);
 }
 
-void InputHandler::register_window(GLFWwindow& new_window)
+void InputHandler::register_window(GLFWwindow* new_window)
 {
-    if (window) { return; }
-    window = &new_window;
+    if (window) {
+		fprintf(stderr, "ERROR: InputHandler::register_window() error caused by already registered window.\n");
+		window = nullptr;
+	}
+    window = new_window;
 
 	// Set this class as a User Pointer, giving each GLFWwindow access to this class
 	glfwSetWindowUserPointer(window, this);
@@ -105,4 +108,13 @@ glm::dvec2 InputHandler::get_cursor_position() const
 	double x, y;
 	glfwGetCursorPos(window, &x, &y);
     return glm::dvec2(x, y);
+}
+
+void InputHandler::init()
+{
+	
+}
+
+void InputHandler::finish()
+{
 }
