@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <chess/ChessUtility.h>
+#include <engine/input/InputHandler.h>
 
 void GameBoard::init()
 {
@@ -43,14 +44,10 @@ void GameBoard::try_pickup_piece_at_location(PiecePositions position)
     for (auto& piece_data : pieces) {
         for (int i = 0; i < piece_data.positions.size(); i++) {
             if (piece_data.positions[i] == position) {
-                piece_data.dragged_piece_id = i;
 
+                piece_data.dragged_piece_id = i;
                 on_update->broadcast(piece_data.name);
 
-                // fprintf(stdout, "STARTED DRAGGING: ");
-                // ChessUtility::print_piece_name(piece_data.name, false);
-                // fprintf(stdout, " at ");
-                // ChessUtility::print_position(piece_data.positions[i], true);
                 return;
             }
         }
@@ -59,11 +56,30 @@ void GameBoard::try_pickup_piece_at_location(PiecePositions position)
 }
 
 void GameBoard::drop_piece() {
-    for (auto& piece_data : pieces) {
-        if (piece_data.dragged_piece_id != -1) {
-            fprintf(stdout, "STOPPED DRAGGING: ");
-            ChessUtility::print_piece_name(piece_data.name, true);
-            piece_data.dragged_piece_id = -1;
+    for (int i = 0; i < pieces.size(); i++) {
+        UniquePieceData* piece_data = &pieces[i];
+
+        if (piece_data->dragged_piece_id != -1) {
+
+            // Get cursor position in screen space
+            const glm::dvec2 cursor_pos = engine.input_handler->get_cursor_position();
+
+            // Convert to world space
+            glm::vec3 world_pos;
+            engine.input_handler->screen_to_world_space(cursor_pos, world_pos);
+            
+            // Convert to board position
+            PiecePositions dropped_position;
+            bool conversion_result = ChessUtility::world_to_board_position(world_pos, dropped_position);
+            if (conversion_result) {
+                // Update the piece's position in the game board
+                piece_data->positions[piece_data->dragged_piece_id] = dropped_position;
+            }
+            piece_data->dragged_piece_id = -1;
+
+            // Broadcast the update to any listeners
+            on_update->broadcast(piece_data->name);
+            return;
         }
     }
     return;

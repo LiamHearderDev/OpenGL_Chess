@@ -7,6 +7,7 @@
 #include <vector>
 
 #include <chess/ChessEnums.h>
+#include <engine/EngineContext.h>
 
 #include "delegates/MulticastDelegate.h"
 
@@ -27,6 +28,7 @@ struct UniquePieceData {
  * A class used for storing the game board, and game state.
  */
 class GameBoard {
+    EngineContext engine;
     std::array<UniquePieceData, 12> pieces;
 
 public:
@@ -40,6 +42,9 @@ public:
 
     unsigned int get_pieces_count() { return pieces.size(); }
     UniquePieceData get_piece_data(PieceNames name) { return pieces.at(name); }
+
+    /** Registers the engine context with the game board. */
+    void register_engine_context(EngineContext engine_context) { engine = engine_context; }
 
     /** 
      * Checks if a square on the board is occupied.

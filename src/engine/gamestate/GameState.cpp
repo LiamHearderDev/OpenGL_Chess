@@ -8,8 +8,9 @@
 void GameState::init()
 {
     game_board = std::make_shared<GameBoard>();
+    game_board->register_engine_context(engine);
     game_board->init();
-
+    
     // Bind to the input handler
     engine.input_handler->on_mouse_pressed->add(this, &on_mouse_pressed);
     engine.input_handler->on_mouse_released->add(this, &on_mouse_released);
