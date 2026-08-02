@@ -58,4 +58,6 @@ private:
     void init_material() override;
 
     void init_piece();
+
+    void on_game_board_updated(PieceNames piece_updated);
 };

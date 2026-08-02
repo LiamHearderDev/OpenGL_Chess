@@ -39,17 +39,18 @@ bool GameBoard::is_square_occupied(PiecePositions position)
 
 void GameBoard::try_pickup_piece_at_location(PiecePositions position)
 {
+    fprintf(stdout, "trying to pickup piece.\n");
     for (auto& piece_data : pieces) {
         for (int i = 0; i < piece_data.positions.size(); i++) {
             if (piece_data.positions[i] == position) {
                 piece_data.dragged_piece_id = i;
 
-                on_update->broadcast();
+                on_update->broadcast(piece_data.name);
 
-                fprintf(stdout, "STARTED DRAGGING: ");
-                ChessUtility::print_piece_name(piece_data.name, false);
-                fprintf(stdout, " at ");
-                ChessUtility::print_position(piece_data.positions[i], true);
+                // fprintf(stdout, "STARTED DRAGGING: ");
+                // ChessUtility::print_piece_name(piece_data.name, false);
+                // fprintf(stdout, " at ");
+                // ChessUtility::print_position(piece_data.positions[i], true);
                 return;
             }
         }

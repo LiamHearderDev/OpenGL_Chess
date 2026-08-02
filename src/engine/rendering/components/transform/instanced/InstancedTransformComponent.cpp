@@ -20,6 +20,7 @@ void InstancedTransformComponent::set_transforms(std::vector<glm::mat4> new_tran
     for (const auto& transform : new_transforms) {
         transformations.emplace_back(transform);
     }
+    if (update) on_update->broadcast();
 }
 
 void InstancedTransformComponent::set_transform_at(glm::mat4 new_transform, unsigned int index, bool update)

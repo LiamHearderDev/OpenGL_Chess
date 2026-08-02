@@ -11,6 +11,7 @@ public:
     Logger(char** argv) {
         filepath = std::string(argv[0]) + "/../../out/log.txt";
         output_file.open(filepath, std::ios::out | std::ios::trunc);
+        output_file.close();
     }
 
     ~Logger() {
@@ -21,7 +22,6 @@ public:
 
     template<typename... Args>
     void LogMessage(const std::string& format, Args... args) {
-
         output_file.open(filepath, std::ios::app);
 
         char buffer[1024];

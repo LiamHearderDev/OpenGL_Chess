@@ -27,7 +27,7 @@ void InstancedRenderable::init()
         GL_ARRAY_BUFFER, 
         (long)(sizeof(glm::mat4) * instanced_transform_component->get_transforms().size()), 
         instanced_transform_component->get_transforms().data(), 
-        GL_STATIC_DRAW
+        GL_STREAM_DRAW
     );
     
     // INDICES 
@@ -84,10 +84,18 @@ void InstancedRenderable::finish()
 
 void InstancedRenderable::update_instance_vbo()
 {
-    //fprintf(stdout, "UPDATING VBO...\n");
-    const long offset = (long)(sizeof(vertex_data) * get_vertices_count());
-    const long data_size = (long)(sizeof(glm::mat4) * instanced_transform_component->get_transforms().size());
-    glBufferSubData(GL_ARRAY_BUFFER, offset, data_size, instanced_transform_component->get_transforms().data());
+    fprintf(stdout, "UPDATING VBO...\n");
+
+    const auto& transforms = instanced_transform_component->get_transforms();
+    if (transforms.empty()) return;
+
+    glBindBuffer(GL_ARRAY_BUFFER, get_vbo_instances());
+    glBufferSubData(
+        GL_ARRAY_BUFFER, 
+        0,
+        (long)(sizeof(glm::mat4) * instanced_transform_component->get_transforms().size()), 
+        instanced_transform_component->get_transforms().data()
+    );
 }
 
 void InstancedRenderable::setup_attrib_pointers()

@@ -34,7 +34,7 @@ public:
     ~GameBoard() {}
 
     /** A delegate that is triggered when the game board is updated. */
-    DECLARE_MULTICAST_DELEGATE(on_update);
+    DECLARE_MULTICAST_DELEGATE(on_update, PieceNames /* piece_updated */);
 
     void init();
 

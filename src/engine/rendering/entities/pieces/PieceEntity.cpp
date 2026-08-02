@@ -30,13 +30,21 @@ void PieceEntity::init_piece()
     piece_id = name % 6; 
 
     // Bind to delegates
-    engine.game_state->game_board->on_update->add(this, &update);
+    engine.game_state->game_board->on_update->add(this, &on_game_board_updated);
 
     // TODO: delete this
     fprintf(stdout, "Initialising piece: ");
     ChessUtility::print_piece_name(name, true);
 
     update();
+}
+
+void PieceEntity::on_game_board_updated(PieceNames piece_updated)
+{
+    fprintf(stdout, "on_board_updated\n");
+    if (piece_updated == name) {
+        update();
+    }
 }
 
 void PieceEntity::change_board_position(PiecePositions original_position, PiecePositions new_position)
@@ -53,6 +61,7 @@ void PieceEntity::update()
 {
     const UniquePieceData data = engine.game_state->game_board->get_piece_data(name);
 
+    fprintf(stdout, "updated piece.\n");
     positions.clear();
     //positions = std::move(data.positions);
     for (int i = 0; i < data.positions.size(); i++) {
@@ -72,10 +81,8 @@ void PieceEntity::update()
             ChessUtility::board_to_world_position(piece_pos, world_pos);
         }
 
-        z_rot += (10.f * engine.window_manager->getDeltaTime());
-
         glm::mat4 instance_transform = instanced_transform_component->calc_instance_transform(
-            world_pos, glm::vec3(0.f, 0.f, z_rot), glm::vec3(ChessUtility::get_piece_scale())
+            world_pos, glm::vec3(0.f, 0.f, 0.f), glm::vec3(ChessUtility::get_piece_scale())
         );
         temp_transforms.emplace_back(instance_transform);
     }
