@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
 project(OpenGL_Chess LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(EXISTS "${STAGED_INSTALL_PREFIX}/lib64")
@@ -21,8 +21,6 @@ message(STATUS "glfw3_DIR is... ${glfw3_DIR}")
 
 find_package(glfw3 REQUIRED CONFIG)
 
-# set(GLEW_USE_STATIC_LIBS ON)
-# find_package(GLEW REQUIRED CONFIG)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../lib/glad ${CMAKE_BINARY_DIR}/glad_build)
 
 # set(SRCS main.cpp)

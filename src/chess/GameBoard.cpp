@@ -1,5 +1,8 @@
 #include "GameBoard.h"
 
+#include <cstdio>
+#include <chess/ChessUtility.h>
+
 void GameBoard::init()
 {
     pieces.fill(UniquePieceData{});
@@ -25,9 +28,43 @@ void GameBoard::init()
 bool GameBoard::is_square_occupied(PiecePositions position)
 {
     for (const auto& piece_data : pieces) {
-        if (piece_data.positions.find(position) != piece_data.positions.end()) {
-            return true;
+        for (const PiecePositions& pos : piece_data.positions) {
+            if (pos == position) {
+                return true;
+            }
         }
     }
     return false;
+}
+
+void GameBoard::try_pickup_piece_at_location(PiecePositions position)
+{
+    fprintf(stdout, "trying to pickup piece.\n");
+    for (auto& piece_data : pieces) {
+        for (int i = 0; i < piece_data.positions.size(); i++) {
+            if (piece_data.positions[i] == position) {
+                piece_data.dragged_piece_id = i;
+
+                on_update->broadcast(piece_data.name);
+
+                // fprintf(stdout, "STARTED DRAGGING: ");
+                // ChessUtility::print_piece_name(piece_data.name, false);
+                // fprintf(stdout, " at ");
+                // ChessUtility::print_position(piece_data.positions[i], true);
+                return;
+            }
+        }
+    }
+    return;
+}
+
+void GameBoard::drop_piece() {
+    for (auto& piece_data : pieces) {
+        if (piece_data.dragged_piece_id != -1) {
+            fprintf(stdout, "STOPPED DRAGGING: ");
+            ChessUtility::print_piece_name(piece_data.name, true);
+            piece_data.dragged_piece_id = -1;
+        }
+    }
+    return;
 }

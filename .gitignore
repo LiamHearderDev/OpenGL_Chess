@@ -70,3 +70,5 @@ vcpkg_installed/
 Testing/
 .cache/
 desktop.ini
+
+out/log.txt
