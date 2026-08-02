@@ -19,6 +19,7 @@ public:
     InputHandler() { init(); };
     ~InputHandler() { finish(); };
 
+    /** Registers the engine context with the input handler. */
     void register_engine_context(EngineContext new_engine) { engine = new_engine; }
 
     // ====== Callback variables ====== //
@@ -39,13 +40,19 @@ public:
 
     // ====== Functions ====== //
 
+    /** Registers a GLFWwindow with the input handler, allowing it to receive input events from said window. */
     void register_window(GLFWwindow* window);
+
+    /** Converts a screen space position to a world space position. */
     void screen_to_world_space(double screen_x, double screen_y, float& world_x, float& world_y, float& world_z);
     void screen_to_world_space(double screen_x, double screen_y, glm::vec3& world);
     void screen_to_world_space(glm::dvec2 screen, float& world_x, float& world_y, float& world_z);
     void screen_to_world_space(glm::dvec2 screen, glm::vec3& world);
     
+    /** Returns whether the user is currently dragging the mouse. */
     bool get_is_dragging() const;
+
+    /** Returns the current cursor position in screen space. */
     glm::dvec2 get_cursor_position() const;
 
 private:

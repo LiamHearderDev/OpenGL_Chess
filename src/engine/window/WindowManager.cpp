@@ -103,6 +103,8 @@ void WindowManager::update()
 	int viewX = (size.x - viewW) / 2;
 	int viewY = (size.y - viewH) / 2;
 	glViewport(viewX, viewY, viewW, viewH);
+
+	//fprintf(stdout, "fps: %.2f,	delta_time:	%.4f\n", 1.0 / delta_time, delta_time);
 }
 
 void WindowManager::finish()
