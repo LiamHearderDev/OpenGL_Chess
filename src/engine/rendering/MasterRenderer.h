@@ -11,7 +11,7 @@
 
 /** The Master Renderer handles and manages all renderable entities in the scene. */
 class MasterRenderer {
-    EngineContext* engine;
+    EngineContext engine;
 
     std::vector<std::unique_ptr<RenderableBase>> renderables;
 
@@ -23,5 +23,5 @@ public:
     void draw();
     void finish();
 
-    void register_engine_context(EngineContext& new_engine) { engine = &new_engine; }
+    void register_engine_context(EngineContext new_engine) { engine = new_engine; }
 };

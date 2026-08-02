@@ -17,7 +17,7 @@ class PieceEntity : public InstancedRenderable {
     float z_rot = 0;
 
     // References
-    EngineContext& engine;
+    EngineContext engine;
 
 public:
     /**
@@ -25,7 +25,7 @@ public:
      * @param name The name of the piece, as defined in the PieceNames enum.
      * @param positions A vector of PiecePositions that this type of piece occupies on the board.
     */
-    PieceEntity(PieceNames name, std::vector<PiecePositions>&& positions, EngineContext& engine) :
+    PieceEntity(PieceNames name, std::vector<PiecePositions>&& positions, EngineContext engine) :
         name(name),
         positions(positions),
         engine(engine),

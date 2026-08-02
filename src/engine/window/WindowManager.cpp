@@ -16,10 +16,6 @@ void error_callback(int error, const char* description)
     fprintf(stderr, "Error: %s\n", description);
 }
 
-void foo() {
-	//
-	return;
-}
 
 // ======================== //
 
@@ -66,14 +62,18 @@ int WindowManager::createWindow(unsigned int width, unsigned int height)
 	glfwMakeContextCurrent(window);
 
 	// Link the window to the input handler
-	engine->input_handler.register_window(*window);
+	engine.input_handler->register_window(*window);
 	return 0;
 }
 
 
 bool WindowManager::ShouldWindowClose()
 {
-    return (window) ? (glfwWindowShouldClose(window)) : (true);
+	if (window == NULL) {
+		fprintf(stderr, "Error: Window not created.\n");
+		return true;
+	}
+	return glfwWindowShouldClose(window);
 }
 
 void WindowManager::update()
@@ -103,6 +103,14 @@ void WindowManager::update()
 	int viewX = (size.x - viewW) / 2;
 	int viewY = (size.y - viewH) / 2;
 	glViewport(viewX, viewY, viewW, viewH);
+}
+
+void WindowManager::finish()
+{
+	if (window) {
+		glfwDestroyWindow(window);
+		window = nullptr;
+	}
 }
 
 void WindowManager::swapBuffers()

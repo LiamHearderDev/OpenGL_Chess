@@ -3,6 +3,7 @@
 #include <engine/gamestate/GameState.h>
 #include <engine/input/InputHandler.h>
 #include <engine/window/WindowManager.h>
+#include <engine/logger/Logger.h>
 
 #include "components/texture_loader/TextureLoader.h"
 #include "entities/pieces/PieceEntity.h"
@@ -29,10 +30,10 @@ int MasterRenderer::init()
 		renderables.emplace_back(std::make_unique<BoardEntity>());
 
 		// Create all pieces
-		for (int i = 0; i < engine->game_state.game_board->get_pieces_count(); i++) {
-			UniquePieceData data = engine->game_state.game_board->get_piece_data(static_cast<PieceNames>(i));
+		for (int i = 0; i < engine.game_state->game_board->get_pieces_count(); i++) {
+			UniquePieceData data = engine.game_state->game_board->get_piece_data(static_cast<PieceNames>(i));
 			renderables.emplace_back(std::make_unique<PieceEntity>(
-				data.name, std::move(data.positions), *engine)
+				data.name, std::move(data.positions), engine)
 			);
 		}
 
@@ -57,9 +58,13 @@ void MasterRenderer::draw()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	for (const auto& element : renderables) {
-		element->update();
-		element->render();
+	try {
+		for (const auto& element : renderables) {
+			//element->update();
+			element->render();
+		}
+	} catch (const std::exception& e) {
+		fprintf(stderr, "Exception during draw call: %s\n", e.what());
 	}
 }
 

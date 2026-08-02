@@ -8,7 +8,7 @@
 
 
 class GameState {
-    EngineContext* engine;
+    EngineContext engine;
 
 public:
     GameState() {}
@@ -16,7 +16,7 @@ public:
 
     std::shared_ptr<GameBoard> game_board{};
 
-    void register_engine_context(EngineContext& new_engine) { engine = &new_engine; }
+    void register_engine_context(EngineContext new_engine) { engine = new_engine; }
     void init();
 
 private:

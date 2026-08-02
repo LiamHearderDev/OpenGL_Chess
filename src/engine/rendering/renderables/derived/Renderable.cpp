@@ -15,12 +15,12 @@ void Renderable::init()
 
     glGenBuffers(1, &VBO_vertices);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_vertices);
-    glBufferData(GL_ARRAY_BUFFER, (size_t)(sizeof(vertex_data) * get_vertices_count()), vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (long)(sizeof(vertex_data) * get_vertices_count()), vertices.data(), GL_STATIC_DRAW);
     setup_attrib_pointers();
 
     glGenBuffers(1, &VBO_indices);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_indices);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, (size_t)(sizeof(unsigned int) * get_indices_count()), indices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, (long)(sizeof(unsigned int) * get_indices_count()), indices.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(0); // Unbind, so we don't accidentally write to the above VAO
 

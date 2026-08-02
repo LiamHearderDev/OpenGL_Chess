@@ -19,12 +19,13 @@ public:
 
     [[nodiscard]] glm::mat4 calc_instance_transform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale) const;
 
-    void set_transforms(std::vector<glm::mat4>&& new_transforms);
-    void set_transform_at(glm::mat4 new_transform, unsigned int index);
-    void remove_transform(unsigned int index) {}
-    void add_transform(glm::mat4 new_transform) {}
+    void set_transforms(std::vector<glm::mat4> new_transforms, bool update); 
+    void set_transform_at(glm::mat4 new_transform, unsigned int index, bool update = true);
+    void remove_transform(unsigned int index, bool update) {}
+    void add_transform(glm::mat4 new_transform, bool update) {}
     
-    std::vector<glm::mat4> get_transforms() const { return transformations; }
+    std::vector<glm::mat4> get_transforms() const;
+    int get_instance_count() const;
 };
 
 

@@ -13,88 +13,110 @@
 #include "engine/rendering/MasterRenderer.h"
 #include "engine/input/InputHandler.h"
 #include "engine/gamestate/GameState.h"
+#include "engine/logger/Logger.h"
 
 
 int main(int arc, char** argv) {
-	// Creating output log file...
-	std::filesystem::path filepath = std::string(argv[0]) + "/../../out/log.txt";
-	std::ofstream output_file(filepath);
-	
-	output_file << "Beginning OpenGL_Chess\n\n";
-	
-
+	fprintf(stdout, "Beginning OpenGL_Chess\n\n");
 	
 	// ======== Generate Engine Services ======== //
-	output_file << "Creating engine services...	";
+	std::shared_ptr<Logger> 		logger 			= std::make_shared<Logger>(argv);
 	std::shared_ptr<WindowManager>	window_manager 	= std::make_shared<WindowManager>();
 	std::shared_ptr<MasterRenderer> master_renderer = std::make_shared<MasterRenderer>();
 	std::shared_ptr<InputHandler> 	input_handler 	= std::make_shared<InputHandler>();
 	std::shared_ptr<GameState>		game_state 		= std::make_shared<GameState>();
 
-	std::unique_ptr<EngineContext> engine_context = std::make_unique<EngineContext>(
-		*game_state,
-		*input_handler,
-		*master_renderer,
-		*window_manager
-		);
+	EngineContext engine_context {
+		game_state.get(),
+		input_handler.get(),
+		master_renderer.get(),
+		window_manager.get(),
+		logger.get()
+	};
 
-	window_manager->register_engine_context(*engine_context);
-	master_renderer->register_engine_context(*engine_context);
-	input_handler->register_engine_context(*engine_context);
-	game_state->register_engine_context(*engine_context);
-	output_file << "finished.\n";
+	window_manager->register_engine_context(engine_context);
+	master_renderer->register_engine_context(engine_context);
+	input_handler->register_engine_context(engine_context);
+	game_state->register_engine_context(engine_context);
 
 	// ======== Window setup ======== //
-	output_file << "Initialising Window Manager...	";
+	logger->LogMessage("Initialising Window Manager...	");
 	WindowManager::init();
-	output_file << "finished.\n";
+	logger->LogMessage("finished.\n");
 
-	output_file << "Creating window...		";
-	window_manager->createWindow(800, 800);
-	output_file << "finished.\n";
-
-	output_file << "Initialising GLAD...		";
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		output_file << "Error: Failed to initialize GLAD." << std::endl;
+	logger->LogMessage("Creating window...		");
+	int window_status = window_manager->createWindow(800, 800);
+	if (window_status == 1) {
+		logger->LogMessage("Error: Cannot open multiple windows.\n");
+		return 1;
+	} else if (window_status == 2) {
+		logger->LogMessage("Error: Failed to create GLFW window.\n");
 		return 1;
 	}
-	output_file << "finished.\n";
+	logger->LogMessage("finished.\n");
+
+	logger->LogMessage("Initialising GLAD...		");
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+		logger->LogMessage("Error: Failed to initialize GLAD.\n");
+		return 1;
+	}
+	logger->LogMessage("finished.\n");
+	
 	
 	
 	// ======== Game State setup ======== //
-	output_file << "Initialising Game State...	";
+	logger->LogMessage("Initialising Game State...	");
 	game_state->init();
-	output_file << "finished.\n";
+	logger->LogMessage("finished.\n");
 
 
 	// ======== Renderer setup ======== //
-	output_file << "Initialising renderer...	";
+	logger->LogMessage("Initialising renderer...	");
 	if (master_renderer->init() != 0) {
-		output_file << "Error: Could not initialise renderer." << std::endl;
+		logger->LogMessage("Error: Could not initialise renderer.\n");
 		return 1;
 	}
-	output_file << "finished.\n";
+	logger->LogMessage("finished.\n");
 
 
 	// ======== Main Event Loop ======== //
-	output_file << "Beginning main loop...		";
-	while (!(window_manager->ShouldWindowClose())) {
-		master_renderer->draw();
-		window_manager->update();
-		window_manager->swapBuffers();
-		glfwPollEvents();
+	// logger->LogMessage("Beginning main loop...		");
+	// while (!(window_manager->ShouldWindowClose())) {
+	// 	master_renderer->draw();
+	// 	window_manager->update();
+	// 	window_manager->swapBuffers();
+	// 	glfwPollEvents();
+	// }
+	// logger->LogMessage("finished.\n");
+
+	logger->LogMessage("Beginning main loop...		");
+	try {
+		if (window_manager->ShouldWindowClose()) {
+			logger->LogMessage("Error: Window closed before main loop.\n");
+		}
+		while (!(window_manager->ShouldWindowClose())) {
+			master_renderer->draw();
+			window_manager->update();
+			window_manager->swapBuffers();
+			glfwPollEvents();
+		}
+		logger->LogMessage("finished.\n");
+	} catch (const std::exception& e) {
+		logger->LogMessage("Exception during main loop: %s\n", e.what());
+	} catch (...) {
+		logger->LogMessage("Unknown exception during main loop.\n");
 	}
-	output_file << "finished.\n";
 
 	
 	// ======== Finish ======== //
-	output_file << "Finishing renderer...		";
+	logger->LogMessage("Finishing renderer...		");
 	master_renderer->finish();
-	output_file << "finished.\n";
+	logger->LogMessage("finished.\n");
 
-	// end output log
-	output_file.close();
+	logger->LogMessage("Finishing window manager...	");
+	window_manager->finish();
+	logger->LogMessage("finished.\n");
 
-	output_file << "Success!\n";
+	logger->LogMessage("Success!\n");
 	return 0;
 }

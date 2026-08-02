@@ -12,14 +12,14 @@ class GLFWwindow;
 
 /** A class for handling all user inputs on a given window. */
 class InputHandler {
-    EngineContext* engine;
+    EngineContext engine;
     GLFWwindow* window;
 
 public:
     InputHandler() {};
     ~InputHandler() {};
 
-    void register_engine_context(EngineContext& new_engine) { engine = &new_engine; }
+    void register_engine_context(EngineContext new_engine) { engine = new_engine; }
 
     // ====== Callback variables ====== //
 

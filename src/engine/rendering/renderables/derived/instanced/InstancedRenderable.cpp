@@ -15,7 +15,7 @@ void InstancedRenderable::init()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_vertices);
     glBufferData(
         GL_ARRAY_BUFFER, 
-        (size_t)(sizeof(vertex_data) * get_vertices_count()),
+        (long)(sizeof(vertex_data) * get_vertices_count()),
         vertices.data(),
         GL_STATIC_DRAW
     );
@@ -25,7 +25,7 @@ void InstancedRenderable::init()
     glBindBuffer(GL_ARRAY_BUFFER, VBO_instances);
     glBufferData(
         GL_ARRAY_BUFFER, 
-        (size_t)(sizeof(glm::mat4) * instanced_transform_component->get_transforms().size()), 
+        (long)(sizeof(glm::mat4) * instanced_transform_component->get_transforms().size()), 
         instanced_transform_component->get_transforms().data(), 
         GL_STATIC_DRAW
     );
@@ -35,7 +35,7 @@ void InstancedRenderable::init()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO_indices);
     glBufferData(
         GL_ELEMENT_ARRAY_BUFFER, 
-        (size_t)(sizeof(unsigned int) * get_indices_count()), 
+        (long)(sizeof(unsigned int) * get_indices_count()), 
         indices.data(), 
         GL_STATIC_DRAW
     );
@@ -53,6 +53,7 @@ void InstancedRenderable::init()
 
 void InstancedRenderable::render()
 {
+    
     // Shader setup
     material->use();
     set_uniform_data();
@@ -65,7 +66,7 @@ void InstancedRenderable::render()
 
     // Bind the VAO we plan to use
     glBindVertexArray(get_vao());
-
+    
     // Draw
     glDrawElementsInstanced(GL_TRIANGLES, get_indices_count(), GL_UNSIGNED_INT, nullptr, instance_count);
 
@@ -84,8 +85,8 @@ void InstancedRenderable::finish()
 void InstancedRenderable::update_instance_vbo()
 {
     //fprintf(stdout, "UPDATING VBO...\n");
-    const size_t offset = (size_t)(sizeof(vertex_data) * get_vertices_count());
-    const size_t data_size = (size_t)(sizeof(glm::mat4) * instanced_transform_component->get_transforms().size());
+    const long offset = (long)(sizeof(vertex_data) * get_vertices_count());
+    const long data_size = (long)(sizeof(glm::mat4) * instanced_transform_component->get_transforms().size());
     glBufferSubData(GL_ARRAY_BUFFER, offset, data_size, instanced_transform_component->get_transforms().data());
 }
 

@@ -2,7 +2,10 @@
 #define INSTANCED_RENDERABLE_H
 
 #include <engine/rendering/components/transform/instanced/InstancedTransformComponent.h>
-#include <engine/rendering/renderables/derived/Renderable.h>
+
+#include <engine/rendering/renderables/base/RenderableBase.h>
+#include <engine/rendering/renderables/data/RenderableData.h>
+#include <engine/rendering/materials/BaseMaterial.h>
 
 
 // ====== Instanced Renderable Component ====== //
