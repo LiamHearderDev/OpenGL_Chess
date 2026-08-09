@@ -63,6 +63,21 @@ public:
      * Attempts to drop any picked up piece.
     */
     void drop_piece();
+
+private:
+    /**
+     * Executes the code to stop dragging a specific piece.
+     */
+    void stop_dragging_piece(UniquePieceData* piece);
+
+    /**
+     * Checks if the given move is obstructed by any other piece.
+     * @param piece The name of the piece we are moving.
+     * @param start The starting point of the move.
+     * @param end The ending point of the move.
+     * @return true if the move is obstructed.
+     */
+    bool is_moved_obstructed(PieceNames piece, PiecePositions start, PiecePositions end);
 };
 
 

@@ -72,15 +72,86 @@ void GameBoard::drop_piece() {
             PiecePositions dropped_position;
             bool conversion_result = ChessUtility::world_to_board_position(world_pos, dropped_position);
             if (conversion_result) {
+
+                /** The Plan:
+                 * 1. If the start and end points are the same, cancel.
+                 * 
+                 * 2. Check if this is a valid move based on standard movement rules.
+                 * 
+                 * 3. Check if any pieces block this move.
+                 *      a. Unless the moving piece is a knight, then skip this step.
+                 * 
+                 * 4. Check if any piece currently occupies the target square.
+                 *      a. Check if that piece is an enemy piece. 
+                 *          A. Check if this capture is valid, based on capturing rules.
+                 *          B. Remove the enemy piece.
+                 *          C. TODO: add this piece to the team's "captured pieces" list.
+                 * 
+                 * 5. Change the current turn.
+                */
+
+                // Collect all required data
+                const PiecePositions start_pos = piece_data->positions[piece_data->dragged_piece_id];
+
+
+                // 1. Check if start and end are the same.
+                // if (start_pos == dropped_position) {
+                //     stop_dragging_piece(piece_data);
+                //     return;
+                // }
+
+                // // 2. Check if this is a valid move
+                if (false == ChessUtility::is_move_legal(piece_data->name, start_pos, dropped_position)) {
+                    stop_dragging_piece(piece_data);
+                    return;
+                }
+
+                // // 3. Check if any pieces block this move.
+                // if (is_moved_obstructed(piece_data->name, start_pos, dropped_position)) {
+                //     stop_dragging_piece(piece_data);
+                //     return;
+                // }
+
                 // Update the piece's position in the game board
                 piece_data->positions[piece_data->dragged_piece_id] = dropped_position;
             }
-            piece_data->dragged_piece_id = -1;
-
-            // Broadcast the update to any listeners
-            on_update->broadcast(piece_data->name);
+            stop_dragging_piece(piece_data);
             return;
         }
     }
     return;
+}
+
+void GameBoard::stop_dragging_piece(UniquePieceData* piece)
+{
+    piece->dragged_piece_id = -1;
+    on_update->broadcast(piece->name);
+}
+
+bool GameBoard::is_moved_obstructed(PieceNames piece, PiecePositions start, PiecePositions end)
+{
+    switch (piece) {
+        case PieceNames::WHITE_ROOK:
+        case PieceNames::BLACK_ROOK:
+            // Rooks can move any number of squares along a rank or file
+            if (start / 8 == end / 8) { // Same row
+                int min_col = std::min(start % 8, end % 8);
+                int max_col = std::max(start % 8, end % 8);
+                for (int col = min_col + 1; col < max_col; ++col) {
+                    if (is_square_occupied(static_cast<PiecePositions>(start / 8 * 8 + col))) {
+                        return true;
+                    }
+                }
+            } else if (start % 8 == end % 8) { // Same column
+                int min_row = std::min(start / 8, end / 8);
+                int max_row = std::max(start / 8, end / 8);
+                for (int row = min_row + 1; row < max_row; ++row) {
+                    if (is_square_occupied(static_cast<PiecePositions>(row * 8 + start % 8))) {
+                        return true;
+                    }
+                }
+            }
+            break;
+    }
+    return false;
 }

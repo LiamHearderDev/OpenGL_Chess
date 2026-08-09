@@ -33,6 +33,16 @@ public:
     [[nodiscard]] static bool world_to_board_position(glm::vec3 world_position, PiecePositions& board_pos);
 
     /**
+     * Checks if a move is a legal depending on standard movement rules. 
+     * Does NOT consider obstruction or current turn.
+     * @param piece The name of the piece we are moving.
+     * @param start The starting board position.
+     * @param end The ending board position.
+     * @return true if the move is a valid legal
+     */
+    static bool is_move_legal(PieceNames piece, PiecePositions start, PiecePositions end);
+
+    /**
      * Converts a board position to a string representation.
      * @param position The board position to convert.
      * @param output A reference to a std::string object that will be set to the converted string.

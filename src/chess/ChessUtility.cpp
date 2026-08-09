@@ -33,6 +33,76 @@ bool ChessUtility::world_to_board_position(glm::vec3 world_position, PiecePositi
     return false;
 }
 
+bool ChessUtility::is_move_legal(PieceNames piece, PiecePositions start, PiecePositions end)
+{
+    const unsigned int start_row = start / 8;
+    const unsigned int start_col = start % 8;
+    const unsigned int end_row = end / 8;
+    const unsigned int end_col = end % 8;
+
+    const int row_diff = static_cast<int>(end_row) - static_cast<int>(start_row);
+    const int col_diff = static_cast<int>(end_col) - static_cast<int>(start_col);
+
+    switch (piece) {
+        case PieceNames::WHITE_PAWN:
+            if (col_diff == 0 && row_diff == -1) {
+                return true;
+            }
+            if (col_diff == 0 && row_diff == -2 && start_row == 6) {
+                return true;
+            }
+            break;
+        case PieceNames::BLACK_PAWN:
+            // Pawns can move forward one square, or two squares from their starting position
+            if (col_diff == 0 && row_diff == 1) {
+                return true;
+            }
+            if (col_diff == 0 && row_diff == 2 && start_row == 1) {
+                return true;
+            }
+            break;
+        case PieceNames::WHITE_ROOK:
+        case PieceNames::BLACK_ROOK:
+            // Rooks can move any number of squares along a rank or file
+            if (row_diff == 0 || col_diff == 0) {
+                return true;
+            }
+            break;
+        case PieceNames::WHITE_KNIGHT:
+        case PieceNames::BLACK_KNIGHT:
+            // Knights move in an L-shape: two squares in one direction and then one square perpendicular
+            if ((abs(row_diff) == 2 && abs(col_diff) == 1) || (abs(row_diff) == 1 && abs(col_diff) == 2)) {
+                return true;
+            }
+            break;
+        case PieceNames::WHITE_BISHOP:
+        case PieceNames::BLACK_BISHOP:
+            // Bishops move diagonally any number of squares
+            if (abs(row_diff) == abs(col_diff)) {
+                return true;
+            }
+            break;
+        case PieceNames::WHITE_QUEEN:
+        case PieceNames::BLACK_QUEEN:
+            // Queens move any number of squares along a rank, file, or diagonal
+            if (row_diff == 0 || col_diff == 0 || abs(row_diff) == abs(col_diff)) {
+                return true;
+            }
+            break;
+        case PieceNames::WHITE_KING:
+        case PieceNames::BLACK_KING:
+            // Kings move one square in any direction
+            if (abs(row_diff) <= 1 && abs(col_diff) <= 1) {
+                return true;
+            }
+            break;
+        case PieceNames::NONE:
+            // No piece selected, so no move is legal
+            return false;
+    }
+    return false;
+}
+
 void ChessUtility::position_to_string(PiecePositions position, std::string &output)
 {
     const char file = static_cast<char>('A' + (position / 8));
