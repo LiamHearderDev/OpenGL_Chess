@@ -30,7 +30,7 @@ void PieceEntity::init_piece()
     piece_id = name % 6; 
 
     // Bind to delegates
-    engine.game_state->game_board->on_update->add(this, &on_game_board_updated);
+    engine.game_state->game_board->on_update->add(this, &PieceEntity::on_game_board_updated);
 
     // TODO: delete this
     fprintf(stdout, "Initialising piece: ");

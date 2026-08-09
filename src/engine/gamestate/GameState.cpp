@@ -12,8 +12,8 @@ void GameState::init()
     game_board->init();
     
     // Bind to the input handler
-    engine.input_handler->on_mouse_pressed->add(this, &on_mouse_pressed);
-    engine.input_handler->on_mouse_released->add(this, &on_mouse_released);
+    engine.input_handler->on_mouse_pressed->add(this, &GameState::on_mouse_pressed);
+    engine.input_handler->on_mouse_released->add(this, &GameState::on_mouse_released);
 }
 
 void GameState::on_mouse_pressed(mouse_click_data data)

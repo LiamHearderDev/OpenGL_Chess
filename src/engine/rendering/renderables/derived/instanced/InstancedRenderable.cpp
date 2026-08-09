@@ -48,7 +48,7 @@ void InstancedRenderable::init()
     init_material();
 
     // Bind instance updates
-    instanced_transform_component->on_update->add(this, &update_instance_vbo);
+    instanced_transform_component->on_update->add(this, &InstancedRenderable::update_instance_vbo);
 }
 
 void InstancedRenderable::render()
