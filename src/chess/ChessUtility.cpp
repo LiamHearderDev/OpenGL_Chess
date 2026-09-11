@@ -45,19 +45,19 @@ bool ChessUtility::is_move_legal(MoveData move_data)
 
     switch (move_data.name) {
         case PieceNames::WHITE_PAWN:
-            if (col_diff == 1 && row_diff == 0) {
+            if (col_diff == 0 && row_diff == -1) {
                 return true;
             }
-            if (col_diff == 2 && row_diff == 0 && start_col == 1) {
+            if (col_diff == 0 && row_diff == -2 && start_row == 6) {
                 return true;
             }
             break;
         case PieceNames::BLACK_PAWN:
             // Pawns can move forward one square, or two squares from their starting position
-            if (col_diff == -1 && row_diff == 0) {
+            if (col_diff == 0 && row_diff == 1) {
                 return true;
             }
-            if (col_diff == -2 && row_diff == 0 && start_col == 6) {
+            if (col_diff == 0 && row_diff == 2 && start_row == 1) {
                 return true;
             }
             break;
