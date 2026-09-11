@@ -53,6 +53,14 @@ public:
      * @return true if the square is occupied, false otherwise.
      */
     bool is_square_occupied(PiecePositions position);
+    
+    /** 
+     * Checks if a square on the board is occupied.
+     * @param row Integer matching the row number for the position.
+     * @param column Integer matching the column number for the position.
+     * @return true if the square is occupied, false otherwise.
+     */
+    bool is_square_occupied(int row, int column);
 
     /** 
      * Attempts to pick up a piece at the specified location.

@@ -132,7 +132,7 @@ bool ChessUtility::move_data_to_movement_type(MoveData move_data, MovementType& 
     }
 
     // Diagonal Movement
-    if (row_diff == col_diff) {
+    if (abs(row_diff) == abs(col_diff)) {
         movement_type = MovementType::DIAGONAL;
         return true;
     }

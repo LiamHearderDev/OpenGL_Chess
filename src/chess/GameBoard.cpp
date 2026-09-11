@@ -31,11 +31,19 @@ bool GameBoard::is_square_occupied(PiecePositions position)
     for (const auto& piece_data : pieces) {
         for (const PiecePositions& pos : piece_data.positions) {
             if (pos == position) {
+                fprintf(stdout, "Square occupied.\n");
                 return true;
             }
         }
     }
     return false;
+}
+
+bool GameBoard::is_square_occupied(int row, int column)
+{
+    const int stride = 8;
+    const PiecePositions pos = static_cast<PiecePositions>(row * stride + column);
+    return is_square_occupied(pos);
 }
 
 void GameBoard::try_pickup_piece_at_location(PiecePositions position)
@@ -92,6 +100,7 @@ void GameBoard::drop_piece() {
 
                 // Collect all required data
                 const PiecePositions start_pos = piece_data->positions[piece_data->dragged_piece_id];
+                ChessUtility::MoveData move_data{piece_data->name, start_pos, dropped_position};
 
 
                 // 1. Check if start and end are the same.
@@ -101,7 +110,7 @@ void GameBoard::drop_piece() {
                 // }
 
                 // // 2. Check if this is a valid move
-                if (false == ChessUtility::is_move_legal(ChessUtility::MoveData{piece_data->name, start_pos, dropped_position})) {
+                if (false == ChessUtility::is_move_legal(move_data)) {
                     stop_dragging_piece(piece_data);
 
                     fprintf(stdout, "Illegal move for ");
@@ -113,10 +122,10 @@ void GameBoard::drop_piece() {
                 }
 
                 // // 3. Check if any pieces block this move.
-                // if (is_move_obstructed(piece_data->name, start_pos, dropped_position)) {
-                //     stop_dragging_piece(piece_data);
-                //     return;
-                // }
+                if (is_move_obstructed(move_data)) {
+                    stop_dragging_piece(piece_data);
+                    return;
+                }
 
                 // Update the piece's position in the game board
                 piece_data->positions[piece_data->dragged_piece_id] = dropped_position;
@@ -142,34 +151,64 @@ bool GameBoard::is_move_obstructed(ChessUtility::MoveData move_data)
     const unsigned int end_row = move_data.end_pos / 8;
     const unsigned int end_col = move_data.end_pos % 8;
 
-    MovementType movement_type;
+    // Determine the movement type
+    MovementType movement_type{};
+    const bool status = ChessUtility::move_data_to_movement_type(move_data, movement_type);
+    if (status == false){
+        // TODO: Find some way to return an error state here... std::expected?
+        fprintf(stderr, "ERROR: Could not determine movement type.\n");
+    }
 
-    switch (move_data.name) {
-        case PieceNames::WHITE_ROOK:
-        case PieceNames::BLACK_ROOK:
-        case PieceNames::BLACK_PAWN:
-        case PieceNames::WHITE_PAWN:
+    fprintf(stdout, "MovementType = %d\n", static_cast<int>(movement_type));
+
+    const int min_col = std::min(start_col, end_col);
+    const int max_col = std::max(start_col, end_col);
+
+    const int min_row = std::min(start_row, end_row);
+    const int max_row = std::max(start_row, end_row);
+
+    const int row_diff = static_cast<int>(end_row) - static_cast<int>(start_row);
+    const int col_diff = static_cast<int>(end_col) - static_cast<int>(start_col);
+
+    // Either 1 or -1, depending on the sign of row_diff and col_diff
+    const int row_diff_sign = row_diff < 0 ? -1 : 1;
+    const int col_diff_sign = col_diff < 0 ? -1 : 1;
+
+
+    switch (movement_type) {
+        case MovementType::HORIZONTAL:
         
-            // Rooks can move any number of squares along a rank or file
-            if (start_row == end_row) { // Same row
-                const int min_col = std::min(start_col, end_col);
-                const int max_col = std::max(start_col, end_col);
-
-                for (int col = min_col + 1; col < max_col; ++col) {
-                    if (is_square_occupied(static_cast<PiecePositions>(start_row + col))) {
-                        return true;
-                    }
-                }
-            } else if (start_col == end_col) { // Same column
-                const int min_row = std::min(start_row, end_row);
-                const int max_row = std::max(start_row, end_row);
-
-                for (int row = min_row + 1; row < max_row; ++row) {
-                    if (is_square_occupied(static_cast<PiecePositions>(row * 8 + start_col))) {
-                        return true;
-                    }
+            for (int col = min_col + 1; col < max_col; ++col) {
+                fprintf(stdout, "col = %d\n", col);
+                if (is_square_occupied(start_row, col)) {
+                    return true;
                 }
             }
+            break;
+
+        case MovementType::VERTICAL:
+            for (int row = min_row + 1; row < max_row; ++row) {
+                if (is_square_occupied(row, start_col)) {
+                    return true;
+                }
+            }
+            break;
+        
+        case MovementType::DIAGONAL:
+            fprintf(stdout, "\n");
+            for (int i = 1; i < abs(row_diff); i++) {
+                const int col_i = start_col + (i * col_diff_sign);
+                const int row_i = start_row + (i * row_diff_sign);
+                if(is_square_occupied(row_i, col_i)){
+                    return true;
+                }
+            }
+            break;
+        
+        case MovementType::L_SHAPED:
+            break;
+
+        default:
             break;
     }
     return false;
