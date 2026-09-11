@@ -27,6 +27,16 @@ public:
     };
 
 
+    struct CaptureData {
+        ChessTeam attacking_team;
+        ChessTeam defending_team;
+        PieceNames attacking_piece;
+        PieceNames defending_piece;
+        PiecePositions start_pos;
+        PiecePositions end_pos;
+    };
+
+
     // ====== FUNCTIONS ====== //
 
     /* Used to scale the size of each piece. */
@@ -54,6 +64,22 @@ public:
      * @return true if the move is a valid, legal move
      */
     static bool is_move_legal(MoveData move_data);
+
+    /**
+     * Checks if a capture is legal based on the attacking and defending pieces, as well as the move data.
+     * @param attacking_piece The piece that is attempting to capture.
+     * @param defending_piece The piece that is being captured.
+     * @param move_data Data about the requested move.
+     * @return true if the capture is legal, false otherwise.
+     */
+    static bool is_capture_legal(CaptureData capture_data, MoveData move_data);
+
+    /**
+     * Returns the team of a given chess piece.
+     * @param piece The chess piece, as defined in the PieceNames enum.
+     * @return The team to which the piece belongs, as defined in the ChessTeam enum.
+     */
+    static ChessTeam get_team(PieceNames piece);
 
     /**
      * Returns the correct MovementType based on the provided MoveData structure.

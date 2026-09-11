@@ -17,6 +17,10 @@ enum PieceNames {
     BLACK_PAWN, BLACK_KNIGHT, BLACK_BISHOP, BLACK_ROOK, BLACK_QUEEN, BLACK_KING
 };
 
+enum ChessTeam {
+    WHITE, BLACK
+};
+
 // Originally designed with GameBoard functions, for piece movement logic.
 enum MovementType {
     HORIZONTAL, VERTICAL, DIAGONAL, L_SHAPED

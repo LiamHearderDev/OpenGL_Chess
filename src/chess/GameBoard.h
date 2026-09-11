@@ -41,10 +41,30 @@ public:
 
     void init();
 
+    /** 
+     * Gets the number of unique pieces on the board.
+     * @return The number of unique pieces on the board.
+     */
     unsigned int get_pieces_count() { return pieces.size(); }
+
+    /**
+     * Gets a copy of the UniquePieceData structure for the specified piece name.
+     * @param name The name of the piece to get data for.
+     * @return A copy of the UniquePieceData structure for the specified piece name.
+     */
     UniquePieceData get_piece_data(PieceNames name) { return pieces.at(name); }
 
-    /** Registers the engine context with the game board. */
+    /**
+     * Gets a reference to the UniquePieceData structure for the specified piece name.
+     * @param name The name of the piece to get data for.
+     * @return A reference to the UniquePieceData structure for the specified piece name.
+     */
+    UniquePieceData& get_piece_data_ref(PieceNames name) { return pieces.at(name); }
+
+    /** 
+     * Registers the engine context with the game board. 
+     * @param engine_context The engine context to register.
+     */
     void register_engine_context(EngineContext engine_context) { engine = engine_context; }
 
     /** 
@@ -62,6 +82,23 @@ public:
      */
     bool is_square_occupied(int row, int column);
 
+    /**
+     * Attempts to get the piece at the specified position.
+     * @param pos The position to check.
+     * @param piece_data A reference to a UniquePieceData structure that will be set to the found piece's data if a piece is found at the position.
+     * @return true if a piece was found at the position, false otherwise.
+     */
+    [[nodiscard]] bool get_piece_at_position(const PiecePositions pos, UniquePieceData& piece_data);
+
+    /**
+     * Attempts to get the piece at the specified row and column.
+     * @param row Integer matching the row number for the position.
+     * @param column Integer matching the column number for the position.
+     * @param piece_data A reference to a UniquePieceData structure that will be set to the found piece's data if a piece is found at the position.
+     * @return true if a piece was found at the position, false otherwise.
+     */
+    [[nodiscard]] bool get_piece_at_position(const int row, const int column, UniquePieceData& piece_data);
+
     /** 
      * Attempts to pick up a piece at the specified location.
      * @param location The location of the piece to pick up.
@@ -72,6 +109,7 @@ public:
      * Attempts to drop any picked up piece.
     */
     void drop_piece();
+
 
 private:
     /**
@@ -90,6 +128,14 @@ private:
      * @return true if the move is obstructed.
      */
     bool is_move_obstructed(ChessUtility::MoveData move_data);
+
+    /**
+     * Captures a chess piece, removes it from the board, and updates the game state accordingly.
+     * Does NOT check if the capture is legal, that should be done before calling this function.
+     * Also does not move the attacking piece to the defending piece's position, that should be done after calling this function.
+     * @param capture_data A structure containing information about the capture, including the attacking and defending pieces, their teams, and their positions.
+     */
+    void capture_piece(ChessUtility::CaptureData capture_data);
 };
 
 

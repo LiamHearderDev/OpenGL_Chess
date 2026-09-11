@@ -1,6 +1,8 @@
 #include "GameBoard.h"
 
 #include <cstdio>
+#include <algorithm>
+
 #include <chess/ChessUtility.h>
 #include <engine/input/InputHandler.h>
 
@@ -44,6 +46,25 @@ bool GameBoard::is_square_occupied(int row, int column)
     const int stride = 8;
     const PiecePositions pos = static_cast<PiecePositions>(row * stride + column);
     return is_square_occupied(pos);
+}
+
+bool GameBoard::get_piece_at_position(const PiecePositions pos, UniquePieceData &piece_data)
+{
+    for (auto& piece : pieces) {
+        for (const auto& position : piece.positions) {
+            if (position == pos) {
+                piece_data = piece;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool GameBoard::get_piece_at_position(const int row, const int column, UniquePieceData &piece_data)
+{
+    const PiecePositions pos = static_cast<PiecePositions>(row * 8 + column);
+    return get_piece_at_position(pos, piece_data);
 }
 
 void GameBoard::try_pickup_piece_at_location(PiecePositions position)
@@ -104,10 +125,11 @@ void GameBoard::drop_piece() {
 
 
                 // 1. Check if start and end are the same.
-                // if (start_pos == dropped_position) {
-                //     stop_dragging_piece(piece_data);
-                //     return;
-                // }
+                if (start_pos == dropped_position) {
+                    stop_dragging_piece(piece_data);
+                    fprintf(stdout, "start == end\n");
+                    return;
+                }
 
                 // // 2. Check if this is a valid move
                 if (false == ChessUtility::is_move_legal(move_data)) {
@@ -121,12 +143,46 @@ void GameBoard::drop_piece() {
                     return;
                 }
 
-                // // 3. Check if any pieces block this move.
+                // 3. Check if any pieces block this move.
                 if (is_move_obstructed(move_data)) {
                     stop_dragging_piece(piece_data);
                     return;
                 }
 
+                // 4. Check if any piece currently occupies the target square.
+                if (is_square_occupied(move_data.end_pos)) {
+
+                    UniquePieceData other_piece{};
+                    if(get_piece_at_position(move_data.end_pos, other_piece)){
+
+                        // Check if this capture is valid, based on capturing rules.
+                        ChessUtility::CaptureData capture{
+                            ChessUtility::get_team(piece_data->name),
+                            ChessUtility::get_team(other_piece.name),
+                            piece_data->name,
+                            other_piece.name,
+                            move_data.start_pos,
+                            move_data.end_pos
+                        };
+
+                        if (ChessUtility::is_capture_legal(capture, move_data)) {
+                            fprintf(stdout, "Legal capture.\n");
+
+                            // TODO: capture piece
+                            capture_piece(capture);
+
+                        } else { // capture was illegal, so cancel the move
+                            fprintf(stdout, "NOT a legal capture.\n");
+                            stop_dragging_piece(piece_data);
+                            return;
+                        }
+                    } else { // Error: We know the square is occupied, but can't find any piece there...
+                        // TODO: some kind of error state
+                        fprintf(stderr, "ERROR: Target square is occupied, but cannot retrieve piece data...\n");
+                        stop_dragging_piece(piece_data);
+                        return;
+                    }
+                }
                 // Update the piece's position in the game board
                 piece_data->positions[piece_data->dragged_piece_id] = dropped_position;
             }
@@ -212,4 +268,20 @@ bool GameBoard::is_move_obstructed(ChessUtility::MoveData move_data)
             break;
     }
     return false;
+}
+
+void GameBoard::capture_piece(ChessUtility::CaptureData capture_data)
+{
+    // Find the defending piece in the game board
+    UniquePieceData& defender = get_piece_data_ref(capture_data.defending_piece);
+
+    // Remove the defending piece from the game board
+    defender.positions.erase( 
+        std::remove(defender.positions.begin(), defender.positions.end(), capture_data.end_pos),
+        defender.positions.end()
+    );
+    // std::erase(defender.positions, capture_data.end_pos);
+
+    // Add the defending piece to the attacking team's "captured pieces" list
+
 }

@@ -102,6 +102,49 @@ bool ChessUtility::is_move_legal(MoveData move_data)
     return false;
 }
 
+bool ChessUtility::is_capture_legal(CaptureData capture_data, MoveData move_data)
+{
+    // If same team, capture is obviously illegal
+    if (get_team(capture_data.attacking_piece) == get_team(capture_data.defending_piece)){
+        return false;
+    }
+
+    // Get data about the move
+    const unsigned int start_row = move_data.start_pos / 8;
+    const unsigned int start_col = move_data.start_pos % 8;
+    const unsigned int end_row = move_data.end_pos / 8;
+    const unsigned int end_col = move_data.end_pos % 8;
+    const int row_diff = static_cast<int>(end_row) - static_cast<int>(start_row);
+    const int col_diff = static_cast<int>(end_col) - static_cast<int>(start_col);
+
+    // Check if the attacking piece is a WHITE pawn
+    if (capture_data.attacking_piece == PieceNames::WHITE_PAWN){
+        // They can only attack up, diagonally, by 1 square.
+        if (row_diff != -1 || abs(row_diff) != abs(col_diff)) {
+            return false;
+        }
+    }
+
+    // Check if the attacking piece is a BLACK pawn
+    if (capture_data.attacking_piece == PieceNames::BLACK_PAWN){
+        // They can only attack down, diagonally, and by 1 square.
+        if (row_diff != 1 || abs(row_diff) != abs(col_diff)) {
+            return false;
+        }
+    }
+    
+    // Else the capture is legal
+    // This is because all other legal chess moves, are also legal captures.
+    // Therefore, you must always check if the move is legal first.
+
+    return true;
+}
+
+ChessTeam ChessUtility::get_team(PieceNames piece)
+{
+    return static_cast<ChessTeam>(piece / 6);
+}
+
 bool ChessUtility::move_data_to_movement_type(MoveData move_data, MovementType& movement_type)
 {
     // Rows = Ranks = Numbers
