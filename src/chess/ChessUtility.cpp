@@ -8,8 +8,8 @@ void ChessUtility::board_to_world_position(PiecePositions board_position, glm::v
 
     const float piece_scale = ChessUtility::get_piece_scale();
 
-    const float x = (row - 3.5f) * piece_scale;
-    const float y = (col - 3.5f) * piece_scale;
+    const float x = (col - 3.5f) * piece_scale;
+    const float y = ((7 - row) - 3.5f) * piece_scale;
 
     world_position = glm::vec3(x, y, 0.f);
 }
@@ -21,8 +21,8 @@ bool ChessUtility::world_to_board_position(glm::vec3 world_position, PiecePositi
     if (world_position.x < -0.5 || world_position.x > 0.5) { return false; }
     if (world_position.y < -0.5 || world_position.y > 0.5) { return false; }
     
-    const unsigned int row = static_cast<unsigned int>(world_position.x / piece_scale + 4.f);
-    const unsigned int col = static_cast<unsigned int>(world_position.y / piece_scale + 4.f);
+    const unsigned int col = static_cast<unsigned int>(world_position.x / piece_scale + 4.f);
+    const unsigned int row = static_cast<unsigned int>(-(world_position.y) / piece_scale + 4.f);
 
     if (row < 8 && col < 8)
     {
@@ -33,17 +33,17 @@ bool ChessUtility::world_to_board_position(glm::vec3 world_position, PiecePositi
     return false;
 }
 
-bool ChessUtility::is_move_legal(PieceNames piece, PiecePositions start, PiecePositions end)
+bool ChessUtility::is_move_legal(MoveData move_data)
 {
-    const unsigned int start_row = start / 8;
-    const unsigned int start_col = start % 8;
-    const unsigned int end_row = end / 8;
-    const unsigned int end_col = end % 8;
+    const unsigned int start_row = move_data.start_pos / 8;
+    const unsigned int start_col = move_data.start_pos % 8;
+    const unsigned int end_row = move_data.end_pos / 8;
+    const unsigned int end_col = move_data.end_pos % 8;
 
     const int row_diff = static_cast<int>(end_row) - static_cast<int>(start_row);
     const int col_diff = static_cast<int>(end_col) - static_cast<int>(start_col);
 
-    switch (piece) {
+    switch (move_data.name) {
         case PieceNames::WHITE_PAWN:
             if (col_diff == 1 && row_diff == 0) {
                 return true;
@@ -96,10 +96,53 @@ bool ChessUtility::is_move_legal(PieceNames piece, PiecePositions start, PiecePo
                 return true;
             }
             break;
-        case PieceNames::NONE:
-            // No piece selected, so no move is legal
+        default:    // No piece selected, so not legal
             return false;
     }
+    return false;
+}
+
+bool ChessUtility::move_data_to_movement_type(MoveData move_data, MovementType& movement_type)
+{
+    // Rows = Ranks = Numbers
+    // Cols = Files = Letters
+    const unsigned int start_row = move_data.start_pos / 8;
+    const unsigned int start_col = move_data.start_pos % 8;
+    const unsigned int end_row = move_data.end_pos / 8;
+    const unsigned int end_col = move_data.end_pos % 8;
+
+    const int row_diff = static_cast<int>(end_row) - static_cast<int>(start_row);
+    const int col_diff = static_cast<int>(end_col) - static_cast<int>(start_col);
+
+    // Check if the piece moved at all
+    if (move_data.start_pos == move_data.end_pos) { 
+        return false; 
+    }
+
+    // Horizontal Movement
+    if (start_row == end_row) {
+        movement_type = MovementType::HORIZONTAL;
+        return true;
+    }
+    
+    // Vertical Movement
+    if (start_col == end_col) {
+        movement_type = MovementType::VERTICAL;
+        return true;
+    }
+
+    // Diagonal Movement
+    if (row_diff == col_diff) {
+        movement_type = MovementType::DIAGONAL;
+        return true;
+    }
+
+    // L-Shaped Movement
+    if ((abs(row_diff) == 2 && abs(col_diff) == 1) || (abs(row_diff) == 1 && abs(col_diff) == 2)) {
+        movement_type = MovementType::L_SHAPED;
+        return true;
+    }
+
     return false;
 }
 
@@ -125,18 +168,18 @@ void ChessUtility::print_piece_name(PieceNames name, bool new_line)
 {
     const char* name_str = nullptr;
     switch (name) {
-        case PieceNames::WHITE_PAWN: name_str = "White Pawn"; break;
-        case PieceNames::WHITE_ROOK: name_str = "White Rook"; break;
-        case PieceNames::WHITE_KNIGHT: name_str = "White Knight"; break;
-        case PieceNames::WHITE_BISHOP: name_str = "White Bishop"; break;
-        case PieceNames::WHITE_QUEEN: name_str = "White Queen"; break;
-        case PieceNames::WHITE_KING: name_str = "White King"; break;
-        case PieceNames::BLACK_PAWN: name_str = "Black Pawn"; break;
-        case PieceNames::BLACK_ROOK: name_str = "Black Rook"; break;
-        case PieceNames::BLACK_KNIGHT: name_str = "Black Knight"; break;
-        case PieceNames::BLACK_BISHOP: name_str = "Black Bishop"; break;
-        case PieceNames::BLACK_QUEEN: name_str = "Black Queen"; break;
-        case PieceNames::BLACK_KING: name_str = "Black King"; break;
+        case PieceNames::WHITE_PAWN:    name_str = "White Pawn";    break;
+        case PieceNames::WHITE_ROOK:    name_str = "White Rook";    break;
+        case PieceNames::WHITE_KNIGHT:  name_str = "White Knight";  break;
+        case PieceNames::WHITE_BISHOP:  name_str = "White Bishop";  break;
+        case PieceNames::WHITE_QUEEN:   name_str = "White Queen";   break;
+        case PieceNames::WHITE_KING:    name_str = "White King";    break;
+        case PieceNames::BLACK_PAWN:    name_str = "Black Pawn";    break;
+        case PieceNames::BLACK_ROOK:    name_str = "Black Rook";    break;
+        case PieceNames::BLACK_KNIGHT:  name_str = "Black Knight";  break;
+        case PieceNames::BLACK_BISHOP:  name_str = "Black Bishop";  break;
+        case PieceNames::BLACK_QUEEN:   name_str = "Black Queen";   break;
+        case PieceNames::BLACK_KING:    name_str = "Black King";    break;
     }
     if (name_str) {
         fprintf(stdout, "%s", name_str);

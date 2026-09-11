@@ -7,6 +7,7 @@
 #include <vector>
 
 #include <chess/ChessEnums.h>
+#include <chess/ChessUtility.h>
 #include <engine/EngineContext.h>
 
 #include "delegates/MulticastDelegate.h"
@@ -71,13 +72,16 @@ private:
     void stop_dragging_piece(UniquePieceData* piece);
 
     /**
-     * Checks if the given move is obstructed by any other piece.
+     * Checks if the given move is obstructed by any other piece. 
+     * This is different to checking if a piece exists on the ending
+     * position, such as when attacking a piece. This function only
+     * checks the squares between two positions.
      * @param piece The name of the piece we are moving.
      * @param start The starting point of the move.
      * @param end The ending point of the move.
      * @return true if the move is obstructed.
      */
-    bool is_moved_obstructed(PieceNames piece, PiecePositions start, PiecePositions end);
+    bool is_move_obstructed(ChessUtility::MoveData move_data);
 };
 
 

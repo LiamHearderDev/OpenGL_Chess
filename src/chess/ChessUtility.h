@@ -14,6 +14,21 @@
 class ChessUtility {
 public:
 
+    // ====== STRUCTURES ====== //
+
+    /**
+     * MoveData structure is used to store information about a chess move, including 
+     * the piece being moved and its starting and ending positions.
+     */
+    struct MoveData {
+        PieceNames name;
+        PiecePositions start_pos;
+        PiecePositions end_pos;
+    };
+
+
+    // ====== FUNCTIONS ====== //
+
     /* Used to scale the size of each piece. */
     [[nodiscard]] static constexpr float get_piece_scale() { return 1.f/8.f; }
 
@@ -35,12 +50,19 @@ public:
     /**
      * Checks if a move is a legal depending on standard movement rules. 
      * Does NOT consider obstruction or current turn.
-     * @param piece The name of the piece we are moving.
-     * @param start The starting board position.
-     * @param end The ending board position.
-     * @return true if the move is a valid legal
+     * @param move_data Data about the requested move.
+     * @return true if the move is a valid, legal move
      */
-    static bool is_move_legal(PieceNames piece, PiecePositions start, PiecePositions end);
+    static bool is_move_legal(MoveData move_data);
+
+    /**
+     * Returns the correct MovementType based on the provided MoveData structure.
+     * @param move_data Data about a chess move.
+     * @param movement_type A reference to a MovementType variable that will be set to the corresponding 
+     *      movement type if the conversion is successful.
+     * @return True if the move_data corresponds to a valid MovementType, false otherwise.
+     */
+    [[nodiscard]] static bool move_data_to_movement_type(MoveData move_data, MovementType& movement_type);
 
     /**
      * Converts a board position to a string representation.

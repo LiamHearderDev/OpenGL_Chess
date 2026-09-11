@@ -101,13 +101,19 @@ void GameBoard::drop_piece() {
                 // }
 
                 // // 2. Check if this is a valid move
-                if (false == ChessUtility::is_move_legal(piece_data->name, start_pos, dropped_position)) {
+                if (false == ChessUtility::is_move_legal(ChessUtility::MoveData{piece_data->name, start_pos, dropped_position})) {
                     stop_dragging_piece(piece_data);
+
+                    fprintf(stdout, "Illegal move for ");
+                    ChessUtility::print_piece_name(piece_data->name, false);
+                    fprintf(stdout, " at position ");
+                    ChessUtility::print_position(dropped_position, true);
+
                     return;
                 }
 
                 // // 3. Check if any pieces block this move.
-                // if (is_moved_obstructed(piece_data->name, start_pos, dropped_position)) {
+                // if (is_move_obstructed(piece_data->name, start_pos, dropped_position)) {
                 //     stop_dragging_piece(piece_data);
                 //     return;
                 // }
@@ -128,25 +134,38 @@ void GameBoard::stop_dragging_piece(UniquePieceData* piece)
     on_update->broadcast(piece->name);
 }
 
-bool GameBoard::is_moved_obstructed(PieceNames piece, PiecePositions start, PiecePositions end)
+bool GameBoard::is_move_obstructed(ChessUtility::MoveData move_data)
 {
-    switch (piece) {
+    // First, get data about the move itself
+    const unsigned int start_row = move_data.start_pos / 8;
+    const unsigned int start_col = move_data.start_pos % 8;
+    const unsigned int end_row = move_data.end_pos / 8;
+    const unsigned int end_col = move_data.end_pos % 8;
+
+    MovementType movement_type;
+
+    switch (move_data.name) {
         case PieceNames::WHITE_ROOK:
         case PieceNames::BLACK_ROOK:
+        case PieceNames::BLACK_PAWN:
+        case PieceNames::WHITE_PAWN:
+        
             // Rooks can move any number of squares along a rank or file
-            if (start / 8 == end / 8) { // Same row
-                int min_col = std::min(start % 8, end % 8);
-                int max_col = std::max(start % 8, end % 8);
+            if (start_row == end_row) { // Same row
+                const int min_col = std::min(start_col, end_col);
+                const int max_col = std::max(start_col, end_col);
+
                 for (int col = min_col + 1; col < max_col; ++col) {
-                    if (is_square_occupied(static_cast<PiecePositions>(start / 8 * 8 + col))) {
+                    if (is_square_occupied(static_cast<PiecePositions>(start_row + col))) {
                         return true;
                     }
                 }
-            } else if (start % 8 == end % 8) { // Same column
-                int min_row = std::min(start / 8, end / 8);
-                int max_row = std::max(start / 8, end / 8);
+            } else if (start_col == end_col) { // Same column
+                const int min_row = std::min(start_row, end_row);
+                const int max_row = std::max(start_row, end_row);
+
                 for (int row = min_row + 1; row < max_row; ++row) {
-                    if (is_square_occupied(static_cast<PiecePositions>(row * 8 + start % 8))) {
+                    if (is_square_occupied(static_cast<PiecePositions>(row * 8 + start_col))) {
                         return true;
                     }
                 }
